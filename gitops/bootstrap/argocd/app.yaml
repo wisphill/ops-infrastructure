@@ -15,7 +15,7 @@ spec:
         repoServer:
           extraContainers:
             - name: sops
-              image: mozilla/sops:3.8.1
+              image: chatwork/sops:3.8.1
               command: ["/bin/sh", "-c"]
               args:
                 - |
