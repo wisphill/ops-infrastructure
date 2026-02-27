@@ -6,13 +6,39 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/wisphill/ops-infrastructure.git
-    path: gitops/bootstrap/argocd
-    targetRevision: main
+    repoURL: https://argoproj.github.io/argo-helm
+    chart: argo-cd
+    targetRevision: 5.51.6
     helm:
       releaseName: argocd
-      valueFiles:
-        - values.yaml
+      values: |
+        repoServer:
+          extraContainers:
+            - name: sops
+              image: ghcr.io/mozilla/sops:v3.8.1
+              command: ["/bin/sh", "-c"]
+              args:
+                - |
+                  cp /usr/local/bin/sops /custom-tools/
+              volumeMounts:
+                - mountPath: /custom-tools
+                  name: custom-tools
+
+          volumes:
+            - name: custom-tools
+              emptyDir: {}
+
+          volumeMounts:
+            - mountPath: /custom-tools
+              name: custom-tools
+
+        configs:
+          cm:
+            configManagementPlugins: |
+              - name: sops
+                generate:
+                  command: ["/custom-tools/sops"]
+                  args: ["-d", "."]
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
