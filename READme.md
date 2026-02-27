@@ -6,6 +6,6 @@
 # Example using an AGE key
 kubectl create secret generic sops-age-key \
  --namespace argocd \
- --from-file=keys.txt=age-key.txt
+ --from-file=keys.txt=key.txt
 
 ```

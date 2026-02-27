@@ -13,46 +13,38 @@ spec:
       releaseName: argocd
       values: |
         repoServer:
+          env:
+            - name: SOPS_AGE_KEY_FILE
+              value: /home/argocd/.config/sops/age/keys.txt
           volumes:
             - name: sops-age-key
               secret:
                 secretName: sops-age-key
-            - name: cmp-tmp
-              emptyDir: {}
-
-          extraContainers:
-            - name: sops-plugin
-              # This image includes sops and the plugin server
-              image: ghcr.io/jkroepke/helm-secrets:v4.6.0
-              command: [/var/run/argocd/argocd-cmp-server]
-              securityContext:
-                runAsUser: 999
-              env:
-                - name: SOPS_AGE_KEY_FILE
-                  value: /home/argocd/.config/sops/age/keys.txt
+          volumeMounts:
+            - name: sops-age-key
+              mountPath: /home/argocd/.config/sops/age/keys.txt
+              subPath: keys.txt
+          initContainers:
+            - name: install-ksops
+              image: viaductoss/ksops:v4.2.0
+              command:
+                - sh
+                - -c
+                - |
+                  cp /usr/local/bin/ksops /custom-tools/
               volumeMounts:
-                - name: var-files
-                  mountPath: /var/run/argocd
-                - name: cmp-tmp
-                  mountPath: /tmp
-                - name: sops-age-key
-                  mountPath: /home/argocd/.config/sops/age/keys.txt
-                  subPath: keys.txt
-
+                - mountPath: /custom-tools
+                  name: custom-tools
+          volumes:
+            - name: custom-tools
+              emptyDir: {}
+          volumeMounts:
+            - mountPath: /usr/local/bin/ksops
+              name: custom-tools
+              subPath: ksops
         configs:
-          # We define how the plugin identifies and decrypts your files
-          cmp:
-            create: true
-            plugins:
-              sops:
-                generate:
-                  command: ["sh", "-c"]
-                  # This command finds all .yaml files and tries to decrypt them
-                  args: ["find . -name '*.yaml' -exec sops -d {} \\;"]
-                discover:
-                  # This plugin only triggers if it finds a file with 'sops' metadata
-                  fileName: "*.yaml"
-                  containsText: "sops"
+          cm:
+            kustomize.buildOptions: "--enable-alpha-plugins --enable-exec"
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
