@@ -10,6 +10,7 @@ spec:
     chart: argo-cd
     targetRevision: 5.51.6
     helm:
+      releaseName: argocd
       valueFiles:
         - values.yaml
   destination:
