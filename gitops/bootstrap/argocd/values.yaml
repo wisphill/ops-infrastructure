@@ -1,0 +1,7 @@
+server:
+  service:
+    type: ClusterIP
+
+configs:
+  cm:
+    timeout.reconciliation: 30s
