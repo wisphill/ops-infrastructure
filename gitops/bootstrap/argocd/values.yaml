@@ -2,6 +2,30 @@ server:
   service:
     type: ClusterIP
 
+repoServer:
+  extraContainers:
+    - name: sops
+      image: ghcr.io/mozilla/sops:v3.8.1
+      command: ["/bin/sh", "-c"]
+      args:
+        - |
+          cp /usr/local/bin/sops /custom-tools/
+      volumeMounts:
+        - mountPath: /custom-tools
+          name: custom-tools
+
+  volumes:
+    - name: custom-tools
+      emptyDir: {}
+
+  volumeMounts:
+    - mountPath: /custom-tools
+      name: custom-tools
+
 configs:
   cm:
-    timeout.reconciliation: 30s
+    configManagementPlugins: |
+      - name: sops
+        generate:
+          command: ["/custom-tools/sops"]
+          args: ["-d", "."]
