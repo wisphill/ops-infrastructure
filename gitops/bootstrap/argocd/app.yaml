@@ -6,9 +6,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://argoproj.github.io/argo-helm
-    chart: argo-cd
-    targetRevision: 5.51.6
+    repoURL: https://github.com/wisphill/ops-infrastructure.git
+    path: gitops/bootstrap/argocd
+    targetRevision: main
     helm:
       releaseName: argocd
       valueFiles:
