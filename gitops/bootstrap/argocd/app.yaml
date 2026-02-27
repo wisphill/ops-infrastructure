@@ -21,7 +21,7 @@ spec:
                 secretName: sops-age-key
           initContainers:
             - name: install-ksops
-              image: viaductoss/ksops:v4.3.2 # Check for latest version
+              image: viaductoss/ksops:v4.3.2
               command: ["/bin/sh", "-c"]
               args:
                 - cp /usr/local/bin/ksops /custom-tools/ksops
