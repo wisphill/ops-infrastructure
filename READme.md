@@ -1,11 +1,3 @@
-1. Create a Secret for your Private Key
-   Argo CD needs your private key (AGE or GPG) to decrypt files.
+TODO list
 
-```
-
-# Example using an AGE key
-kubectl create secret generic sops-age-key \
- --namespace argocd \
- --from-file=keys.txt=key.txt
-
-```
+1. Add infra app to manage infrastructure resources.
