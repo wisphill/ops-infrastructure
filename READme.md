@@ -8,6 +8,8 @@ TODO list
 - Add apps: Nginx, Ingress, Telemetry
 - Istio testing with Istio Bookinfo
 - Host Bitwarden for internal use with Tailscale
+- Build gateway for game
+- Host Minecraft servers for 2 players
 
 DONE
 
