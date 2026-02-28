@@ -1,6 +1,13 @@
 TODO list
 
 - Backup /etcd
+- Add statefulset application
+- Add role/role binding resource and testing
+- Testing helm
+- Add Grafana & datasources
+- Add apps: Nginx, Ingress, Telemetry
+- Istio testing with Istio Bookinfo
+- Host Bitwarden for internal use with Tailscale
 
 DONE
 
