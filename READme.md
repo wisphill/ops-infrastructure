@@ -1,3 +1,7 @@
 TODO list
 
-1. Add infra app to manage infrastructure resources.
+- Backup /etcd
+
+DONE
+
+1. Add infra app to manage infrastructure resources. (DONE)
