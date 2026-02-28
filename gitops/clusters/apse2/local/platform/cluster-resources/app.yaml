@@ -4,7 +4,7 @@ metadata:
   name: cluster-resources
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "-1" # TODO: for what
+    argocd.argoproj.io/sync-wave: "-1"
 spec:
   project: default
   source:
