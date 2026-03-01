@@ -1,6 +1,0 @@
-apiVersion: viaduct.ai/v1
-kind: ksops
-metadata:
-  name: grafana-secret
-files:
-  - secrets.enc.yaml

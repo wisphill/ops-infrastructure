@@ -48,7 +48,7 @@ spec:
                 generate:
                   command: ["sh", "-c"]
                   args:
-                    - kustomize build . --enable-alpha-plugins --enable-exec
+                    - ksops -k . && kustomize build .
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
