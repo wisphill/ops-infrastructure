@@ -1,0 +1,6 @@
+apiVersion: viaduct.ai/v1
+kind: ksops
+metadata:
+  name: grafana-secrets-generator
+files:
+  - secrets.enc.yaml # This points to your encrypted file
