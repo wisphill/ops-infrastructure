@@ -12,71 +12,39 @@ spec:
     helm:
       releaseName: argocd
       values: |
-        extraObjects:
-          - apiVersion: v1
-            kind: ConfigMap
-            metadata:
-              name: ksops-plugin-config
-              namespace: argocd
-            data:
-              plugin.yaml: |
-                apiVersion: argoproj.io/v1alpha1
-                kind: ConfigManagementPlugin
-                metadata:
-                  name: ksops
-                spec:
-                  allowConcurrency: true
-                  discover:
-                    fileName: kustomization.yaml
-                  generate:
-                    command: ["kustomize"]
-                    args: ["build", "."]
-
         repoServer:
+          initContainers:
+            - name: install-ksops
+              image: viaductoss/ksops:v4.2.0
+              command:
+                - sh
+                - -c
+                - |
+                  cp /usr/local/bin/ksops /custom-tools/ksops
+              volumeMounts:
+                - mountPath: /custom-tools
+                  name: custom-tools
+
           volumes:
+            - name: custom-tools
+              emptyDir: {}
+
             - name: sops-age-key
               secret:
                 secretName: sops-age-key
 
-            - name: ksops-config
-              configMap:
-                name: ksops-plugin-config
-
-            - name: var-files
-              emptyDir: {}
-
           volumeMounts:
-            - mountPath: /var/run/argocd
-              name: var-files
+            - mountPath: /usr/local/bin/ksops
+              name: custom-tools
+              subPath: ksops
 
-            - mountPath: /home/argocd/cmp-server/plugins
-              name: var-files
+            - mountPath: /home/argocd/.config/sops/age/keys.txt
+              name: sops-age-key
+              subPath: keys.txt
 
-          extraContainers:
-            - name: ksops-plugin
-              image: viaductoss/ksops:v4.2.0
-              command: [/var/run/argocd/argocd-cmp-server]
-              securityContext:
-                runAsUser: 999
-
-              env:
-                - name: SOPS_AGE_KEY_FILE
-                  value: /home/argocd/.config/sops/age/keys.txt
-
-              volumeMounts:
-                - mountPath: /var/run/argocd
-                  name: var-files
-
-                - mountPath: /home/argocd/cmp-server/plugins
-                  name: var-files
-
-                - mountPath: /home/argocd/cmp-server/config/plugin.yaml
-                  name: ksops-config
-                  subPath: plugin.yaml
-
-                - mountPath: /home/argocd/.config/sops/age/keys.txt
-                  name: sops-age-key
-                  subPath: keys.txt
+          env:
+            - name: SOPS_AGE_KEY_FILE
+              value: /home/argocd/.config/sops/age/keys.txt
 
   destination:
     server: https://kubernetes.default.svc
