@@ -20,31 +20,35 @@ spec:
             - name: sops-age-key
               secret:
                 secretName: sops-age-key
+            - name: custom-tools
+              emptyDir: {}
           volumeMounts:
             - name: sops-age-key
               mountPath: /home/argocd/.config/sops/age/keys.txt
               subPath: keys.txt
+            - name: custom-tools
+              mountPath: /usr/local/bin/ksops
+              subPath: ksops
+
           initContainers:
             - name: install-ksops
               image: viaductoss/ksops:v4.2.0
               command:
                 - sh
                 - -c
-                - |
-                  cp /usr/local/bin/ksops /custom-tools/
+                - cp /usr/local/bin/ksops /custom-tools/ksops
               volumeMounts:
-                - mountPath: /custom-tools
-                  name: custom-tools
-          volumes:
-            - name: custom-tools
-              emptyDir: {}
-          volumeMounts:
-            - mountPath: /usr/local/bin/ksops
-              name: custom-tools
-              subPath: ksops
+                - name: custom-tools
+                  mountPath: /custom-tools
         configs:
-          cm:
-            kustomize.buildOptions: "--enable-alpha-plugins --enable-exec"
+          cmp:
+            create: true
+            plugins:
+              ksops:
+                generate:
+                  command: ["sh", "-c"]
+                  args:
+                    - kustomize build . --enable-alpha-plugins --enable-exec
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
