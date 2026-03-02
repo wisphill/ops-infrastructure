@@ -1,0 +1,8 @@
+apiVersion: viaduct.ai/v1
+kind: ksops
+metadata:
+  name: secret
+files:
+  - secret.enc.yaml
+options:
+  prune: true
