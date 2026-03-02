@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cmp-plugin
+  namespace: argocd
+data:
+  plugin.yaml: |
+    apiVersion: argoproj.io/v1alpha1
+    kind: ConfigManagementPlugin
+    metadata:
+      name: ksops
+    spec:
+      discover:
+        find:
+          command: ["sh", "-c", "test -f kustomization.yaml"]
+      generate:
+        command: ["sh", "-c"]
+        args:
+          - kustomize build --enable-alpha-plugins .
