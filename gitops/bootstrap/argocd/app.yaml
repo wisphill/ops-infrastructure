@@ -18,7 +18,7 @@ spec:
           image:
             repository: yuulya/argocd-repo-server
             tag: v2.11.8-ksops
-            pullPolicy: Always
+            pullPolicy: IfNotPresent
 
           extraContainers:
             - name: argocd-cmp-server
