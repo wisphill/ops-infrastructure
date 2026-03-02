@@ -17,12 +17,12 @@ spec:
         repoServer:
           image:
             repository: yuulya/argocd-repo-server
-            tag: v2.11.4-ksops
+            tag: v2.11.8-ksops
             pullPolicy: Always
 
           extraContainers:
             - name: argocd-cmp-server
-              image: yuulya/argocd-repo-server:v2.11.4-ksops
+              image: yuulya/argocd-repo-server:v2.11.8-ksops
               command: ["/usr/local/bin/argocd-cmp-server"]
               securityContext:
                 runAsNonRoot: true

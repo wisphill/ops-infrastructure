@@ -3,6 +3,6 @@ kind: ksops
 metadata:
   name: secret
 files:
-  - secret.enc.yaml
+  - secrets.enc.yaml
 options:
   prune: true
