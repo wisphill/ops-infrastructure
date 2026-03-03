@@ -13,7 +13,7 @@ spec:
     path: gitops/clusters/apse2/local/platform/metal-lb
   destination:
     server: https://kubernetes.default.svc
-    namespace: metal-lb
+    namespace: metallb-system
   syncPolicy:
     automated:
       prune: true
