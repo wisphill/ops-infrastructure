@@ -11,3 +11,10 @@ metadata:
   name: dev
   labels:
     app.kubernetes.io/managed-by: argocd
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: metal-lb
+  labels:
+    app.kubernetes.io/managed-by: argocd
