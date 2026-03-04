@@ -23,7 +23,7 @@ spec:
                 name: oauth2-proxy-secret
           args:
             - --provider=github
-            - --github-org=ywisper
+            - --github-org=Ywisper
             - --email-domain=*
             - --scope=read:org
             - --http-address=0.0.0.0:4180
