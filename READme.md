@@ -24,3 +24,10 @@
 ### Using your generated age key and encrypt admin/password using the public key
 sops --encrypt --age {{age_public_key}} gitops/clusters/apse2/local/platform/monitoring/grafana/grafana-admin.yaml > gitops/clusters/apse2/local/platform/monitoring/grafana/secrets.enc.yaml
 ```
+
+#### Generate cookie secrets
+
+```bash
+# Generate OAUTH2_PROXY_COOKIE_SECRET for the Oauth2 Proxy authentication server
+openssl rand -base64 32
+```
