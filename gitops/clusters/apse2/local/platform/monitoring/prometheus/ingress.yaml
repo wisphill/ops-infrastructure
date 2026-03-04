@@ -15,4 +15,4 @@ spec:
               service:
                 name: monitoring-kube-prometheus-prometheus
                 port:
-                  number: 8080
+                  number: 9090
