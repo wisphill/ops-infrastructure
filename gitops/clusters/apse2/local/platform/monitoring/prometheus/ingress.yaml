@@ -16,3 +16,10 @@ spec:
                 name: monitoring-kube-prometheus-prometheus
                 port:
                   number: 9090
+          - path: /oauth2
+            pathType: Prefix
+            backend:
+              service:
+                name: oauth2-proxy
+                port:
+                  number: 4180
