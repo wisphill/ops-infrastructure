@@ -3,3 +3,6 @@ kind: Kustomization
 
 resources:
   - oauth2-proxy.yaml
+
+generators:
+  - secrets-generator.yaml
