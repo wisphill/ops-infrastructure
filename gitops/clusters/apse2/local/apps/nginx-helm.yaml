@@ -16,6 +16,8 @@ spec:
         controller:
           service:
             type: LoadBalancer
+            # fixed metal LB IP for the Nginx ingress controller
+            loadBalancerIP: 172.18.255.200
           # set default ingress class to nginx
           ingressClassResource:
             name: nginx
