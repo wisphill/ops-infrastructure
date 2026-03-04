@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: oauth2-proxy
-  namespace: auth
+  namespace: platform
 spec:
   replicas: 1
   selector:
