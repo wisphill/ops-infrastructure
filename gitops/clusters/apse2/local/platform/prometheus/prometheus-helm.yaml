@@ -35,7 +35,7 @@ spec:
                       storage: 1Gi
   destination:
     server: https://kubernetes.default.svc
-    namespace: monitoring
+    namespace: platform
   syncPolicy:
     automated:
       prune: true
