@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/wisphill/ops-infrastructure
     targetRevision: main
-    path: gitops/clusters/apse2/local/platform/monitoring/grafana
+    path: gitops/clusters/apse2/local/platform/grafana
     plugin:
       name: ksops
   destination:

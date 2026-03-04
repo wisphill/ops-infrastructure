@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: grafana
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://grafana.github.io/helm-charts
+    chart: grafana
+    targetRevision: 7.3.7
+    helm:
+      values: |
+        existingSecret: grafana-admin
+        userKey: admin-user
+        passwordKey: admin-password
+
+        service:
+          type: ClusterIP
+          port: 80
+
+        # ingress:
+        #   enabled: true
+        #   ingressClassName: nginx
+        #   hosts:
+        #     - grafana.opswork.io.vn
+        #   path: /
+        #   pathType: Prefix
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: platform
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
