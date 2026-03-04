@@ -11,9 +11,10 @@ spec:
     targetRevision: 7.3.7
     helm:
       values: |
-        existingSecret: grafana-admin
-        userKey: admin-user
-        passwordKey: admin-password
+        admin:
+          existingSecret: grafana-admin
+          userKey: admin-user
+          passwordKey: admin-password
 
         service:
           type: ClusterIP
