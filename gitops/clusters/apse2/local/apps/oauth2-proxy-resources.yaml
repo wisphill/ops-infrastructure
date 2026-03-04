@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: oauth2-proxy-manager
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/wisphill/ops-infrastructure
+    targetRevision: main
+    path: gitops/clusters/apse2/local/platform/oauth2-proxy
+    plugin:
+      name: ksops
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: platform
+  syncPolicy: {}
