@@ -5,7 +5,7 @@
 - Add role/role binding resource and testing
 - Testing helm
 - Add Grafana & datasources
-- Add apps: Nginx, Ingress, Telemetry
+- Add Telemetry
 - Istio testing with Istio Bookinfo
 - Host Bitwarden for internal use with Tailscale
 - Build gateway for game
@@ -16,10 +16,11 @@
 
 - [x] Add infra app to manage infrastructure resources. (DONE)
 - [x] Add secrets using AGE key
+- [x] Added the Nginx as Ingress
 
 ## Commands
 
 ```
 ### Using your generated age key and encrypt admin/password using the public key
-sops --encrypt --age age1fg2mcvwuztl4cgycxhdlfzu584uslnfznmgunqgw99znwmqhjq3quxdmw3 gitops/clusters/apse2/local/platform/monitoring/grafana/grafana-admin.yaml > gitops/clusters/apse2/local/platform/monitoring/grafana/secrets.enc.yaml
+sops --encrypt --age {{age_public_key}} gitops/clusters/apse2/local/platform/monitoring/grafana/grafana-admin.yaml > gitops/clusters/apse2/local/platform/monitoring/grafana/secrets.enc.yaml
 ```
