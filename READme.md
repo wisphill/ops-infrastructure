@@ -17,6 +17,7 @@
 - [x] Add infra app to manage infrastructure resources. (DONE)
 - [x] Add secrets using AGE key
 - [x] Added the Nginx as Ingress
+- [x] Added Prometheus & Grafana
 
 ## Commands
 
@@ -29,5 +30,5 @@ sops --encrypt --age {{age_public_key}} gitops/clusters/apse2/local/platform/mon
 
 ```bash
 # Generate OAUTH2_PROXY_COOKIE_SECRET for the Oauth2 Proxy authentication server
-openssl rand -base64 32
+openssl rand -base64 24
 ```
