@@ -3,5 +3,6 @@ kind: Kustomization
 
 resources:
   - ingress.yaml
+  - helm-app.yaml
 generators:
   - generator.yaml
