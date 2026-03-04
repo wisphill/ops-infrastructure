@@ -1,6 +1,25 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
+  name: oauth2-proxy-ingress-no-auth
+  namespace: platform
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: prometheus.opswork.io.vn
+      http:
+        paths:
+          - path: /oauth2
+            pathType: Prefix
+            backend:
+              service:
+                name: oauth2-proxy
+                port:
+                  number: 4180
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
   name: prometheus-ingress
   namespace: platform
   annotations:
@@ -20,10 +39,3 @@ spec:
                 name: monitoring-kube-prometheus-prometheus
                 port:
                   number: 9090
-          - path: /oauth2
-            pathType: Prefix
-            backend:
-              service:
-                name: oauth2-proxy
-                port:
-                  number: 4180
