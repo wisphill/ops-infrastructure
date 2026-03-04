@@ -25,7 +25,7 @@ spec:
             - --provider=github
             - --github-org=Ywisper
             - --email-domain=*
-            - --scope=read:org
+            - --scope=user:email,read:org
             - --http-address=0.0.0.0:4180
             - --reverse-proxy=true
             - --cookie-secure=true
