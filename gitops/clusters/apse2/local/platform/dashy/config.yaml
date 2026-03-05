@@ -9,6 +9,8 @@ data:
       theme: high-constrast-light
       preventWriteToDisk: true
       disableConfigurationForNonAdmin: true
+      auth:
+        enableGuestAccess: true
       hideComponents:
         hideFooter: true
 
