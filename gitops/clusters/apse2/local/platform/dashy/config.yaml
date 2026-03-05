@@ -7,7 +7,6 @@ data:
   conf.yml: |
     appConfig:
       theme: high-constrast-light
-      hideComponents:
       preventWriteToDisk: true
       disableConfigurationForNonAdmin: true
       hideComponents:
