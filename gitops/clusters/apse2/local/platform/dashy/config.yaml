@@ -5,12 +5,19 @@ metadata:
   namespace: platform
 data:
   conf.yml: |
+    appConfig:
+      theme: high-constrast-light
+
     pageInfo:
       title: Phil Homelab
 
     sections:
       - name: Monitoring
         items:
+          - title: GitHub
+            description: Source Code, Issues and Pull Requests
+            url: https://github.com/wisphill
+
           - title: Grafana
             url: https://grafana.opswork.io.vn
             icon: grafana
