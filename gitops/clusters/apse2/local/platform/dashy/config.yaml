@@ -7,11 +7,17 @@ data:
   conf.yml: |
     appConfig:
       theme: high-constrast-light
-      showGithubLink: true
-      hideFooter: true
+      hideComponents:
+      preventWriteToDisk: true
+      disableConfigurationForNonAdmin: true
+      hideComponents:
+        hideFooter: true
+
 
     pageInfo:
       title: Phil Homelab
+      description: Kubernetes • Observability • GitOps
+      footerText: Phil Homelab • Kubernetes • Observability • GitOps
 
     sections:
       - name: Monitoring
