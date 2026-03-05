@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dashy
+  namespace: platform
+spec:
+  selector:
+    app: dashy
+  ports:
+    - port: 80
+      targetPort: 80
+  type: ClusterIP
