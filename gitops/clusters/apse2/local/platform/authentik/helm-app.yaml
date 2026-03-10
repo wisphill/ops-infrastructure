@@ -15,6 +15,10 @@ spec:
         authentik:
           existingSecret:
             secretName: authentik-secret-key
+          postgresql:
+            host: authentik-postgresql
+            name: authentik
+            user: authentik
         postgresql:
           image:
             registry: docker.io
