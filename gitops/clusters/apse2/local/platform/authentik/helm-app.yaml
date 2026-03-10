@@ -20,6 +20,9 @@ spec:
             registry: docker.io
             repository: bitnami/postgresql
             tag: latest
+          auth:
+            username: authentik
+            database: authentik
           primary:
             persistence:
               enabled: true
