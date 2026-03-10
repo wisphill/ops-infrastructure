@@ -13,8 +13,7 @@ spec:
     helm:
       values: |
         authentik:
-          existingSecret: authentik-secret-key
-          existingSecretKey: AUTHENTIK_SECRET_KEY
+          secretName: authentik-secret-key
 
         postgresql:
           image:
