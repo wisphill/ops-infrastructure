@@ -15,6 +15,9 @@ spec:
         authentik:
           existingSecret:
             secretName: authentik-secret-keys
+          config:
+            AUTHENTIK_LISTEN__TRUSTED_PROXY_CIDRS: "0.0.0.0/0"
+            AUTHENTIK_FORCE_HTTPS: "true"
         postgresql:
           image:
             registry: docker.io
