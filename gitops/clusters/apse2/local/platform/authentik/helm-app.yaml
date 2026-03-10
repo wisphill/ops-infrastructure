@@ -24,6 +24,8 @@ spec:
             username: authentik
             database: authentik
           primary:
+            podSecurityContext:
+              fsGroup: 1001
             persistence:
               enabled: true
               size: 4Gi
