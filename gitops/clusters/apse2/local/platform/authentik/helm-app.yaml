@@ -19,6 +19,7 @@ spec:
             host: authentik-postgresql
             name: authentik
             user: authentik
+            password: authentik
         postgresql:
           image:
             registry: docker.io
@@ -27,6 +28,7 @@ spec:
           auth:
             username: authentik
             database: authentik
+            password: authentik
           primary:
             podSecurityContext:
               fsGroup: 1001
