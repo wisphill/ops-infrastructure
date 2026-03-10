@@ -32,3 +32,22 @@ sops --encrypt --age {{age_public_key}} gitops/clusters/apse2/local/platform/mon
 # Generate OAUTH2_PROXY_COOKIE_SECRET for the Oauth2 Proxy authentication server
 openssl rand -base64 24
 ```
+
+### Useful commands
+
+#### Generate cookie secrets
+
+```bash
+### Test the postgreSQL
+kubectl run psql-test \
+  -it --rm \
+  --image=postgres:17 \
+  -n authentik \
+  -- bash
+
+kubectl run curl \
+  --rm -it \
+  --image=curlimages/curl \
+  -n authentik -- sh
+
+```

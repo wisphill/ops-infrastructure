@@ -36,6 +36,10 @@ spec:
           ingress:
             enabled: true
             ingressClassName: nginx
+            # required for the backend protocol
+            annotations:
+              nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+              nginx.ingress.kubernetes.io/proxy-buffer-size: "16k"
             hosts:
               - authentik.opswork.io.vn
 
