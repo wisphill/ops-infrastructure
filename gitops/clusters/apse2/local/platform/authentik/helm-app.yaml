@@ -13,8 +13,8 @@ spec:
     helm:
       values: |
         authentik:
-          secretName: authentik-secret-key
-
+          existingSecret:
+            secretName: authentik-secret-key
         postgresql:
           image:
             registry: docker.io
