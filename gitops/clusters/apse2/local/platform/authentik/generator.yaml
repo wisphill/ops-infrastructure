@@ -4,5 +4,6 @@ metadata:
   name: secret
 files:
   - secrets.enc.yaml
+  - postgresql-secrets.enc.yaml
 options:
   prune: true

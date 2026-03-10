@@ -14,12 +14,7 @@ spec:
       values: |
         authentik:
           existingSecret:
-            secretName: authentik-secret-key
-          postgresql:
-            host: authentik-postgresql
-            name: authentik
-            user: authentik
-            password: authentik
+            secretName: authentik-secret-keys
         postgresql:
           image:
             registry: docker.io
@@ -28,7 +23,7 @@ spec:
           auth:
             username: authentik
             database: authentik
-            password: authentik
+            existingSecret: postgresql-secret-keys
           primary:
             podSecurityContext:
               fsGroup: 1001
