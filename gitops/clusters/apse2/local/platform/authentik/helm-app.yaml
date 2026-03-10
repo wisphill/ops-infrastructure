@@ -18,8 +18,8 @@ spec:
         postgresql:
           image:
             registry: docker.io
-            repository: bitnamilegacy/postgresql
-            tag: 15.8.0-debian-12-r18
+            repository: bitnami/postgresql
+            tag: latest
           primary:
             persistence:
               enabled: true
