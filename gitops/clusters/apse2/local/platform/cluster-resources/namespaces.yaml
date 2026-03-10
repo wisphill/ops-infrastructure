@@ -25,3 +25,10 @@ metadata:
   name: platform
   labels:
     app.kubernetes.io/managed-by: argocd
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: argo-workflows
+  labels:
+    app.kubernetes.io/managed-by: argocd
