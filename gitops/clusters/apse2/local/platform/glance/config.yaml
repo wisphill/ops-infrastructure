@@ -18,7 +18,8 @@ data:
                 hour-format: 24h
           - size: full
             widgets:
-              - type: services
+              - type: monitor
+                cache: 1m
                 title: Services
                 services:
                   - name: Home Assistant
