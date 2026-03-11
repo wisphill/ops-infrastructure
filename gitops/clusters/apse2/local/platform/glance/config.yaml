@@ -10,24 +10,15 @@ data:
     pages:
       - name: Home
         columns:
+
           - size: small
             widgets:
               - type: search
                 search-engine: duckduckgo
               - type: clock
                 hour-format: 24h
-              - type: bookmarks
-                groups:
-                  - title: Infrastructure
-                    links:
-                      - title: ArgoCD
-                        url: https://argocd.example.com
-                      - title: Grafana
-                        url: https://grafana.example.com
-                      - title: Prometheus
-                        url: https://prometheus.example.com
 
-          - size: small
+          - size: full
             widgets:
               - type: monitor
                 title: Services
@@ -54,8 +45,6 @@ data:
                     url: https://teslamate.example.com
                     icon: si:tesla
 
-          - size: small
-            widgets:
               - type: monitor
                 sites:
                   - title: Portainer
@@ -67,6 +56,19 @@ data:
                   - title: What's Up Docker
                     url: https://wud.example.com
                     icon: si:docker
+
+          - size: small
+            widgets:
+              - type: bookmarks
+                groups:
+                  - title: Infrastructure
+                    links:
+                      - title: ArgoCD
+                        url: https://argocd.example.com
+                      - title: Grafana
+                        url: https://grafana.example.com
+                      - title: Prometheus
+                        url: https://prometheus.example.com
   custom.css: |
     @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&display=swap');
 
