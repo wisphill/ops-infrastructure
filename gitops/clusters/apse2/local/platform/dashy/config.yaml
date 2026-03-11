@@ -8,6 +8,7 @@ data:
     appConfig:
       theme: high-constrast-light
       preventWriteToDisk: true
+      statusCheck: false
       disableConfigurationForNonAdmin: true
       auth:
         enableGuestAccess: true
@@ -21,13 +22,15 @@ data:
       footerText: Phil Homelab • Kubernetes • Observability • GitOps
 
     sections:
-      - name: Monitoring
+      - name: Resources
         items:
           - title: GitHub
             description: Source Code, Issues and Pull Requests
             icon: https://cdn.simpleicons.org/github
             url: https://github.com/wisphill
 
+      - name: Monitoring
+        items:
           - title: Grafana
             url: https://grafana.opswork.io.vn
             icon: https://cdn.simpleicons.org/grafana
@@ -41,3 +44,14 @@ data:
           - title: ArgoCD
             url: https://argocd.yuu.dev
             icon: https://cdn.simpleicons.org/argo
+          - title: Argo Workflows
+            url: https://argo-workflows.opswork.io.vn
+            description: Running pipelines, logging in by Authentik
+            icon: https://cdn.simpleicons.org/argo
+
+      - name: OIDC & Authentication
+        items:
+          - title: Authentik
+            url: https://authentik.opswork.io.vn
+            description: Centralized SSO for authentication
+            icon: https://cdn.simpleicons.org/authentik
