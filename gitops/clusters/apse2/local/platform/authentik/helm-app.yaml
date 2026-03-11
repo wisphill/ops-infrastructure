@@ -48,6 +48,10 @@ spec:
               nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
               nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
               nginx.ingress.kubernetes.io/upstream-vhost: "authentik.opswork.io.vn"
+              nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+              nginx.ingress.kubernetes.io/proxy-buffer-size: "16k"
+              nginx.ingress.kubernetes.io/configuration-snippet: |
+                proxy_set_header X-Forwarded-Proto https;
             hosts:
               - authentik.opswork.io.vn
 
