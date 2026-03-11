@@ -20,6 +20,11 @@ spec:
             - sso
           sso:
             enabled: true
+            scopes:
+              - openid
+              - profile
+              - email
+              - groups
             issuer: https://authentik.opswork.io.vn/application/o/argoworkflows/
             clientId:
               name: argo-workflows-secret-keys
