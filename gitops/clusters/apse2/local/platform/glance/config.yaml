@@ -16,7 +16,55 @@ data:
                 search-engine: duckduckgo
               - type: clock
                 hour-format: 24h
+          - size: full
+            widgets:
+              - type: services
+                title: Services
+                services:
+                  - name: Home Assistant
+                    icon: si:homeassistant
+                    url: https://homeassistant.example.com
+                    check-url: https://homeassistant.example.com
 
+                  - name: Immich
+                    icon: si:immich
+                    url: https://immich.example.com
+                    check-url: https://immich.example.com
+
+                  - name: Zigbee2MQTT
+                    icon: si:zigbee
+                    url: https://zigbee.example.com
+                    check-url: https://zigbee.example.com
+
+                  - name: Nginx
+                    icon: si:nginx
+                    url: https://nginx.example.com
+                    check-url: https://nginx.example.com
+
+                  - name: Grafana
+                    icon: si:grafana
+                    url: https://grafana.example.com
+                    check-url: https://grafana.example.com
+
+                  - name: TeslaMate
+                    icon: si:tesla
+                    url: https://teslamate.example.com
+                    check-url: https://teslamate.example.com
+
+                  - name: Portainer
+                    icon: si:portainer
+                    url: https://portainer.example.com
+                    check-url: https://portainer.example.com
+
+                  - name: InfluxDB
+                    icon: si:influxdb
+                    url: https://influx.example.com
+                    check-url: https://influx.example.com
+
+                  - name: What's Up Docker
+                    icon: si:docker
+                    url: https://wud.example.com
+                    check-url: https://wud.example.com
           - size: full
             widgets:
               - type: bookmarks
