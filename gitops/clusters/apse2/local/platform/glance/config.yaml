@@ -26,13 +26,15 @@ data:
                 sites:
                   - title: Portfolio
                     url: https://phil.opswork.io.vn
-                    icon: ti:home
+                    icon: mdi:home
+                    icon-color: "#E04E39"
                   - title: Authentik
                     url: https://authentik.opswork.io.vn
                     icon: si:authentik
+                    icon-color: "#FD4B2D"
                   - title: Agro Workflows
                     url: https://argo-workflows.opswork.io.vn
-                    icon: si:argo
+                    icon: sh:argo-cd
                   - title: Agro CD & Kubernetes
                     url: https://argo-cd.opswork.io.vn
                     icon: si:kubernetes
