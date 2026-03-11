@@ -25,6 +25,8 @@ spec:
               - profile
               - email
               - groups
+            rbac:
+              enabled: true
             issuer: https://authentik.opswork.io.vn/application/o/argoworkflows/
             clientId:
               name: argo-workflows-secret-keys
