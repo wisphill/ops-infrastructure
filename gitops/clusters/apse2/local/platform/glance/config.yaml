@@ -8,66 +8,65 @@ data:
     theme:
       custom-css: /app/config/custom.css
     pages:
-      pages:
-        - name: Home
-          columns:
-            - size: small
-              widgets:
-                - type: search
-                  search-engine: duckduckgo
-                - type: clock
-                  hour-format: 24h
-                - type: bookmarks
-                  groups:
-                    - title: Infrastructure
-                      links:
-                        - title: ArgoCD
-                          url: https://argocd.example.com
-                        - title: Grafana
-                          url: https://grafana.example.com
-                        - title: Prometheus
-                          url: https://prometheus.example.com
+      - name: Home
+        columns:
+          - size: small
+            widgets:
+              - type: search
+                search-engine: duckduckgo
+              - type: clock
+                hour-format: 24h
+              - type: bookmarks
+                groups:
+                  - title: Infrastructure
+                    links:
+                      - title: ArgoCD
+                        url: https://argocd.example.com
+                      - title: Grafana
+                        url: https://grafana.example.com
+                      - title: Prometheus
+                        url: https://prometheus.example.com
 
-            - size: small
-              widgets:
-                - type: monitor
-                  title: Services
-                  sites:
-                    - title: Home Assistant
-                      url: https://homeassistant.example.com
-                      icon: si:homeassistant
-                    - title: Immich
-                      url: https://immich.example.com
-                      icon: si:immich
-                    - title: Zigbee2MQTT
-                      url: https://zigbee.example.com
-                      icon: si:zigbee
+          - size: small
+            widgets:
+              - type: monitor
+                title: Services
+                sites:
+                  - title: Home Assistant
+                    url: https://homeassistant.example.com
+                    icon: si:homeassistant
+                  - title: Immich
+                    url: https://immich.example.com
+                    icon: si:immich
+                  - title: Zigbee2MQTT
+                    url: https://zigbee.example.com
+                    icon: si:zigbee
 
-                - type: monitor
-                  sites:
-                    - title: Nginx
-                      url: https://nginx.example.com
-                      icon: si:nginx
-                    - title: Grafana
-                      url: https://grafana.example.com
-                      icon: si:grafana
-                    - title: TeslaMate
-                      url: https://teslamate.example.com
-                      icon: si:tesla
+              - type: monitor
+                sites:
+                  - title: Nginx
+                    url: https://nginx.example.com
+                    icon: si:nginx
+                  - title: Grafana
+                    url: https://grafana.example.com
+                    icon: si:grafana
+                  - title: TeslaMate
+                    url: https://teslamate.example.com
+                    icon: si:tesla
 
-            - size: small
-              widgets:
-                - type: monitor
-                  sites:
-                    - title: Portainer
-                      url: https://portainer.example.com
-                      icon: si:portainer
-                    - title: InfluxDB
-                      url: https://influx.example.com
-                      icon: si:influxdb
-                    - title: What's Up Docker
-                      url: https://wud.example.com
-                      icon: si:docker
+          - size: small
+            widgets:
+              - type: monitor
+                sites:
+                  - title: Portainer
+                    url: https://portainer.example.com
+                    icon: si:portainer
+                  - title: InfluxDB
+                    url: https://influx.example.com
+                    icon: si:influxdb
+                  - title: What's Up Docker
+                    url: https://wud.example.com
+                    icon: si:docker
   custom.css: |
     @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&display=swap');
 
