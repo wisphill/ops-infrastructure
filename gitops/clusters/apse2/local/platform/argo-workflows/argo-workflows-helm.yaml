@@ -16,6 +16,17 @@ spec:
         server:
           service:
             type: ClusterIP
+          authModes:
+            - sso
+          sso:
+            issuer: https://authentik.opswork.io.vn/application/o/argoworkflows/
+            clientId:
+              name: argo-workflows-sso
+              key: SSO_CLIENT_ID
+            clientSecret:
+              name: argo-workflows-sso
+              key: SSO_CLIENT_SECRET
+            redirectUrl: https://argo-workflows.opswork.io.vn/oauth2/callback
           ingress:
             enabled: true
             ingressClassName: nginx
