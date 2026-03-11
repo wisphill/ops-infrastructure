@@ -5,6 +5,8 @@ metadata:
   namespace: glance
 data:
   glance.yml: |
+    theme:
+      custom-css: /app/config/custom.css
     pages:
       - name: Home
         columns:
@@ -27,3 +29,9 @@ data:
                         url: https://grafana.example.com
                       - title: Prometheus
                         url: https://prometheus.example.com
+  custom.css: |
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&display=swap');
+
+    body {
+      font-family: 'IBM Plex Mono', monospace !important;
+    }
