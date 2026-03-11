@@ -11,6 +11,7 @@ spec:
     chart: ingress-nginx
     targetRevision: 4.10.1
 
+    # use-forwarded-headers
     helm:
       values: |
         controller:
@@ -23,6 +24,8 @@ spec:
             name: nginx
             enabled: true
             default: true
+          config:
+            use-forwarded-headers: "true"
   destination:
     server: https://kubernetes.default.svc
     namespace: ingress

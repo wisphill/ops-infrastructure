@@ -41,7 +41,6 @@ spec:
             ingressClassName: nginx
             # required for the backend protocol
             annotations:
-              # 1. Ép HTTPS và truyền X-Forwarded-Proto
               nginx.ingress.kubernetes.io/ssl-redirect: "true"
               nginx.ingress.kubernetes.io/use-forwarded-headers: "true"
               nginx.ingress.kubernetes.io/proxy-body-size: "0"
@@ -50,8 +49,6 @@ spec:
               nginx.ingress.kubernetes.io/upstream-vhost: "authentik.opswork.io.vn"
               nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
               nginx.ingress.kubernetes.io/proxy-buffer-size: "16k"
-              nginx.ingress.kubernetes.io/configuration-snippet: |
-                proxy_set_header X-Forwarded-Proto https;
             hosts:
               - authentik.opswork.io.vn
 
