@@ -37,11 +37,11 @@ data:
                     url: https://nginx.example.com
                     icon: si:nginx
                   - title: Grafana
-                    url: https://grafana.example.com
+                    url: https://grafana.opswork.io.vn
                     icon: si:grafana
-                  - title: TeslaMate
-                    url: https://teslamate.example.com
-                    icon: si:tesla
+                  - title: Prometheus
+                    url: https://prometheus.opswork.io.vn
+                    icon: si:prometheus
                   - title: Portainer
                     url: https://portainer.example.com
                     icon: si:portainer
