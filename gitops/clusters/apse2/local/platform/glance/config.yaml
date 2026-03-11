@@ -22,6 +22,7 @@ data:
             widgets:
               - type: monitor
                 title: Services
+                cache: 1m
                 sites:
                   - title: Home Assistant
                     url: https://homeassistant.example.com
@@ -32,9 +33,6 @@ data:
                   - title: Zigbee2MQTT
                     url: https://zigbee.example.com
                     icon: si:zigbee
-
-              - type: monitor
-                sites:
                   - title: Nginx
                     url: https://nginx.example.com
                     icon: si:nginx
