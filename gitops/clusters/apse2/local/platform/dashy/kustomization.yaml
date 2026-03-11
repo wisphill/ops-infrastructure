@@ -3,7 +3,7 @@ kind: Kustomization
 
 # disabled Dashy due to ugly UI
 resources:
-  # - config.yaml
-  # - deployment.yaml
-  # - service.yaml
-  # - ingress.yaml
+  - config.yaml
+  - deployment.yaml
+  - service.yaml
+  - ingress.yaml
