@@ -22,15 +22,15 @@ data:
                 cache: 1m
                 title: Services
                 services:
-                  - name: Home Assistant
+                  - name: Porfolio
                     icon: si:homeassistant
-                    url: https://homeassistant.example.com
-                    check-url: https://homeassistant.example.com
+                    url: https://phil.opswork.io.vn
+                    check-url: https://phil.opswork.io.vn
 
-                  - name: Immich
+                  - name: Grafana
                     icon: si:immich
-                    url: https://immich.example.com
-                    check-url: https://immich.example.com
+                    url: https://grafana.opswork.io.vn
+                    check-url: https://grafana.opswork.io.vn
 
                   - name: Zigbee2MQTT
                     icon: si:zigbee
