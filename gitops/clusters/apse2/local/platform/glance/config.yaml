@@ -24,18 +24,15 @@ data:
                 title: Services
                 cache: 1m
                 sites:
-                  - title: Home Assistant
+                  - title: Portfolio
                     url: https://homeassistant.example.com
                     icon: si:homeassistant
-                  - title: Immich
-                    url: https://immich.example.com
-                    icon: si:immich
-                  - title: Zigbee2MQTT
-                    url: https://zigbee.example.com
-                    icon: si:zigbee
-                  - title: Nginx
-                    url: https://nginx.example.com
-                    icon: si:nginx
+                  - title: Authentik
+                    url: https://authentik.opswork.io.vn
+                    icon: si:authentik
+                  - title: Agro Workflows
+                    url: https://argo-workflows.opswork.io.vn
+                    icon: si:argo
                   - title: Grafana
                     url: https://grafana.opswork.io.vn
                     icon: si:grafana
