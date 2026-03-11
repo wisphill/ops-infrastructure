@@ -19,6 +19,11 @@
 - [x] Added the Nginx as Ingress
 - [x] Added Prometheus & Grafana
 
+### Authentik
+
+- First time logging in, let's use /if/flow/initial-setup/ for setting up the admin
+- Authentik uses the PostgreSQL for storage, consider to back it up usually
+
 ## Commands
 
 ```

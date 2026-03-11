@@ -17,7 +17,6 @@ spec:
             secretName: authentik-secret-keys
           config:
             AUTHENTIK_LISTEN__TRUSTED_PROXY_CIDRS: "0.0.0.0/0"
-            AUTHENTIK_FORCE_HTTPS: "true"
         postgresql:
           image:
             registry: docker.io
@@ -42,13 +41,12 @@ spec:
             # required for the backend protocol
             annotations:
               nginx.ingress.kubernetes.io/ssl-redirect: "true"
-              nginx.ingress.kubernetes.io/use-forwarded-headers: "true"
               nginx.ingress.kubernetes.io/proxy-body-size: "0"
               nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
               nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
               nginx.ingress.kubernetes.io/upstream-vhost: "authentik.opswork.io.vn"
               nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-              nginx.ingress.kubernetes.io/proxy-buffer-size: "16k"
+              nginx.ingress.kubernetes.io/proxy-buffer-size: "32k"
             hosts:
               - authentik.opswork.io.vn
 
