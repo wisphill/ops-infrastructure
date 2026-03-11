@@ -37,13 +37,13 @@ data:
                     icon: sh:argo-cd
                   - title: Agro CD & Kubernetes
                     url: https://argo-cd.opswork.io.vn
-                    icon: si:kubernetes
+                    icon: sh:kubernetes
                   - title: Grafana
                     url: https://grafana.opswork.io.vn
-                    icon: si:grafana
+                    icon: sh:grafana
                   - title: Prometheus
                     url: https://prometheus.opswork.io.vn
-                    icon: si:prometheus
+                    icon: sh:prometheus
                   - title: Portainer
                     url: https://portainer.example.com
                     icon: si:portainer
