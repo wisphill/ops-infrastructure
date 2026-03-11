@@ -3,3 +3,4 @@ kind: Kustomization
 
 # disabled Dashy due to ugly UI
 resources:
+  - config.yaml
