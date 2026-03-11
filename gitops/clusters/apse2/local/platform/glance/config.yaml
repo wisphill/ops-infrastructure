@@ -44,9 +44,6 @@ data:
                   - title: TeslaMate
                     url: https://teslamate.example.com
                     icon: si:tesla
-
-              - type: monitor
-                sites:
                   - title: Portainer
                     url: https://portainer.example.com
                     icon: si:portainer
