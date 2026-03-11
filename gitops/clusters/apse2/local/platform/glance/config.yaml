@@ -16,56 +16,49 @@ data:
                 search-engine: duckduckgo
               - type: clock
                 hour-format: 24h
-          - size: full
+          - size: small
             widgets:
               - type: monitor
-                cache: 1m
                 title: Services
                 sites:
-                  - name: Porfolio
+                  - title: Home Assistant
+                    url: https://homeassistant.example.com
                     icon: si:homeassistant
-                    url: https://phil.opswork.io.vn
-                    check-url: https://phil.opswork.io.vn
-
-                  - name: Grafana
+                  - title: Immich
+                    url: https://immich.example.com
                     icon: si:immich
-                    url: https://grafana.opswork.io.vn
-                    check-url: https://grafana.opswork.io.vn
-
-                  - name: Zigbee2MQTT
-                    icon: si:zigbee
+                  - title: Zigbee2MQTT
                     url: https://zigbee.example.com
-                    check-url: https://zigbee.example.com
+                    icon: si:zigbee
 
-                  - name: Nginx
-                    icon: si:nginx
+          - size: small
+            widgets:
+              - type: monitor
+                sites:
+                  - title: Nginx
                     url: https://nginx.example.com
-                    check-url: https://nginx.example.com
-
-                  - name: Grafana
-                    icon: si:grafana
+                    icon: si:nginx
+                  - title: Grafana
                     url: https://grafana.example.com
-                    check-url: https://grafana.example.com
-
-                  - name: TeslaMate
-                    icon: si:tesla
+                    icon: si:grafana
+                  - title: TeslaMate
                     url: https://teslamate.example.com
-                    check-url: https://teslamate.example.com
+                    icon: si:tesla
 
-                  - name: Portainer
-                    icon: si:portainer
+          - size: small
+            widgets:
+              - type: monitor
+                sites:
+                  - title: Portainer
                     url: https://portainer.example.com
-                    check-url: https://portainer.example.com
-
-                  - name: InfluxDB
-                    icon: si:influxdb
+                    icon: si:portainer
+                  - title: InfluxDB
                     url: https://influx.example.com
-                    check-url: https://influx.example.com
-
-                  - name: What's Up Docker
-                    icon: si:docker
+                    icon: si:influxdb
+                  - title: What's Up Docker
                     url: https://wud.example.com
-                    check-url: https://wud.example.com
+                    icon: si:docker
+
           - size: full
             widgets:
               - type: bookmarks
