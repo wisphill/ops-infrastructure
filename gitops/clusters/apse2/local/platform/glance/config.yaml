@@ -21,7 +21,7 @@ data:
               - type: monitor
                 cache: 1m
                 title: Services
-                services:
+                sites:
                   - name: Porfolio
                     icon: si:homeassistant
                     url: https://phil.opswork.io.vn
