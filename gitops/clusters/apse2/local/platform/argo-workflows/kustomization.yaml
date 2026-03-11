@@ -3,5 +3,6 @@ kind: Kustomization
 
 resources:
   - argo-workflows-helm.yaml
+  - service-account.yaml
 generators:
   - secrets-generator.yaml
