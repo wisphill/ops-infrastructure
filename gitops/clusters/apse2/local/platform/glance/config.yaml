@@ -36,7 +36,7 @@ data:
                   User-Agent: Glance-Dashboard
                 template: |
                   <div class="github-repos">
-                    <ul class="list list-gap-14 collapsible-container" data-collapse-after="5">
+                    <ul class="list list-gap-14 collapsible-container" data-collapse-after="3">
                       {{ range .JSON.Array "" }}
                         <li>
                           <a class="size-h3 color-primary" href="{{ .String "html_url" }}">{{ .String "full_name" }}</a>
@@ -69,8 +69,7 @@ data:
                     icon: mdi:post
                   - title: Authentik
                     url: https://authentik.opswork.io.vn
-                    icon: si:authentik
-                    icon-color: "#FD4B2D"
+                    icon: sh:authentik
                   - title: Agro Workflows
                     url: https://argo-workflows.opswork.io.vn
                     icon: sh:argo-cd
@@ -89,7 +88,7 @@ data:
               - type: rss
                 title: DevOps News
                 limit: 10
-                collapse-after: 5
+                collapse-after: 3
                 cache: 30m
                 feeds:
                   - url: https://devops.com/feed/
