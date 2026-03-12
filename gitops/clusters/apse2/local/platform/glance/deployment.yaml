@@ -16,6 +16,12 @@ spec:
       containers:
         - name: glance
           image: glanceapp/glance:latest
+          env:
+            - name: GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: glance-secrets
+                  key: GITHUB_TOKEN
           ports:
             - containerPort: 8080
           volumeMounts:
