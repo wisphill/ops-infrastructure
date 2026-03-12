@@ -6,7 +6,7 @@ metadata:
 data:
   glance.yml: |
     theme:
-      custom-css-file: custom.css
+      custom-css-file: /assets/custom.css
     pages:
       - name: Home
         columns:

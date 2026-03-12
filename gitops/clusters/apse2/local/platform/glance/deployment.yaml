@@ -23,7 +23,7 @@ spec:
               mountPath: /app/config/glance.yml
               subPath: glance.yml
             - name: config
-              mountPath: /app/config/custom.css
+              mountPath: /app/assets/custom.css
               subPath: custom.css
       volumes:
         - name: config
