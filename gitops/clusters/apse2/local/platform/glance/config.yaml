@@ -5,6 +5,8 @@ metadata:
   namespace: glance
 data:
   glance.yml: |
+    server:
+      assets-path: /app/assets
     theme:
       custom-css-file: /assets/custom.css
     pages:
