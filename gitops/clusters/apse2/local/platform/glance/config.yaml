@@ -7,6 +7,12 @@ data:
   glance.yml: |
     server:
       assets-path: /app/assets
+    branding:
+      custom-footer: |
+        <p>Powered by <a href="https://github.com/wisphill">Wisphill</a></p>
+      app-name: "My Porfolio - Kubernetes - Gitops"
+      app-icon-url: "/assets/app-icon.png"
+      app-background-color: "#151519"
     theme:
       custom-css-file: /assets/custom.css
     pages:
@@ -58,7 +64,9 @@ data:
                   - title: Portfolio
                     url: https://phil.opswork.io.vn
                     icon: mdi:home
-                    icon-color: "#E04E39"
+                  - title: My blog
+                    url: https://wisphill.github.io
+                    icon: mdi:post
                   - title: Authentik
                     url: https://authentik.opswork.io.vn
                     icon: si:authentik
@@ -75,28 +83,22 @@ data:
                   - title: Prometheus
                     url: https://prometheus.opswork.io.vn
                     icon: sh:prometheus
-                  - title: Portainer
-                    url: https://portainer.example.com
-                    icon: si:portainer
-                  - title: InfluxDB
-                    url: https://influx.example.com
-                    icon: si:influxdb
-                  - title: What's Up Docker
-                    url: https://wud.example.com
-                    icon: si:docker
 
           - size: small
             widgets:
-              - type: bookmarks
-                groups:
-                  - title: Infrastructure
-                    links:
-                      - title: ArgoCD
-                        url: https://argocd.example.com
-                      - title: Grafana
-                        url: https://grafana.example.com
-                      - title: Prometheus
-                        url: https://prometheus.example.com
+              - type: rss
+                title: DevOps News
+                limit: 10
+                collapse-after: 5
+                cache: 30m
+                feeds:
+                  - url: https://devops.com/feed/
+                    title: DevOps.com
+                  - url: https://kubernetes.io/feed.xml
+                    title: Kubernetes Blog
+                  - url: https://aws.amazon.com/blogs/devops/feed/
+                    title: AWS DevOps Blog
+
   custom.css: |
     @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&display=swap');
 
