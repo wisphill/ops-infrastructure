@@ -14,6 +14,25 @@ spec:
     helm:
       releaseName: argocd
       values: |
+        server:
+          env:
+            - name: AUTHENTIK_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: argocd-custom-secrets
+                  key: AUTHENTIK_CLIENT_ID
+            - name: AUTHENTIK_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: argocd-custom-secrets
+                  key: AUTHENTIK_CLIENT_SECRET
+        cm:
+          oidc.config: |
+            name: AuthentikSSO
+            issuer: https://authentik.opswork.io.vn/application/o/argo-cd/
+            clientID: $AUTHENTIK_CLIENT_ID
+            clientSecret: $AUTHENTIK_CLIENT_SECRET
+
         repoServer:
           image:
             repository: yuulya/argocd-repo-server
