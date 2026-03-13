@@ -1,0 +1,24 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mcp-server-playwright
+  namespace: argocd
+
+spec:
+  project: default
+
+  source:
+    repoURL: oci://docker.io/acuvity/mcp-server-playwright
+    chart: mcp-server-playwright
+    targetRevision: 1.0.0
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: mcp-playwright
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
