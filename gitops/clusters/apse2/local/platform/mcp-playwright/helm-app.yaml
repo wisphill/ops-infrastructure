@@ -8,7 +8,7 @@ spec:
   project: default
 
   source:
-    repoURL: oci://docker.io/acuvity
+    repoURL: oci://docker.io/acuvity/mcp-server-playwright
     chart: mcp-server-playwright
     targetRevision: 1.0.0
 
