@@ -26,6 +26,9 @@ spec:
             hosts:
               - argocd.opswork.io.vn
 
+        dex:
+          enabled: false
+
         configs:
           rbac:
             policy.default: role:readonly
@@ -33,6 +36,8 @@ spec:
               g, authentik Admins, role:admin
           cm:
             url: https://argocd.opswork.io.vn
+            # no password login, can be re-enabled when Authentik is not working
+            admin.enabled: "false"
             oidc.config: |
               name: Authentik
               issuer: https://authentik.opswork.io.vn/application/o/argo-cd/
