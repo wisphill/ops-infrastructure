@@ -6,3 +6,6 @@ resources:
   - service-account.yaml
   - helm-app.yaml
   - cmp.yaml
+
+generators:
+  - secrets.enc.yaml
