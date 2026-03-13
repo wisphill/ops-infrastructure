@@ -74,7 +74,7 @@ data:
                     url: https://argo-workflows.opswork.io.vn
                     icon: sh:argo-cd
                   - title: Agro CD & Kubernetes
-                    url: https://argo-cd.opswork.io.vn
+                    url: https://argocd.opswork.io.vn
                     icon: sh:kubernetes
                   - title: Grafana
                     url: https://grafana.opswork.io.vn
