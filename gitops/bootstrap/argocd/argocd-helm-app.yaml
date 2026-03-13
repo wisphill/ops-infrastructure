@@ -36,8 +36,8 @@ spec:
             oidc.config: |
               name: Authentik
               issuer: https://authentik.opswork.io.vn/application/o/argo-cd/
-              clientID: $argocd-custom-secrets:AUTHENTIK_CLIENT_ID
-              clientSecret: $argocd-custom-secrets:AUTHENTIK_CLIENT_SECRET
+              clientID: $argocd-custom-secrets-2:AUTHENTIK_CLIENT_ID
+              clientSecret: $argocd-custom-secrets-2:AUTHENTIK_CLIENT_SECRET
               # Add requested scopes if Authentik requires them
               requestedScopes: ["openid", "profile", "email", "groups"]
 
