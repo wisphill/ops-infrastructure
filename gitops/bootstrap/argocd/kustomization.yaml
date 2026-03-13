@@ -4,6 +4,8 @@ kind: Kustomization
 resources:
   - cluster-role-binding.yaml
   - service-account.yaml
+  - argocd-helm-app.yaml
+  - cmp.yaml
 
 generators:
   - generator.yaml
