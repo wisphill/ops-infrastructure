@@ -14,18 +14,18 @@ spec:
     helm:
       releaseName: argocd
       values: |
-        # server:
-        #   env:
-        #     - name: AUTHENTIK_CLIENT_ID
-        #       valueFrom:
-        #         secretKeyRef:
-        #           name: argocd-custom-secrets
-        #           key: AUTHENTIK_CLIENT_ID
-        #     - name: AUTHENTIK_CLIENT_SECRET
-        #       valueFrom:
-        #         secretKeyRef:
-        #           name: argocd-custom-secrets
-        #           key: AUTHENTIK_CLIENT_SECRET
+        server:
+          env:
+            - name: AUTHENTIK_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: argocd-custom-secrets
+                  key: AUTHENTIK_CLIENT_ID
+            - name: AUTHENTIK_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: argocd-custom-secrets
+                  key: AUTHENTIK_CLIENT_SECRET
         # cm:
         #   oidc.config: |
         #     name: AuthentikSSO
