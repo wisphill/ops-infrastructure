@@ -4,4 +4,3 @@ kind: Kustomization
 resources:
   - cluster-role-binding.yaml
   - service-account.yaml
-  - cmp.yaml
