@@ -36,14 +36,16 @@ spec:
                 secretKeyRef:
                   name: argocd-custom-secrets
                   key: AUTHENTIK_CLIENT_SECRET
-        cm:
-          oidc.config: |
-            name: AuthentikSSO
-            issuer: https://authentik.opswork.io.vn/application/o/argo-cd/
-            clientID: $AUTHENTIK_CLIENT_ID
-            clientSecret: $AUTHENTIK_CLIENT_SECRET
-            # Add requested scopes if Authentik requires them
-            requestedScopes: ["openid", "profile", "email", "groups"]
+
+        configs:
+          cm:
+            oidc.config: |
+              name: AuthentikSSO
+              issuer: https://authentik.opswork.io.vn/application/o/argo-cd/
+              clientID: $AUTHENTIK_CLIENT_ID
+              clientSecret: $AUTHENTIK_CLIENT_SECRET
+              # Add requested scopes if Authentik requires them
+              requestedScopes: ["openid", "profile", "email", "groups"]
 
         repoServer:
           image:
