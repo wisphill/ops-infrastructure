@@ -9,6 +9,8 @@ spec:
     repoURL: https://github.com/wisphill/ops-infrastructure
     targetRevision: main
     path: gitops/bootstrap/argocd
+    plugin:
+      name: ksops
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
