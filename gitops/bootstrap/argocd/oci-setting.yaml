@@ -7,6 +7,6 @@ metadata:
     argocd.argoproj.io/secret-type: repository
 stringData:
   name: acuvity-mcp
-  url: registry-1.docker.io/acuvity
+  url: docker.io/acuvity
   type: helm
   enableOCI: "true"
