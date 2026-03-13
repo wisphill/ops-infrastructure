@@ -7,5 +7,5 @@ resources:
   - helm-app.yaml
   - cmp.yaml
 
-generators:
-  - secrets.enc.yaml
+# generators:
+#   - secrets.enc.yaml
