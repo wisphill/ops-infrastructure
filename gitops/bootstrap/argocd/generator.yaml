@@ -6,3 +6,10 @@ files:
   - secrets.enc.yaml
 options:
   prune: true
+---
+apiVersion: viaduct.ai/v1
+kind: ksops
+metadata:
+  name: argocd-values
+files:
+  - values.enc.yaml

@@ -13,6 +13,8 @@ spec:
 
     helm:
       releaseName: argocd
+      valueFiles:
+        - values.enc.yaml
       values: |
         server:
           # https is not needed because argocd is behind the reserve proxy

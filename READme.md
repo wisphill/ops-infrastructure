@@ -29,6 +29,8 @@
 ```
 ### Using your generated age key and encrypt admin/password using the public key
 sops --encrypt --age {{age_public_key}} gitops/clusters/apse2/local/platform/monitoring/grafana/grafana-admin.yaml > gitops/clusters/apse2/local/platform/monitoring/grafana/secrets.enc.yaml
+
+sops --encrypt --age age1fg2mcvwuztl4cgycxhdlfzu584uslnfznmgunqgw99znwmqhjq3quxdmw3 gitops/bootstrap/argocd/values.yaml > gitops/bootstrap/argocd/values.enc.yaml
 ```
 
 #### Generate cookie secrets
