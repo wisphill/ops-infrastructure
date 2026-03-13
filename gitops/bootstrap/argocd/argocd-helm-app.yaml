@@ -51,7 +51,9 @@ spec:
             repository: yuulya/argocd-repo-server
             tag: v2.11.8-ksops
             pullPolicy: IfNotPresent
-
+          env:
+            - name: HELM_EXPERIMENTAL_OCI
+              value: "1"
           extraContainers:
             - name: argocd-cmp-server
               image: yuulya/argocd-repo-server:v2.11.8-ksops
