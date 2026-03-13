@@ -4,3 +4,6 @@ kind: Kustomization
 resources:
   - cluster-role-binding.yaml
   - service-account.yaml
+
+generators:
+  - secrets.enc.yaml
