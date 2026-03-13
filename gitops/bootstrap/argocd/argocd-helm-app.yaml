@@ -13,8 +13,6 @@ spec:
 
     helm:
       releaseName: argocd
-      valueFiles:
-        - secrets.enc.yaml
       values: |
         server:
           # https is not needed because argocd is behind the reserve proxy
@@ -40,6 +38,10 @@ spec:
                   key: AUTHENTIK_CLIENT_SECRET
 
         configs:
+          secret:
+            extra:
+              oidc.authentik.clientID: $argocd-custom-secrets:AUTHENTIK_CLIENT_ID
+              oidc.authentik.clientSecret: $argocd-custom-secrets:AUTHENTIK_CLIENT_SECRET
           rbac:
             policy.default: role:readonly
             policy.csv: |
