@@ -43,6 +43,7 @@ spec:
             policy.csv: |
               g, authentik Admins, role:admin
           cm:
+            url: https://argocd.opswork.io.vn
             oidc.config: |
               name: Authentik
               issuer: https://authentik.opswork.io.vn/application/o/argo-cd/
