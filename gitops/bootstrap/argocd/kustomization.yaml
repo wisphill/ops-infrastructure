@@ -6,3 +6,6 @@ resources:
   - service-account.yaml
   - argocd-helm-app.yaml
   - cmp.yaml
+
+generators:
+  - generator.yaml
