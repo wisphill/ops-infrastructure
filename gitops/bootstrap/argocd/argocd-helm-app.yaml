@@ -25,17 +25,6 @@ spec:
               nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
             hosts:
               - argocd.opswork.io.vn
-          env:
-            - name: AUTHENTIK_CLIENT_ID
-              valueFrom:
-                secretKeyRef:
-                  name: argocd-custom-secrets
-                  key: AUTHENTIK_CLIENT_ID
-            - name: AUTHENTIK_CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: argocd-custom-secrets
-                  key: AUTHENTIK_CLIENT_SECRET
 
         configs:
           rbac:
@@ -81,33 +70,6 @@ spec:
             - name: sops-age-key
               secret:
                 secretName: sops-age-key
-
-        extraObjects:
-          - apiVersion: v1
-            kind: Secret
-            metadata:
-                name: argocd-custom-secrets
-                namespace: argocd
-                app.kubernetes.io/part-of: argocd
-            type: Opaque
-            stringData:
-                AUTHENTIK_CLIENT_ID: ENC[AES256_GCM,data:qhP3HxHs4RChYw0GcCFOLiTFhVTpkSv+MA7rTObNBNJEfOoiP03zOw==,iv:drBV/7pBaCIfSyKkoMn2S9c3Bx6K0EAOU5hGn61gLHU=,tag:q9gmLa3MDMh1ccVy0Wz+4Q==,type:str]
-                AUTHENTIK_CLIENT_SECRET: ENC[AES256_GCM,data:TrKS7gu6jA+K/PsRcVcAvwo8imoJfUBMJuyzG3+A4Kgc2G3YzZhModAnOLWumBGxbXOxygQ+WDcBxHinK36IcYq1YoFDsUs1rGGFEisGe6+atdK+2yoj/1Q0SDIQfnAw4gZOXeZccuwENj3cVNVwAM1+0XdQyVDgc0JPd8lfF2s=,iv:UVOsrY9RZ77NHfnw4DP3FrC4645Gti07Q34rCxxmGZ0=,tag:ppa22uSZx8dS8+Isds/mzA==,type:str]
-            sops:
-                age:
-                    - recipient: age1fg2mcvwuztl4cgycxhdlfzu584uslnfznmgunqgw99znwmqhjq3quxdmw3
-                      enc: |
-                        -----BEGIN AGE ENCRYPTED FILE-----
-                        YWdlLWVuY3J5cHRpb24ub3JnL3YxCi0+IFgyNTUxOSBGcFBlMVJZTDVkV3JremFH
-                        bk9STExPMW5ycHpWbi9aSk1qSEdXajhwT3c0CkQ5bEZuOXdIbmRGbE5OKytJM080
-                        anRyVlNWbHVWQmxwT0VZZ0ZzUUxnMFUKLS0tIDgxdXczVTFsZDNyVlRUdElsUmpK
-                        cElab3RFWEgyTnV4Zy91b3hiV2MvRW8K1GikcQlcN8gCeZy8Fzbb9NLFaeZCgAJX
-                        y87tv/RRtOTk/zkBE+dOC8p4KX3vq9bFroT9iYnuKDlnvHKIyfmFrg==
-                        -----END AGE ENCRYPTED FILE-----
-                lastmodified: "2026-03-13T09:07:19Z"
-                mac: ENC[AES256_GCM,data:poKpOJ5b/7RP9bJT5/LAzhbjoaTnKoiCYwr1AV1wHdJ9LFfJlMlT1aV/3B0bqYErhBsVKoqPt2An5s4GGq9wuVrTG+NTJu9yMiAwf4G3T1aTiSkIX2PDAYtnAA/w2OzTSz1A0ClnEdDdNwLBAbS520FC8niaNTCiE8HwsZlMoY4=,iv:HRZUkxMqIfg4889AJHBuSi3Jk5ynN4qy/G1yPCsmrbI=,tag:soeg7N3lERVVL4xdlH8hcg==,type:str]
-                encrypted_regex: ^(data|stringData)$
-                version: 3.12.1
 
   destination:
     server: https://kubernetes.default.svc
