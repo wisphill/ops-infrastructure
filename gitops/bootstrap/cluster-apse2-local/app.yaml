@@ -9,8 +9,6 @@ spec:
     repoURL: https://github.com/wisphill/ops-infrastructure
     targetRevision: main
     path: gitops/clusters/apse2/local/apps
-    directory:
-      recurse: true
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
