@@ -1,6 +1,0 @@
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-
-# disabled Dashy due to ugly UI
-resources:
-  - config.yaml

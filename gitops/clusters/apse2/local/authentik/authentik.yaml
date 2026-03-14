@@ -1,17 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: glance-manager
+  name: authentik-manager
   namespace: argocd
 spec:
   project: default
   source:
     repoURL: https://github.com/wisphill/ops-infrastructure
     targetRevision: main
-    path: gitops/clusters/apse2/local/platform/glance
+    path: gitops/clusters/apse2/local/authentik
     plugin:
       name: ksops
   destination:
     server: https://kubernetes.default.svc
-    namespace: platform
+    namespace: authentik
   syncPolicy: {}
