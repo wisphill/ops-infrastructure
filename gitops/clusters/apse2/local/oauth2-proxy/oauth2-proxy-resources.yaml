@@ -1,17 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: mcp-playwright
+  name: oauth2-proxy-manager
   namespace: argocd
 spec:
   project: default
   source:
     repoURL: https://github.com/wisphill/ops-infrastructure
     targetRevision: main
-    path: gitops/clusters/apse2/local/platform/mcp-playwright
+    path: gitops/clusters/apse2/local/oauth2-proxy
     plugin:
       name: ksops
   destination:
     server: https://kubernetes.default.svc
-    namespace: mcp-playwright
+    namespace: platform
   syncPolicy: {}

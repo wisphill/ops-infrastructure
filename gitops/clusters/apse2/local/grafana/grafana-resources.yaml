@@ -1,20 +1,17 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: metal-lb-manager
+  name: grafana-manager
   namespace: argocd
-  annotations:
-    argocd.argoproj.io/sync-wave: "-1"
 spec:
   project: default
   source:
     repoURL: https://github.com/wisphill/ops-infrastructure
     targetRevision: main
-    path: gitops/clusters/apse2/local/platform/metal-lb
+    path: gitops/clusters/apse2/local/grafana
+    plugin:
+      name: ksops
   destination:
     server: https://kubernetes.default.svc
-    namespace: metallb-system
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
+    namespace: platform
+  syncPolicy: {}
