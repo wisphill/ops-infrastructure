@@ -10,5 +10,5 @@ resources:
   - metal-lb-manager.yaml
   - nginx-helm.yaml
   - oauth2-proxy-resources.yaml
-  - ../prometheus-resources.yaml
+  - prometheus/prometheus-resources.yaml
   - glance.yaml

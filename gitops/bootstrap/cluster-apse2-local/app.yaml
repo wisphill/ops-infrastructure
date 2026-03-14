@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: https://github.com/wisphill/ops-infrastructure
     targetRevision: main
-    path: gitops/clusters/apse2/local/apps
+    path: gitops/clusters/apse2/local
     kustomize: {}
   destination:
     server: https://kubernetes.default.svc
