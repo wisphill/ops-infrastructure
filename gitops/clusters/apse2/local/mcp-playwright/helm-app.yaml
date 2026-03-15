@@ -11,6 +11,11 @@ spec:
     repoURL: docker.io/acuvity
     path: mcp-server-playwright
     chart: mcp-server-playwright
+    helm:
+      values: |
+        env:
+          - name: PLAYWRIGHT_BROWSERS_PATH
+            value: /app/ms-playwright
     targetRevision: 1.0.0
 
   destination:
