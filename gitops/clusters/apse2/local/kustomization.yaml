@@ -5,7 +5,6 @@ resources:
   - argo-workflows/argo-workflows.yaml
   - authentik/authentik.yaml
   - cluster-resources/cluster-resources.yaml
-  - grafana/grafana-resources.yaml
   - mcp-playwright/mcp-playwright.yaml
   - metal-lb/metal-lb-manager.yaml
   - nginx-helm.yaml
