@@ -1,3 +1,31 @@
+## Project Structure
+
+### GitOps (`gitops/`)
+
+| Path | Description |
+|------|-------------|
+| `gitops/bootstrap/argocd/` | Manifests to bootstrap ArgoCD onto the cluster |
+| `gitops/clusters/apse2/local/app.yaml` | Root ArgoCD Application (app of apps entry point) |
+| `gitops/clusters/apse2/local/kustomization.yaml` | Main Kustomization referencing all apps |
+| `gitops/clusters/apse2/local/cluster-resources/` | Namespaces and cluster-wide resources |
+| `gitops/clusters/apse2/local/metal-lb/` | MetalLB load balancer configuration |
+| `gitops/clusters/apse2/local/nginx-helm.yaml` | Nginx ingress controller (Helm) |
+| `gitops/clusters/apse2/local/prometheus/` | Prometheus monitoring stack |
+| `gitops/clusters/apse2/local/authentik/` | Authentik identity provider (SSO) |
+| `gitops/clusters/apse2/local/oauth2-proxy/` | OAuth2 Proxy for authentication |
+| `gitops/clusters/apse2/local/glance/` | Glance dashboard |
+| `gitops/clusters/apse2/local/argo-workflows/` | Argo Workflows |
+| `gitops/clusters/apse2/local/mcp-playwright/` | MCP Playwright service |
+| `gitops/clusters/grafana/` | Grafana Helm app and resources |
+
+### Infrastructure (`k8s/`)
+
+| Path | Description |
+|------|-------------|
+| `k8s/` | Terraform configuration for the Kubernetes cluster |
+
+---
+
 ### To do tasks
 
 - Backup /etcd
