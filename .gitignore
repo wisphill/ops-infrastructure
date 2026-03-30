@@ -3,3 +3,6 @@
 
 
 .idea
+
+# ignore keys for Gcloud
+terraform-sa-key.json
