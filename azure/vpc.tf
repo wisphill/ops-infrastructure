@@ -1,6 +1,6 @@
 resource "azurerm_resource_group" "lab" {
   name     = "rg-opswork-lab"
-  location = "Southeast Asia"
+  location = local.location
 }
 
 resource "azurerm_virtual_network" "vnet" {
