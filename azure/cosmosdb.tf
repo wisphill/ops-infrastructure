@@ -12,8 +12,18 @@ resource "azurerm_cosmosdb_account" "lab" {
     consistency_level = "Session"
   }
 
+  is_virtual_network_filter_enabled = true
+  virtual_network_rule {
+    id = azurerm_subnet.func_snet.id
+  }
+
   geo_location {
     location          = local.location
     failover_priority = 0
+  }
+
+  # limit for the cost to prevent over-provisioning issue
+  capacity {
+    total_throughput_limit = 1000
   }
 }
