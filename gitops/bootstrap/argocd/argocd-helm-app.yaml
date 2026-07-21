@@ -37,7 +37,7 @@ spec:
           cm:
             url: https://argocd.opswork.io.vn
             # no password login, can be re-enabled when Authentik is not working
-            admin.enabled: "false"
+            admin.enabled: "true"
             oidc.config: |
               name: Authentik
               issuer: https://authentik.opswork.io.vn/application/o/argo-cd/
