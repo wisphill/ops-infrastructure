@@ -15,6 +15,7 @@ spec:
         - name: workspace
           emptyDir: {}
 
+      # use the container set to make sure workflow pods are in the same node
       containerSet:
         volumeMounts:
           - name: workspace
