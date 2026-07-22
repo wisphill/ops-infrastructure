@@ -6,7 +6,7 @@ metadata:
 
 spec:
   entrypoint: build
-
+  serviceAccountName: workflow-runner
   volumes:
     - name: workspace
       emptyDir: {}
