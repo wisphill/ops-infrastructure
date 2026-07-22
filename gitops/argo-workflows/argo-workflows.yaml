@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: argocd-workflows-fl
-  namespace: argocd
+  namespace: argo-workflows
 spec:
   project: default
   source:

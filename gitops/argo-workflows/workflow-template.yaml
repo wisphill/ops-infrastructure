@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: WorkflowTemplate
 metadata:
   name: buildkit-git-image
-  namespace: argocd
+  namespace: argo-workflows
 
 spec:
   entrypoint: build
