@@ -29,7 +29,7 @@ spec:
             args:
               - |
                 set -ex
-                git clone https://github.com/wisphill/apps.git /workspace
+                git clone https://github.com/wisphill/apps.gin.git /workspace
                 ls -lah /workspace
 
           - name: build
