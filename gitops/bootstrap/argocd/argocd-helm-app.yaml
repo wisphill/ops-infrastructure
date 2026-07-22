@@ -33,16 +33,15 @@ spec:
           rbac:
             policy.default: role:readonly
             policy.csv: |
-              g, authentik Admins, role:admin
+              g, Administrators, role:admin
           cm:
             url: https://argocd.opswork.io.vn
-            # no password login, can be re-enabled when Authentik is not working
             admin.enabled: "true"
             oidc.config: |
-              name: Authentik
-              issuer: https://authentik.opswork.io.vn/application/o/argo-cd/
-              clientID: $argocd-custom-secrets:AUTHENTIK_CLIENT_ID
-              clientSecret: $argocd-custom-secrets:AUTHENTIK_CLIENT_SECRET
+              name: Okta
+              issuer: https://integrator-3099121.okta.com
+              clientID: $argocd-custom-secrets:OKTA_CLIENT_ID
+              clientSecret: $argocd-custom-secrets:OKTA_CLIENT_SECRET
               # Add requested scopes if Authentik requires them
               requestedScopes: ["openid", "profile", "email", "groups"]
 
