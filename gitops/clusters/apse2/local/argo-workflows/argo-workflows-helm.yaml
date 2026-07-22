@@ -27,13 +27,13 @@ spec:
               - groups
             rbac:
               enabled: true
-            issuer: https://authentik.opswork.io.vn/application/o/argoworkflows/
+            issuer: https://integrator-3099121.okta.com
             clientId:
               name: argo-workflows-secret-keys
-              key: SSO_CLIENT_ID
+              key: OKTA_AGROWORKFLOWS_CLIENT_ID
             clientSecret:
               name: argo-workflows-secret-keys
-              key: SSO_CLIENT_SECRET
+              key: OKTA_AGROWORKFLOWS_CLIENT_SECRET
             redirectUrl: https://argo-workflows.opswork.io.vn/oauth2/callback
 
           ingress:
