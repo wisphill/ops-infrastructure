@@ -22,7 +22,9 @@ spec:
         args:
           - |
             git clone https://github.com/wisphill/apps.git /workspace
+            echo "testing workflows"
             ls -la /workspace
+            echo "testing workflows 2"
 
         volumeMounts:
           - name: workspace
