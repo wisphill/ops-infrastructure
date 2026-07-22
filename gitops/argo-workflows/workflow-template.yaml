@@ -12,6 +12,13 @@ spec:
       emptyDir: {}
 
   templates:
+    # Workflow entrypoint
+    - name: main
+      steps:
+        - - name: clone
+            template: clone
+        - - name: build
+            template: build
     # Step 1: Clone source
     - name: clone
       container:
