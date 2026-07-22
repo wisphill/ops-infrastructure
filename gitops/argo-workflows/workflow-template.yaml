@@ -43,25 +43,26 @@ spec:
         image: moby/buildkit:v0.25.1-rootless
 
         command:
-          - buildctl-daemonless.sh
+          - sh
+          - -c
+
+        args:
+          - |
+            echo "===== BUILD ====="
+            pwd
+            ls -lah /
+            ls -lah /workspace || true
+            find /workspace -maxdepth 3 -type f | sort
+
+            buildctl-daemonless.sh build \
+              --frontend dockerfile.v0 \
+              --local context=/workspace \
+              --local dockerfile=/workspace \
+              --output type=oci,dest=/workspace/apps-image.tar
 
         env:
           - name: BUILDKITD_FLAGS
             value: --oci-worker-no-process-sandbox
-
-        args:
-          - build
-          - --frontend
-          - dockerfile.v0
-
-          - --local
-          - context=/workspace
-
-          - --local
-          - dockerfile=/workspace
-
-          - --output
-          - type=oci,dest=/workspace/apps-image.tar
 
         volumeMounts:
           - name: workspace
