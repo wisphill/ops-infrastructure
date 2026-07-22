@@ -42,7 +42,7 @@ spec:
               issuer: https://integrator-3099121.okta.com
               clientID: $argocd-custom-secrets:OKTA_CLIENT_ID
               clientSecret: $argocd-custom-secrets:OKTA_CLIENT_SECRET
-              # Add requested scopes if Authentik requires them
+              # Add requested scopes if Okta requires them
               requestedScopes: ["openid", "profile", "email", "groups"]
 
         repoServer:
