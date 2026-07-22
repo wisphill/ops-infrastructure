@@ -10,14 +10,15 @@ spec:
 
   templates:
     - name: build
+
+      volumes:
+        - name: workspace
+          emptyDir: {}
+
       containerSet:
         volumeMounts:
           - name: workspace
             mountPath: /workspace
-
-        volumes:
-          - name: workspace
-            emptyDir: {}
 
         containers:
           - name: clone
