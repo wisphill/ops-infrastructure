@@ -22,11 +22,6 @@ spec:
         service:
           type: ClusterIP
 
-        ingress:
-          enabled: true
-          hosts:
-            - registry.opswork.io.vn
-
   destination:
     server: https://kubernetes.default.svc
     namespace: docker-registry
