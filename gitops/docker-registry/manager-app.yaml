@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: docker-registry
+  labels:
+    app.kubernetes.io/managed-by: argocd
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: docker-registry-mgt
+  namespace: docker-registry
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/wisphill/ops-infrastructure
+    targetRevision: main
+    path: gitops/docker-registry
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

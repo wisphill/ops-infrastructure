@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: docker-registry
+  namespace: docker-registry
+
+spec:
+  project: default
+
+  source:
+    repoURL: https://helm.twun.io
+    chart: docker-registry
+    targetRevision: 2.2.3
+
+    helm:
+      values: |
+        persistence:
+          enabled: true
+          size: 3Gi
+
+        service:
+          type: ClusterIP
+
+        ingress:
+          enabled: true
+          hosts:
+            - registry.opswork.io.vn
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
