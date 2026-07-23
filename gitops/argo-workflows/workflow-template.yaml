@@ -20,7 +20,9 @@ spec:
         volumeMounts:
           - name: workspace
             mountPath: /workspace
-
+          - name: buildkit-config
+            mountPath: /etc/buildkit/buildkitd.toml
+            subPath: buildkitd.toml
         containers:
           - name: clone
             image: alpine/git:v2.45.2
@@ -42,7 +44,7 @@ spec:
               - buildctl-daemonless.sh
             env:
               - name: BUILDKITD_FLAGS
-                value: --oci-worker-no-process-sandbox --insecure-registry docker-registry.docker-registry.svc.cluster.local:5000
+                value: --oci-worker-no-process-sandbox --config=/etc/buildkit/buildkitd.toml
             args:
               - build
               - --frontend
