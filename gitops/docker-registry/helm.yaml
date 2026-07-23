@@ -1,5 +1,6 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
+
 metadata:
   name: docker-registry
   namespace: argocd
@@ -8,7 +9,7 @@ spec:
   project: default
 
   source:
-    repoURL: https://helm.twun.io
+    repoURL: https://twuni.github.io/docker-registry.helm
     chart: docker-registry
     targetRevision: 2.2.3
 
