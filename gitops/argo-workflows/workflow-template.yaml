@@ -33,6 +33,7 @@ spec:
                 git clone https://github.com/wisphill/apps.gin.git /workspace
                 ls -lah /workspace
 
+          # buildkit build, then push to docker registry
           - name: build
             image: moby/buildkit:v0.25.1-rootless
             dependencies:
@@ -51,4 +52,4 @@ spec:
               - --local
               - dockerfile=/workspace
               - --output
-              - type=oci,dest=/workspace/apps-image.tar
+              - type=image,name=docker-registry.docker-registry.svc.cluster.local:5000/apps/gin:latest,push=true
