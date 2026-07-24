@@ -20,9 +20,9 @@ spec:
           enabled: false
         nodeExporter:
           enabled: true
-          hostRootFsMount:
-            enabled: true
-            mountPropagation: null
+        prometheus-node-exporter:
+          extraArgs:
+            - --collector.filesystem.mount-points-exclude=^/run/user.*
         alertmanager:
           enabled: true
         prometheus:
