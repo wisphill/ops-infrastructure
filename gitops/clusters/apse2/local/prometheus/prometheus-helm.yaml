@@ -19,7 +19,7 @@ spec:
         grafana:
           enabled: false
         nodeExporter:
-          enabled: false
+          enabled: true
         alertmanager:
           enabled: true
         prometheus:
