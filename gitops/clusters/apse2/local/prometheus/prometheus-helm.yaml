@@ -20,8 +20,10 @@ spec:
           enabled: false
         nodeExporter:
           enabled: true
+          hostRootFsMount:
+            enabled: true
+            mountPropagation: null
         prometheus-node-exporter:
-          # exclude=^/run/user.* to fix double node metrics scraping in the WSL
           extraArgs:
             - --collector.filesystem.mount-points-exclude=^/run/user.*
         alertmanager:
