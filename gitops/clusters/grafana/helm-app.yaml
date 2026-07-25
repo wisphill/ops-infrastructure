@@ -5,13 +5,24 @@ metadata:
   namespace: argocd
 spec:
   project: default
-  source:
-    repoURL: https://grafana-community.github.io/helm-charts
-    chart: grafana
-    targetRevision: 12.8.0
-    helm:
-      valueFiles:
-        - values.yaml
+  # sources:
+  #   repoURL: https://grafana-community.github.io/helm-charts
+  #   chart: grafana
+  #   targetRevision: 12.8.0
+  #   helm:
+  #     valueFiles:
+  #       - values.yaml
+  sources:
+    - repoURL: https://grafana-community.github.io/helm-charts
+      chart: grafana
+      targetRevision: 12.8.0
+      helm:
+        valueFiles:
+          - $values/gitops/clusters/grafana/values.yaml
+
+    - repoURL: https://github.com/wisphill/ops-infrastructure.git
+      targetRevision: main
+      ref: values
 
   destination:
     server: https://kubernetes.default.svc
