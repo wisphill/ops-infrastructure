@@ -5,15 +5,17 @@ metadata:
   namespace: argocd
 spec:
   project: default
+  sources:
+    - repoURL: https://argoproj.github.io/argo-helm
+      chart: argo-workflows
+      targetRevision: 0.47.4
+      helm:
+        valueFiles:
+          - $values/gitops/clusters/apse2/local/argo-workflows/values.yaml
 
-  source:
-    repoURL: https://argoproj.github.io/argo-helm
-    chart: argo-workflows
-    targetRevision: 0.47.4
-
-    helm:
-      valueFiles:
-        - values.yaml
+    - repoURL: https://github.com/wisphill/ops-infrastructure.git
+      targetRevision: main
+      ref: values
 
   destination:
     server: https://kubernetes.default.svc
