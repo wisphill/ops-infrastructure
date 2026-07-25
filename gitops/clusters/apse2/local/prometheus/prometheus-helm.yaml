@@ -13,30 +13,8 @@ spec:
       releaseName: monitoring
       # one prometheus instance is enough for most use cases.
       # disable the node exporter because I am using K8S on WSL, WSL does not share the mount events to containers
-      values: |
-        prometheusOperator:
-          enabled: true
-        grafana:
-          enabled: false
-        nodeExporter:
-          enabled: true
-        # mount-points-exclude=^/run/user. /run/user got mounted twice by WSL that leads to double generated metrics on the node exporter
-        prometheus-node-exporter:
-          extraArgs:
-            - --collector.filesystem.mount-points-exclude=^/run/user.*
-        alertmanager:
-          enabled: true
-        prometheus:
-          prometheusSpec:
-            retention: 15d
-            retentionSize: 800MiB
-            storageSpec:
-              volumeClaimTemplate:
-                spec:
-                  accessModes: ["ReadWriteOnce"]
-                  resources:
-                    requests:
-                      storage: 1Gi
+      valueFiles:
+        - values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: platform

@@ -1,0 +1,30 @@
+prometheusOperator:
+  enabled: true
+
+grafana:
+  enabled: false
+
+nodeExporter:
+  enabled: true
+
+# mount-points-exclude=^/run/user.*
+# WSL mounts /run/user twice -> duplicate metrics
+prometheus-node-exporter:
+  extraArgs:
+    - --collector.filesystem.mount-points-exclude=^/run/user.*
+
+alertmanager:
+  enabled: true
+
+prometheus:
+  prometheusSpec:
+    retention: 15d
+    retentionSize: 800MiB
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 1Gi
