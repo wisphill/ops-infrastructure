@@ -8,10 +8,13 @@ spec:
   source:
     repoURL: https://github.com/wisphill/ops-infrastructure
     targetRevision: main
-    path: gitops/clusters/grafana
+    path: gitops/grafana
     plugin:
       name: ksops
   destination:
     server: https://kubernetes.default.svc
     namespace: platform
-  syncPolicy: {}
+  syncPolicy:
+    automated:
+      prune: false
+      selfHeal: true
