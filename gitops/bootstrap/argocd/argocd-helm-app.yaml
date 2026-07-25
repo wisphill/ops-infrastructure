@@ -15,7 +15,7 @@ spec:
       helm:
         releaseName: argocd
         valueFiles:
-          - $values/bootstrap/argocd/values.yaml
+          - $values/gitops/bootstrap/argocd/values.yaml
 
   destination:
     server: https://kubernetes.default.svc
