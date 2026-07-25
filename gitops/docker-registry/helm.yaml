@@ -20,6 +20,10 @@ spec:
       targetRevision: main
       ref: values
 
+    - repoURL: https://github.com/wisphill/ops-infrastructure
+      targetRevision: main
+      path: gitops/docker-registry
+
   destination:
     server: https://kubernetes.default.svc
     namespace: docker-registry
