@@ -16,6 +16,11 @@ spec:
     - repoURL: https://github.com/wisphill/ops-infrastructure.git
       targetRevision: main
       ref: values
+    - repoURL: https://github.com/wisphill/ops-infrastructure
+      targetRevision: main
+      path: gitops/grafana
+      plugin:
+        name: ksops
 
   destination:
     server: https://kubernetes.default.svc
