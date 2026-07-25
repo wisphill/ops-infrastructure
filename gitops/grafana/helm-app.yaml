@@ -11,7 +11,7 @@ spec:
       targetRevision: 12.8.0
       helm:
         valueFiles:
-          - $values/gitops/clusters/grafana/values.yaml
+          - $values/gitops/grafana/values.yaml
 
     - repoURL: https://github.com/wisphill/ops-infrastructure.git
       targetRevision: main
