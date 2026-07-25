@@ -16,6 +16,8 @@ spec:
     - repoURL: https://github.com/wisphill/ops-infrastructure.git
       targetRevision: main
       ref: values
+
+    # manage kustomization
     - repoURL: https://github.com/wisphill/ops-infrastructure
       targetRevision: main
       path: gitops/grafana
