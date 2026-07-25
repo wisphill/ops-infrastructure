@@ -8,19 +8,17 @@ metadata:
 spec:
   project: default
 
-  source:
-    repoURL: https://twuni.github.io/docker-registry.helm
-    chart: docker-registry
-    targetRevision: 2.2.3
+  sources:
+    - repoURL: https://twuni.github.io/docker-registry.helm
+      chart: docker-registry
+      targetRevision: 2.2.3
+      helm:
+        valueFiles:
+          - $values/gitops/docker-registry/values.yaml
 
-    helm:
-      values: |
-        persistence:
-          enabled: true
-          size: 3Gi
-
-        service:
-          type: ClusterIP
+    - repoURL: https://github.com/wisphill/ops-infrastructure.git
+      targetRevision: main
+      ref: values
 
   destination:
     server: https://kubernetes.default.svc
