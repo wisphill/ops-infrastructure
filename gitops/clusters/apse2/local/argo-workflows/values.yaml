@@ -1,0 +1,28 @@
+server:
+  service:
+    type: ClusterIP
+  authModes:
+    - sso
+  sso:
+    enabled: true
+    scopes:
+      - openid
+      - profile
+      - email
+      - groups
+    rbac:
+      enabled: true
+    issuer: https://integrator-3099121.okta.com
+    clientId:
+      name: argo-workflows-secret-keys
+      key: OKTA_AGROWORKFLOWS_CLIENT_ID
+    clientSecret:
+      name: argo-workflows-secret-keys
+      key: OKTA_AGROWORKFLOWS_CLIENT_SECRET
+    redirectUrl: https://argo-workflows.opswork.io.vn/oauth2/callback
+
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - argo-workflows.opswork.io.vn

@@ -10,23 +10,8 @@ spec:
     chart: grafana
     targetRevision: 12.8.0
     helm:
-      values: |
-        admin:
-          existingSecret: grafana-admin
-          userKey: admin-user
-          passwordKey: admin-password
-
-        service:
-          type: ClusterIP
-          port: 80
-
-        # ingress:
-        #   enabled: true
-        #   ingressClassName: nginx
-        #   hosts:
-        #     - grafana.opswork.io.vn
-        #   path: /
-        #   pathType: Prefix
+      valueFiles:
+        - values.yaml
 
   destination:
     server: https://kubernetes.default.svc

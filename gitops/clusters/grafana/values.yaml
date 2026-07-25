@@ -1,0 +1,16 @@
+admin:
+  existingSecret: grafana-admin
+  userKey: admin-user
+  passwordKey: admin-password
+
+service:
+  type: ClusterIP
+  port: 80
+
+# ingress:
+#   enabled: true
+#   ingressClassName: nginx
+#   hosts:
+#     - grafana.opswork.io.vn
+#   path: /
+#   pathType: Prefix
