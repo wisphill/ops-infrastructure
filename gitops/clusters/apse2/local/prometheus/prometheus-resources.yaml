@@ -14,4 +14,6 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: platform
-  syncPolicy: {}
+  syncPolicy:
+    automated:
+      prune: false
