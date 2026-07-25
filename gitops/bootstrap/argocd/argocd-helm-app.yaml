@@ -5,77 +5,17 @@ metadata:
   namespace: argocd
 spec:
   project: default
-
-  source:
-    repoURL: https://argoproj.github.io/argo-helm
-    chart: argo-cd
-    targetRevision: 5.51.6
-
-    helm:
-      releaseName: argocd
-      values: |
-        server:
-          # https is not needed because argocd is behind the reserve proxy
-          extraArgs:
-            - --insecure
-          ingress:
-            enabled: true
-            ingressClassName: nginx
-            annotations:
-              nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-            hosts:
-              - argocd.opswork.io.vn
-
-        dex:
-          enabled: false
-
-        configs:
-          rbac:
-            policy.default: role:readonly
-            policy.csv: |
-              g, Administrators, role:admin
-          cm:
-            url: https://argocd.opswork.io.vn
-            admin.enabled: "true"
-            oidc.config: |
-              name: Okta
-              issuer: https://integrator-3099121.okta.com
-              clientID: $argocd-custom-secrets:OKTA_CLIENT_ID
-              clientSecret: $argocd-custom-secrets:OKTA_CLIENT_SECRET
-              # Add requested scopes if Okta requires them
-              requestedScopes: ["openid", "profile", "email", "groups"]
-
-        repoServer:
-          image:
-            repository: yuulya/argocd-repo-server
-            tag: v2.11.8-ksops
-            pullPolicy: IfNotPresent
-          env:
-            - name: HELM_EXPERIMENTAL_OCI
-              value: "1"
-          extraContainers:
-            - name: argocd-cmp-server
-              image: yuulya/argocd-repo-server:v2.11.8-ksops
-              command: ["/usr/local/bin/argocd-cmp-server"]
-              securityContext:
-                runAsNonRoot: true
-                runAsUser: 999
-              volumeMounts:
-                - name: plugins
-                  mountPath: /home/argocd/cmp-server/plugins
-                - name: cmp-plugin
-                  mountPath: /home/argocd/cmp-server/config/plugin.yaml
-                  subPath: plugin.yaml
-                - name: sops-age-key
-                  mountPath: /home/argocd/.config/sops/age
-
-          volumes:
-            - name: cmp-plugin
-              configMap:
-                name: cmp-plugin
-            - name: sops-age-key
-              secret:
-                secretName: sops-age-key
+  sources:
+    - repoURL: https://github.com/wisphill/ops-infrastructure.git
+      targetRevision: main
+      ref: values
+    - repoURL: https://argoproj.github.io/argo-helm
+      chart: argo-cd
+      targetRevision: 5.51.6
+      helm:
+        releaseName: argocd
+        valueFiles:
+          - $values/bootstrap/argocd/values.yaml
 
   destination:
     server: https://kubernetes.default.svc
