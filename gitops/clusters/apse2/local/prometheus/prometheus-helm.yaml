@@ -20,9 +20,7 @@ spec:
           enabled: false
         nodeExporter:
           enabled: true
-          hostRootFsMount:
-            enabled: true
-            mountPropagation: null
+        # mount-points-exclude=^/run/user. /run/user got mounted twice by WSL that leads to double generated metrics on the node exporter
         prometheus-node-exporter:
           extraArgs:
             - --collector.filesystem.mount-points-exclude=^/run/user.*
