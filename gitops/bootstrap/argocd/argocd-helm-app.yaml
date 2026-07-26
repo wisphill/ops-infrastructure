@@ -16,6 +16,11 @@ spec:
         releaseName: argocd
         valueFiles:
           - $values/gitops/bootstrap/argocd/values.yaml
+    - repoURL: https://github.com/wisphill/ops-infrastructure
+      targetRevision: main
+      path: gitops/bootstrap/argocd
+      plugin:
+        name: ksops
 
   destination:
     server: https://kubernetes.default.svc
