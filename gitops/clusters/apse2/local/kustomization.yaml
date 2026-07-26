@@ -2,10 +2,9 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-  - argo-workflows/argo-workflows.yaml
   - cluster-resources/cluster-resources.yaml
   - metal-lb/metal-lb-manager.yaml
   - nginx-helm.yaml
   - oauth2-proxy/oauth2-proxy-resources.yaml
-  - prometheus/prometheus-resources.yaml
+  - prometheus/prometheus-helm.yaml
   - glance/glance.yaml
