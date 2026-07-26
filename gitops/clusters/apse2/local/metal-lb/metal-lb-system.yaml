@@ -6,15 +6,18 @@ metadata:
 spec:
   project: default
 
-  source:
-    repoURL: https://metallb.github.io/metallb
-    chart: metallb
-    targetRevision: 0.14.5
+  sources:
+    - repoURL: https://metallb.github.io/metallb
+      chart: metallb
+      targetRevision: 0.14.5
 
-    helm:
-      values: |
-        controller:
-          tolerations: []
+      helm:
+        values: |
+          controller:
+            tolerations: []
+    - repoURL: https://github.com/wisphill/ops-infrastructure
+      targetRevision: main
+      path: gitops/clusters/apse2/local/metal-lb
 
   destination:
     server: https://kubernetes.default.svc
