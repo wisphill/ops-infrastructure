@@ -5,7 +5,7 @@ resources:
   - argo-workflows-helm.yaml
   - service-account.yaml
   - sa.yaml
-  - workflow-templates.yaml
+  - workflow-template.yaml
   - buildkitd.yaml
 generators:
   - secrets-generator.yaml
