@@ -8,6 +8,7 @@ service:
   port: 80
 
 persistence:
+  enabled: true
   type: pvc
   storageClassName: local-path
   size: 3Gi
