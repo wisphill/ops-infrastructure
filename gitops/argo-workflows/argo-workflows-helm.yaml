@@ -19,7 +19,7 @@ spec:
 
     - repoURL: https://github.com/wisphill/ops-infrastructure
       targetRevision: main
-      path: gitops/clusters/apse2/local/argo-workflows
+      path: gitops/argo-workflows
       plugin:
         name: ksops
 
