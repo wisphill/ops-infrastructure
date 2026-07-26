@@ -11,7 +11,7 @@ spec:
       targetRevision: 0.47.4
       helm:
         valueFiles:
-          - $values/gitops/clusters/apse2/local/argo-workflows/values.yaml
+          - $values/gitops/argo-workflows/values.yaml
 
     - repoURL: https://github.com/wisphill/ops-infrastructure.git
       targetRevision: main
