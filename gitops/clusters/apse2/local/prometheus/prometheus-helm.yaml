@@ -18,6 +18,11 @@ spec:
         # disable the node exporter because I am using K8S on WSL, WSL does not share the mount events to containers
         valueFiles:
           - $values/gitops/clusters/apse2/local/prometheus/values.yaml
+    - repoURL: https://github.com/wisphill/ops-infrastructure
+      targetRevision: main
+      path: gitops/clusters/apse2/local/prometheus
+      plugin:
+        name: ksops
   destination:
     server: https://kubernetes.default.svc
     namespace: platform
