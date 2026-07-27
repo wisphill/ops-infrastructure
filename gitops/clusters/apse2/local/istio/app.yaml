@@ -26,6 +26,12 @@ spec:
         releaseName: istiod
         valueFiles:
           - $values/gitops/clusters/apse2/local/istio/values.yaml
+    - repoURL: https://istio-release.storage.googleapis.com/charts
+      chart: base
+      targetRevision: 1.30.3
+      helm:
+        releaseName: istio-base
+
     - repoURL: https://github.com/wisphill/ops-infrastructure
       targetRevision: main
       path: gitops/clusters/apse2/local/istio
