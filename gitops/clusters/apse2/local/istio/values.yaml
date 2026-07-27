@@ -2,6 +2,7 @@ pilot:
   replicaCount: 1
 
 meshConfig:
+  enableTracing: true
   extensionProviders:
     - name: tempo
       # send the traces data at the GRPC port 4317 of the tempo service
