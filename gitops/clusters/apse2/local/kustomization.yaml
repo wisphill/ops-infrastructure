@@ -9,3 +9,4 @@ resources:
   - prometheus/prometheus-helm.yaml
   - glance/glance.yaml
   - http-test/app.yaml
+  - argo-rollouts/app.yaml
