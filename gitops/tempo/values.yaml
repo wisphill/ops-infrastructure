@@ -16,3 +16,16 @@ persistence:
 
 service:
   type: ClusterIP
+
+storage:
+  trace:
+    backend: local
+    path: /var/tempo/traces
+
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: "0.0.0.0:4317"
+      http:
+        endpoint: "0.0.0.0:4318"
