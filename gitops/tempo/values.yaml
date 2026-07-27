@@ -7,12 +7,6 @@ tempo:
     limits:
       memory: 512Mi
 
-  traces_storage:
-    backend: local
-  # recommended for production
-  storage:
-    path: /var/tempo/metrics
-
 persistence:
   storageClassName: local-path
   accessModes:
