@@ -1,4 +1,22 @@
 apiVersion: networking.istio.io/v1
+kind: DestinationRule
+metadata:
+  name: http-test
+  namespace: mesh-test
+
+spec:
+  host: http-test
+
+  subsets:
+    - name: v1
+      labels:
+        version: v1
+
+    - name: v2
+      labels:
+        version: v2
+---
+apiVersion: networking.istio.io/v1
 kind: VirtualService
 metadata:
   name: http-test
@@ -12,9 +30,9 @@ spec:
         - destination:
             host: http-test
             subset: v1
-          weight: 100
+          weight: 80
 
         - destination:
             host: http-test
             subset: v2
-          weight: 0
+          weight: 20
