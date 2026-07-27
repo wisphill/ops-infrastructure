@@ -8,3 +8,4 @@ resources:
   - oauth2-proxy/oauth2-proxy-resources.yaml
   - prometheus/prometheus-helm.yaml
   - glance/glance.yaml
+  - http-test/app.yaml

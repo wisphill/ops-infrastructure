@@ -1,0 +1,20 @@
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: http-test
+  namespace: mesh-test
+spec:
+  hosts:
+    - http-test
+
+  http:
+    - route:
+        - destination:
+            host: http-test
+            subset: v1
+          weight: 50
+
+        - destination:
+            host: http-test
+            subset: v2
+          weight: 50

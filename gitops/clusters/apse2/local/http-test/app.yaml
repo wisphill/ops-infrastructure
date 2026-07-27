@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: http-test-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/wisphill/ops-infrastructure
+    targetRevision: main
+    path: gitops/clusters/apse2/local/http-test
+    kustomize: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: mesh-test
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

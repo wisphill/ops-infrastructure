@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-test-deployment-v1
+  namespace: mesh-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: http-test
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: http-test
+        version: v1
+    spec:
+      containers:
+        - name: http
+          image: hashicorp/http-echo
+          args:
+            - "-text=hello-v1"
+          ports:
+            - containerPort: 5678
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-test-deployment-v2
+  namespace: mesh-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: http-test
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: http-test
+        version: v2
+    spec:
+      containers:
+        - name: http
+          image: hashicorp/http-echo
+          args:
+            - "-text=hello-v2"
+          ports:
+            - containerPort: 5678
