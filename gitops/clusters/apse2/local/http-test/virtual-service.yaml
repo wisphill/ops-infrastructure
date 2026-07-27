@@ -30,9 +30,9 @@ spec:
         - destination:
             host: http-test
             subset: v1
-          weight: 80
+          weight: 100
 
         - destination:
             host: http-test
             subset: v2
-          weight: 20
+          weight: 0
