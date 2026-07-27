@@ -11,7 +11,6 @@
 | `gitops/clusters/apse2/local/metal-lb/`          | MetalLB load balancer configuration               |
 | `gitops/clusters/apse2/local/nginx-helm.yaml`    | Nginx ingress controller (Helm)                   |
 | `gitops/clusters/apse2/local/prometheus/`        | Prometheus monitoring stack                       |
-| `gitops/clusters/apse2/local/authentik/`         | Authentik identity provider (SSO)                 |
 | `gitops/clusters/apse2/local/oauth2-proxy/`      | OAuth2 Proxy for authentication                   |
 | `gitops/clusters/apse2/local/glance/`            | Glance dashboard                                  |
 | `gitops/clusters/apse2/local/argo-workflows/`    | Argo Workflows                                    |
@@ -47,11 +46,6 @@
 - [x] Added the Nginx as Ingress
 - [x] Added Prometheus & Grafana
 
-### Authentik
-
-- First time logging in, let's use /if/flow/initial-setup/ for setting up the admin
-- Authentik uses the PostgreSQL for storage, consider to back it up usually
-
 ## Commands
 
 ```
@@ -73,17 +67,11 @@ openssl rand -base64 24
 #### Generate cookie secrets
 
 ```bash
-### Test the postgreSQL
-kubectl run psql-test \
-  -it --rm \
-  --image=postgres:17 \
-  -n authentik \
-  -- bash
 
 kubectl run curl \
   --rm -it \
   --image=curlimages/curl \
-  -n authentik -- sh
+  -n checker -- sh
 
 ```
 

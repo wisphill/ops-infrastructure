@@ -67,9 +67,6 @@ data:
                   - title: My blog
                     url: https://wisphill.github.io
                     icon: mdi:post
-                  - title: Authentik
-                    url: https://authentik.opswork.io.vn
-                    icon: sh:authentik
                   - title: Agro Workflows
                     url: https://argo-workflows.opswork.io.vn
                     icon: sh:argo-cd
