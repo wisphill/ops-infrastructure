@@ -1,2 +1,10 @@
 pilot:
   replicaCount: 1
+
+meshConfig:
+  extensionProviders:
+    - name: tempo
+      # send the traces data at the GRPC port 4317 of the tempo service
+      opentelemetry:
+        service: tempo.monitoring.svc.cluster.local
+        port: 4317
