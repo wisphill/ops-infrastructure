@@ -7,6 +7,13 @@ metadata:
 spec:
   project: default
 
+  ignoreDifferences:
+    - group: admissionregistration.k8s.io
+      kind: ValidatingWebhookConfiguration
+      name: istio-validator-istio-system
+      jqPathExpressions:
+        - .webhooks[].failurePolicy
+
   sources:
     - repoURL: https://github.com/wisphill/ops-infrastructure.git
       targetRevision: main
