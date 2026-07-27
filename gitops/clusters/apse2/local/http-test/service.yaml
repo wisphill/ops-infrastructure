@@ -7,5 +7,6 @@ spec:
   selector:
     app: http-test
   ports:
-    - port: 5678
+    - name: http
+      port: 5678
       targetPort: 5678
