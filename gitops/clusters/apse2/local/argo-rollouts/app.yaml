@@ -14,6 +14,8 @@ spec:
       targetRevision: 2.40.6
       helm:
         releaseName: argo-rollouts
+        valueFiles:
+          - $values/gitops/clusters/apse2/local/argo-rollouts/values.yaml
 
     - repoURL: https://github.com/wisphill/ops-infrastructure.git
       targetRevision: main
