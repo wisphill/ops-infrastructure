@@ -19,3 +19,10 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+  ignoreDifferences:
+    - group: networking.istio.io
+      kind: VirtualService
+      name: http-test
+      namespace: mesh-test
+      managedFieldsManagers:
+        - rollouts-controller
