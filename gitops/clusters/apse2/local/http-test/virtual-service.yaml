@@ -29,11 +29,11 @@ spec:
     - name: primaryRoute
       route:
         - destination:
-            host: http-test
+            host: http-test-stable
             subset: stable
           weight: 100
 
         - destination:
-            host: http-test
+            host: http-test-canary
             subset: canary
           weight: 0
