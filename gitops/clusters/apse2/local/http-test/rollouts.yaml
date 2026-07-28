@@ -21,8 +21,8 @@ spec:
 
   strategy:
     canary:
-      stableService: http-test
-      canaryService: http-test
+      stableService: http-test-stable
+      canaryService: http-test-canary
       trafficRouting:
         istio:
           virtualService:
