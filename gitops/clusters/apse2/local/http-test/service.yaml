@@ -1,7 +1,20 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: http-test
+  name: http-test-stable
+  namespace: mesh-test
+spec:
+  selector:
+    app: http-test
+  ports:
+    - name: http
+      port: 5678
+      targetPort: 5678
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: http-test-canary
   namespace: mesh-test
 spec:
   selector:

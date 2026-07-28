@@ -1,0 +1,35 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
+metadata:
+  name: api-test
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: http-test
+
+  template:
+    metadata:
+      labels:
+        app: http-test
+    spec:
+      containers:
+        - name: http
+          image: hashicorp/http-echo
+          args:
+            - "-text=hello-9xhui0"
+
+  strategy:
+    canary:
+      canaryService: http-test-canary
+      stableService: http-test-stable
+      trafficRouting:
+        istio:
+          virtualService:
+            name: http-test
+            routes:
+              - primaryRoute
+      steps:
+        - setWeight: 20
+        - pause: {}
+        - setWeight: 100
