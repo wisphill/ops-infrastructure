@@ -1,22 +1,4 @@
 apiVersion: networking.istio.io/v1
-kind: DestinationRule
-metadata:
-  name: http-test
-  namespace: mesh-test
-
-spec:
-  host: http-test
-
-  subsets:
-    - name: stable
-      labels:
-        version: stable
-
-    - name: canary
-      labels:
-        version: canary
----
-apiVersion: networking.istio.io/v1
 kind: VirtualService
 metadata:
   name: http-test
