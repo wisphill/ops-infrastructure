@@ -3,7 +3,7 @@ kind: Rollout
 metadata:
   name: api-test
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: http-test
