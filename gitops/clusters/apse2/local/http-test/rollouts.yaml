@@ -17,7 +17,7 @@ spec:
         - name: http
           image: hashicorp/http-echo
           args:
-            - "-text=hello-9xhui0"
+            - "-text=hello-next-version-1"
 
   strategy:
     canary:
