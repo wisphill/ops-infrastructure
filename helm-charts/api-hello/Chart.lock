@@ -1,0 +1,6 @@
+dependencies:
+- name: base-service
+  repository: file://../base-service-chart
+  version: 0.1.0
+digest: sha256:31fbcfacc0067bb6ff524b7dee6f12c2a051923b9ef3380c8cf5e7952781750b
+generated: "2026-07-31T17:16:55.449076+07:00"
