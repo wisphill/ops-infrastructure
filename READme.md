@@ -66,7 +66,7 @@ ops-infrastructure/
 
 ---
 
-### 🔲 To do tasks
+## 🔲 To do tasks
 
 - Backup /etcd
 - Add statefulset application
@@ -80,7 +80,7 @@ ops-infrastructure/
 - Host Minecraft servers for 2 players
 - Enable Interoperability to access Window from WSL
 
-### ✅ Completed tasks
+## Completed
 
 - [x] Add infra app to manage infrastructure resources. (DONE)
 - [x] Add secrets using AGE key
@@ -96,7 +96,7 @@ sops --encrypt --age {{age_public_key}} gitops/clusters/apse2/local/platform/mon
 sops --encrypt --age age1fg2mcvwuztl4cgycxhdlfzu584uslnfznmgunqgw99znwmqhjq3quxdmw3 gitops/bootstrap/argocd/values.yaml > gitops/bootstrap/argocd/values.enc.yaml
 ```
 
-#### Generate cookie secrets
+### Generate cookie secrets
 
 ```bash
 # Generate OAUTH2_PROXY_COOKIE_SECRET for the Oauth2 Proxy authentication server
@@ -108,15 +108,39 @@ openssl rand -base64 24
 #### Generate cookie secrets
 
 ```bash
-
 kubectl run curl \
   --rm -it \
   --image=curlimages/curl \
   -n checker -- sh
-
 ```
 
-### Notes
+## Notes
 
 - ArgoWorkflows uses the K8S SA for RBAC
 - AgroCD processes the RBAC itself
+
+---
+
+## License
+
+MIT License
+
+Copyright (c) 2026
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
