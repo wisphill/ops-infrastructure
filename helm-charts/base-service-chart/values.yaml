@@ -1,3 +1,6 @@
+app:
+  name: default
+
 replicaCount: 1
 
 image:

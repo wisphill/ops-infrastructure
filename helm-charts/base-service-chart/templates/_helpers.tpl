@@ -1,12 +1,21 @@
 {{- define "base-service.name" -}}
-{{- .Chart.Name | trunc 63 | trimSuffix "-" }}
+{{- .Values.app.name | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
+{{/*
+Create a default fully qualified app name.
+We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
+*/}}
 {{- define "base-service.fullname" -}}
-{{- if .Values.serviceAccount.name }}
-{{- .Values.serviceAccount.name | trunc 63 | trimSuffix "-" }}
+{{- if .Values.app.name }}
+{{- .Values.app.name | trunc 63 | trimSuffix "-" }}
 {{- else }}
-{{- printf "%s-%s" .Release.Name (include "base-service.name" .) | trunc 63 | trimSuffix "-" }}
+{{- $name := default .Chart.Name .Values.app.name }}
+{{- if contains $name .Release.Name }}
+{{- .Release.Name | trunc 63 | trimSuffix "-" }}
+{{- else }}
+{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
+{{- end }}
 {{- end }}
 {{- end }}
 
@@ -22,10 +31,14 @@ app.kubernetes.io/name: {{ include "base-service.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
+
+{{/*
+Create the name of the service account to use
+*/}}
 {{- define "base-service.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "base-service.fullname" .) .Values.serviceAccount.name }}
+  {{- default (include "base-service.fullname" .) .Values.serviceAccount.name }}
 {{- else }}
-default
+  {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
