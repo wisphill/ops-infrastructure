@@ -10,3 +10,12 @@ helm history api-hello -n backend
 # uninstall
 helm uninstall api-hello -n backend
 ```
+
+### Tests
+
+```bash
+k create namespace test
+k run test --image=curlimages/curl -n test --create-namespace --command -- sleep 3600
+k exec --it pod/test -n test -- /bin/sh
+curl http://api-hello.backend.svc.cluster.local
+```
