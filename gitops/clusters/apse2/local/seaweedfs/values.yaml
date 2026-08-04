@@ -24,8 +24,8 @@ filer:
     http:
       enabled: true
       className: nginx
-      host: seaweedfs.opswork.io.vn
-      path: "/sw-filer/?(.*)"
+      host: seaweedfs-filer.opswork.io.vn
+      path: "/"
 
 s3:
   enabled: true
