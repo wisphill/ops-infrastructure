@@ -31,8 +31,8 @@ configs:
 
 repoServer:
   image:
-    repository: yuulya/argocd-repo-server
-    tag: v2.11.8-ksops
+    repository: ghcr.io/wisphill/argocd-repo-server
+    tag: latest
     pullPolicy: IfNotPresent
   env:
     - name: HELM_EXPERIMENTAL_OCI
