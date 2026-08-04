@@ -13,7 +13,13 @@ volume:
   enabled: true
   replicas: 1
   dataDirs:
-    - /data
+    - name: data
+      type: ""
+      dir: /data
+      maxVolumes: 0
+  persistence:
+    enabled: true
+    size: 5Gi
 
 filer:
   enabled: true
