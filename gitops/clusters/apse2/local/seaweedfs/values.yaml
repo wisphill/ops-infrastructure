@@ -1,0 +1,24 @@
+master:
+  enabled: true
+  replicas: 1
+  ingress:
+    enabled: true
+    ingressClassName: nginx
+    hosts:
+      - host: seaweedfs.opswork.io.vn
+        paths:
+          - /
+
+volume:
+  enabled: true
+  replicas: 1
+  dataDirs:
+    - /data
+
+filer:
+  enabled: true
+  replicas: 1
+
+s3:
+  enabled: true
+  replicas: 1

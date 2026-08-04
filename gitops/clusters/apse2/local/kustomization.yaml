@@ -10,3 +10,4 @@ resources:
   - glance/glance.yaml
   - http-test/app.yaml
   - argo-rollouts/app.yaml
+  - seaweedfs/app.yaml
