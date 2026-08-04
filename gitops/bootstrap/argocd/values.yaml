@@ -39,7 +39,7 @@ repoServer:
       value: "1"
   extraContainers:
     - name: argocd-cmp-server
-      image: yuulya/argocd-repo-server:v2.11.8-ksops
+      image: ghcr.io/wisphill/argocd-repo-server:latest
       command: ["/usr/local/bin/argocd-cmp-server"]
       securityContext:
         runAsNonRoot: true
