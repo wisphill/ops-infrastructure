@@ -20,7 +20,17 @@ volume:
 filer:
   enabled: true
   replicas: 1
+  ingress:
+    enabled: true
+    className: nginx
+    host: seaweedfs-filter.opswork.io.vn
+    path: /
 
 s3:
   enabled: true
   replicas: 1
+  ingress:
+    enabled: true
+    className: nginx
+    host: seaweedfs-s3.opswork.io.vn
+    path: /
