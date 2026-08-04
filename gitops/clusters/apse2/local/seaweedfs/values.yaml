@@ -35,3 +35,15 @@ s3:
     className: nginx
     host: seaweedfs-s3.opswork.io.vn
     path: /
+
+admin:
+  enabled: true
+  replicas: 1
+  secret:
+    adminUser: "admin"
+    adminPassword: "admin"
+  ingress:
+    enabled: true
+    className: nginx
+    host: seaweedfs-admin.opswork.io.vn
+    path: /
