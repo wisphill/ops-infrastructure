@@ -3,18 +3,16 @@ master:
   replicas: 1
   ingress:
     enabled: true
-    ingressClassName: nginx
-    hosts:
-      - host: seaweedfs.opswork.io.vn
-        paths:
-          - /
+    className: nginx
+    host: seaweedfs.opswork.io.vn
+    path: /
 
 volume:
   enabled: true
   replicas: 1
   dataDirs:
     - name: data
-      type: ""
+      type: "local-path-provisioner"
       dir: /data
       maxVolumes: 0
   persistence:
