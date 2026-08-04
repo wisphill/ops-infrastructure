@@ -12,12 +12,9 @@ volume:
   replicas: 1
   dataDirs:
     - name: data
-      type: "local-path-provisioner"
-      dir: /data
+      type: "persistentVolumeClaim"
+      size: "5Gi"
       maxVolumes: 0
-  persistence:
-    enabled: true
-    size: 5Gi
 
 filer:
   enabled: true
