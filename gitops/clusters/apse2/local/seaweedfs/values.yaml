@@ -13,6 +13,7 @@ volume:
   dataDirs:
     - name: data
       type: "persistentVolumeClaim"
+      storageClass: "local-path-provisioner"
       size: "5Gi"
       maxVolumes: 0
 
