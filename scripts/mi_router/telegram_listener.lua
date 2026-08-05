@@ -43,7 +43,7 @@ end
 
 -- wol by sending magic pkg
 function wake()
-    local udp = assert(socket.udp4())
+    local udp = assert(socket.udp4 or socket.udp)
     assert(udp:setoption("broadcast", true))
     assert(udp:setsockname("0.0.0.0", 0))
 
