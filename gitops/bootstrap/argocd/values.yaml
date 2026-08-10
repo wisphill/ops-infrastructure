@@ -7,8 +7,9 @@ server:
     ingressClassName: nginx
     annotations:
       nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-    hosts:
-      - argocd.opswork.io.vn
+    hostname: argocd.opswork.io.vn
+    path: /
+
 
 dex:
   enabled: false
