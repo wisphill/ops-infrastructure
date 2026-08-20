@@ -6,5 +6,6 @@
 
 # ignore keys for Gcloud
 terraform-sa-key.json
+sops-age-key.txt
 
 charts
