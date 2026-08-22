@@ -28,12 +28,12 @@ uninstall:
 
 start:
 	@echo "Starting $(APP_NAME) in background..."
-	@$(PS) "Start-Process powershell.exe -ArgumentList '-ExecutionPolicy Bypass -WindowStyle Hidden -File \"$$env:APPDATA\$(APP_NAME)\$(SCRIPT_NAME)\"'"
+	@$(PS) "Start-Process powershell.exe -WindowStyle Hidden -ArgumentList '-ExecutionPolicy', 'Bypass', '-File', \"$$env:APPDATA\$(APP_NAME)\$(SCRIPT_NAME)\""
 
 stop:
 	@echo "Stopping running server..."
-	@$(PS) "Get-CimInstance Win32_Process -Filter \"CommandLine LIKE '%$(SCRIPT_NAME)%' AND ProcessId <> $$PID\" | Stop-Process -Force"
-
+	@$(PS) "Get-CimInstance Win32_Process -Filter \"CommandLine LIKE '%$(SCRIPT_NAME)%' AND ProcessId <> $$PID\" | ForEach-Object { Stop-Process -Id $$_.ProcessId -Force }"
+	
 status:
 	@$(PS) "\
 		$$proc = Get-CimInstance Win32_Process -Filter \"CommandLine LIKE '%$(SCRIPT_NAME)%' AND ProcessId <> $$PID\"; \
