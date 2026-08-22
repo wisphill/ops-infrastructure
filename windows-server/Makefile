@@ -2,22 +2,29 @@ PS = powershell.exe -NoProfile -ExecutionPolicy Bypass -Command
 APP_NAME = WindowsCommandServer
 SCRIPT_NAME = command-server.ps1
 PORT = 41020
+RUN_AS_USER = YUU\Windows
 
 .PHONY: install uninstall start stop status
 
 install:
-	@echo "Installing $(SCRIPT_NAME) as a SYSTEM background task..."
+	@echo "Installing $(SCRIPT_NAME) as $(RUN_AS_USER) background task..."
 	@$(PS) "\
 		$$dir = $$env:ProgramData + '\$(APP_NAME)'; \
 		if (!(Test-Path $$dir)) { New-Item -ItemType Directory -Path $$dir | Out-Null }; \
 		$$target = $$dir + '\$(SCRIPT_NAME)'; \
 		Copy-Item -Path '.\$(SCRIPT_NAME)' -Destination $$target -Force; \
+		$$password = Read-Host 'Enter password for $(RUN_AS_USER)' -AsSecureString; \
 		$$action = New-ScheduledTaskAction -Execute 'powershell.exe' -Argument ('-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File ' + [char]34 + $$target + [char]34); \
 		$$trigger = New-ScheduledTaskTrigger -AtStartup; \
-		$$principal = New-ScheduledTaskPrincipal -UserId 'NT AUTHORITY\SYSTEM' -LogonType ServiceAccount -RunLevel Highest; \
-		Register-ScheduledTask -TaskName '$(APP_NAME)' -Action $$action -Trigger $$trigger -Principal $$principal -Force | Out-Null; \
+		$$principal = New-ScheduledTaskPrincipal -UserId '$(RUN_AS_USER)' -LogonType Password -RunLevel Highest; \
+		$$task = New-ScheduledTask -Action $$action -Trigger $$trigger -Principal $$principal; \
+		$$bstr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($$password); \
+		$$plainPassword = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($$bstr); \
+		Register-ScheduledTask -TaskName '$(APP_NAME)' -InputObject $$task -User '$(RUN_AS_USER)' -Password $$plainPassword -Force | Out-Null; \
+		[Runtime.InteropServices.Marshal]::ZeroFreeBSTR($$bstr); \
 		Write-Host '[OK] Installed successfully to:' $$dir -ForegroundColor Green; \
-		Write-Host '[OK] Scheduled Task created. Server will start on boot WITHOUT login or UAC.' -ForegroundColor Green \
+		Write-Host '[OK] Scheduled Task created for $(RUN_AS_USER).' -ForegroundColor Green; \
+		Write-Host '[OK] Server will start on boot.' -ForegroundColor Green \
 	"
 
 uninstall:
