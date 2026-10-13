@@ -1,0 +1,46 @@
+# openmetadata chart values (local cluster)
+
+replicaCount: 1
+
+openmetadata:
+  config:
+    elasticsearch:
+      host: opensearch
+      searchType: opensearch
+      port: 9200
+      scheme: http
+    database:
+      host: mysql
+      port: 3306
+      driverClass: com.mysql.cj.jdbc.Driver
+      dbScheme: mysql
+      databaseName: openmetadata_db
+      auth:
+        username: openmetadata_user
+        password:
+          # Provided by gitops/.../openmetadata/secrets (sops + ksops)
+          secretRef: mysql-secrets
+          secretKey: openmetadata-mysql-password
+    # No Airflow in the local cluster, so don't try to reach a pipeline service.
+    pipelineServiceClientConfig:
+      enabled: false
+
+image:
+  pullPolicy: IfNotPresent
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 1Gi
+  limits:
+    cpu: "1"
+    memory: 2Gi
+
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: openmetadata.opswork.io.vn
+      paths:
+        - path: /
+          pathType: Prefix

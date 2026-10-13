@@ -11,3 +11,4 @@ resources:
   - http-test/app.yaml
   - argo-rollouts/app.yaml
   - seaweedfs/app.yaml
+  - openmetadata/app.yaml

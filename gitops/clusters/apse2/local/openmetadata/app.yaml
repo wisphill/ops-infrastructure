@@ -1,0 +1,74 @@
+# OpenMetadata is split into two Argo CD Applications:
+#   1. openmetadata-dependencies : MySQL + OpenSearch (sync-wave 0)
+#   2. openmetadata              : the OpenMetadata server + UI (sync-wave 1)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: openmetadata-dependencies
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+spec:
+  project: default
+
+  sources:
+    - repoURL: https://github.com/wisphill/ops-infrastructure.git
+      targetRevision: main
+      ref: values
+    - repoURL: https://helm.open-metadata.org
+      chart: openmetadata-dependencies
+      targetRevision: 2.0.5
+      helm:
+        releaseName: openmetadata-dependencies
+        valueFiles:
+          - $values/gitops/clusters/apse2/local/openmetadata/dependencies-values.yaml
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openmetadata
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: openmetadata
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: default
+
+  sources:
+    - repoURL: https://github.com/wisphill/ops-infrastructure.git
+      targetRevision: main
+      ref: values
+    # Encrypted secrets (mysql-secrets) rendered by ksops
+    - repoURL: https://github.com/wisphill/ops-infrastructure
+      targetRevision: main
+      path: gitops/clusters/apse2/local/openmetadata/secrets
+      plugin:
+        name: ksops
+    - repoURL: https://helm.open-metadata.org
+      chart: openmetadata
+      targetRevision: 2.0.5
+      helm:
+        releaseName: openmetadata
+        valueFiles:
+          - $values/gitops/clusters/apse2/local/openmetadata/values.yaml
+
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openmetadata
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
