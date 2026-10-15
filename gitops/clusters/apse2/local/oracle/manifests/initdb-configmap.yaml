@@ -1,0 +1,85 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: oracle-initdb
+data:
+  # Read-only account used by the OpenMetadata ingestion CronJob.
+  # SELECT ANY TABLE makes tables created later visible without extra grants.
+  01-om-reader.sh: |
+    #!/bin/bash
+    set -euo pipefail
+    sqlplus -s / as sysdba <<EOF
+    WHENEVER SQLERROR EXIT SQL.SQLCODE
+    ALTER SESSION SET CONTAINER = FREEPDB1;
+    CREATE USER OM_READER IDENTIFIED BY "${OM_READER_PASSWORD}";
+    GRANT CREATE SESSION TO OM_READER;
+    GRANT SELECT_CATALOG_ROLE TO OM_READER;
+    GRANT SELECT ANY DICTIONARY TO OM_READER;
+    GRANT SELECT ANY TABLE TO OM_READER;
+    EXIT
+    EOF
+
+  02-app-schema.sql: |
+    WHENEVER SQLERROR EXIT SQL.SQLCODE
+    ALTER SESSION SET CONTAINER = FREEPDB1;
+    ALTER SESSION SET CURRENT_SCHEMA = APP;
+
+    CREATE TABLE customers (
+      customer_id   NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+      email         VARCHAR2(255) NOT NULL UNIQUE,
+      full_name     VARCHAR2(200) NOT NULL,
+      country_code  CHAR(2),
+      created_at    TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL
+    );
+    COMMENT ON TABLE customers IS 'Registered customers';
+    COMMENT ON COLUMN customers.email IS 'Login email, unique per customer';
+
+    CREATE TABLE products (
+      product_id    NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+      sku           VARCHAR2(64) NOT NULL UNIQUE,
+      name          VARCHAR2(200) NOT NULL,
+      unit_price    NUMBER(12,2) NOT NULL,
+      is_active     NUMBER(1) DEFAULT 1 NOT NULL
+    );
+    COMMENT ON TABLE products IS 'Product catalog';
+
+    CREATE TABLE orders (
+      order_id      NUMBER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+      customer_id   NUMBER NOT NULL REFERENCES customers (customer_id),
+      status        VARCHAR2(20) DEFAULT 'NEW' NOT NULL,
+      ordered_at    TIMESTAMP DEFAULT SYSTIMESTAMP NOT NULL
+    );
+    COMMENT ON TABLE orders IS 'Customer orders';
+    COMMENT ON COLUMN orders.status IS 'NEW, PAID, SHIPPED or CANCELLED';
+
+    CREATE TABLE order_items (
+      order_id      NUMBER NOT NULL REFERENCES orders (order_id),
+      line_no       NUMBER NOT NULL,
+      product_id    NUMBER NOT NULL REFERENCES products (product_id),
+      quantity      NUMBER NOT NULL,
+      unit_price    NUMBER(12,2) NOT NULL,
+      CONSTRAINT order_items_pk PRIMARY KEY (order_id, line_no)
+    );
+    COMMENT ON TABLE order_items IS 'Order line items';
+
+    CREATE VIEW v_order_totals AS
+      SELECT o.order_id, o.customer_id, o.status,
+             SUM(i.quantity * i.unit_price) AS order_total
+        FROM orders o
+        JOIN order_items i ON i.order_id = o.order_id
+       GROUP BY o.order_id, o.customer_id, o.status;
+
+    CREATE OR REPLACE PROCEDURE mark_order_paid (p_order_id IN NUMBER) AS
+    BEGIN
+      UPDATE orders SET status = 'PAID' WHERE order_id = p_order_id;
+    END;
+    /
+
+    INSERT INTO customers (email, full_name, country_code) VALUES ('alice@example.com', 'Alice Nguyen', 'VN');
+    INSERT INTO customers (email, full_name, country_code) VALUES ('bob@example.com', 'Bob Tran', 'AU');
+    INSERT INTO products (sku, name, unit_price) VALUES ('SKU-001', 'Keyboard', 49.90);
+    INSERT INTO products (sku, name, unit_price) VALUES ('SKU-002', 'Mouse', 19.90);
+    INSERT INTO orders (customer_id, status) VALUES (1, 'NEW');
+    INSERT INTO order_items (order_id, line_no, product_id, quantity, unit_price) VALUES (1, 1, 1, 1, 49.90);
+    INSERT INTO order_items (order_id, line_no, product_id, quantity, unit_price) VALUES (1, 2, 2, 2, 19.90);
+    COMMIT;

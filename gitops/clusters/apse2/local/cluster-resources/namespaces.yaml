@@ -46,3 +46,10 @@ metadata:
   name: openmetadata
   labels:
     app.kubernetes.io/managed-by: argocd
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: oracle
+  labels:
+    app.kubernetes.io/managed-by: argocd

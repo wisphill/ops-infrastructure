@@ -1,0 +1,89 @@
+# Oracle Database 23ai Free (gvenzl/oracle-free). The init scripts only run when
+# the data volume is empty, i.e. on the very first start.
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: oracle
+  labels:
+    app: oracle
+spec:
+  serviceName: oracle
+  replicas: 1
+  selector:
+    matchLabels:
+      app: oracle
+  template:
+    metadata:
+      labels:
+        app: oracle
+    spec:
+      securityContext:
+        fsGroup: 54321
+      terminationGracePeriodSeconds: 120
+      containers:
+        - name: oracle
+          image: gvenzl/oracle-free:23.26.3-slim
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: sqlnet
+              containerPort: 1521
+          env:
+            - name: ORACLE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: oracle-secrets
+                  key: ORACLE_PASSWORD
+            - name: APP_USER
+              value: APP
+            - name: APP_USER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: oracle-secrets
+                  key: APP_USER_PASSWORD
+            - name: OM_READER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: oracle-secrets
+                  key: OM_READER_PASSWORD
+          volumeMounts:
+            - name: data
+              mountPath: /opt/oracle/oradata
+            - name: initdb
+              mountPath: /container-entrypoint-initdb.d
+          startupProbe:
+            exec:
+              command: ["healthcheck.sh"]
+            periodSeconds: 10
+            failureThreshold: 60
+          readinessProbe:
+            exec:
+              command: ["healthcheck.sh"]
+            periodSeconds: 15
+            timeoutSeconds: 10
+          livenessProbe:
+            exec:
+              command: ["healthcheck.sh"]
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 5
+          resources:
+            requests:
+              cpu: 250m
+              memory: 2Gi
+            limits:
+              cpu: "2"
+              memory: 3Gi
+      volumes:
+        - name: initdb
+          configMap:
+            name: oracle-initdb
+            defaultMode: 0755
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: local-path
+        resources:
+          requests:
+            storage: 10Gi

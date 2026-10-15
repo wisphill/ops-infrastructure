@@ -1,6 +1,7 @@
-# OpenMetadata is split into two Argo CD Applications:
+# OpenMetadata is split into three Argo CD Applications:
 #   1. openmetadata-dependencies : MySQL + OpenSearch (sync-wave 0)
 #   2. openmetadata              : the OpenMetadata server + UI (sync-wave 1)
+#   3. openmetadata-ingestion    : metadata ingestion CronJobs (sync-wave 2)
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -72,3 +73,26 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: openmetadata-ingestion
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "2"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/wisphill/ops-infrastructure
+    targetRevision: main
+    path: gitops/clusters/apse2/local/openmetadata/ingestion
+    plugin:
+      name: ksops
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openmetadata
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

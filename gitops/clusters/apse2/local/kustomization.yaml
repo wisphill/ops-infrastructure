@@ -12,3 +12,4 @@ resources:
   - argo-rollouts/app.yaml
   - seaweedfs/app.yaml
   - openmetadata/app.yaml
+  - oracle/app.yaml

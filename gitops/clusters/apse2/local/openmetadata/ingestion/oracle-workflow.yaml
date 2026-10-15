@@ -1,0 +1,46 @@
+# OpenMetadata metadata-ingestion workflow for the in-cluster Oracle database.
+# ${...} placeholders are expanded from the container env by the `metadata` CLI.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: oracle-ingestion-workflow
+data:
+  oracle-metadata.yaml: |
+    source:
+      type: oracle
+      serviceName: oracle_local
+      serviceConnection:
+        config:
+          type: Oracle
+          hostPort: oracle.oracle.svc.cluster.local:1521
+          username: OM_READER
+          password: ${ORACLE_PASSWORD}
+          oracleConnectionType:
+            oracleServiceName: FREEPDB1
+          databaseName: freepdb1
+          instantClientDirectory: /instantclient
+      sourceConfig:
+        config:
+          type: DatabaseMetadata
+          includeTables: true
+          includeViews: true
+          includeStoredProcedures: true
+          includeDDL: true
+          # Propagate drops and source-side description changes to OpenMetadata.
+          markDeletedTables: true
+          markDeletedSchemas: true
+          markDeletedStoredProcedures: true
+          overrideMetadata: true
+          schemaFilterPattern:
+            includes:
+              - "(?i)^app$"
+    sink:
+      type: metadata-rest
+      config: {}
+    workflowConfig:
+      loggerLevel: INFO
+      openMetadataServerConfig:
+        hostPort: http://openmetadata.openmetadata.svc.cluster.local:8585/api
+        authProvider: openmetadata
+        securityConfig:
+          jwtToken: ${OM_JWT_TOKEN}
