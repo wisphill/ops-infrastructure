@@ -18,7 +18,9 @@ data:
           oracleConnectionType:
             oracleServiceName: FREEPDB1
           databaseName: freepdb1
-          instantClientDirectory: /instantclient
+          # Empty = python-oracledb thin mode. The bundled 19c thick client is
+          # rejected by Oracle 23ai logins (ORA-01017 with a correct password).
+          instantClientDirectory: ""
       sourceConfig:
         config:
           type: DatabaseMetadata
