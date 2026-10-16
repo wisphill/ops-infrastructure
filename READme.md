@@ -59,6 +59,7 @@ ops-infrastructure/
 ├── k8s/                                # Kubernetes Terraform configuration
 │   ├── main.tf
 │   └── providers.tf
+├── portal/                             # User portal with Google SSO login (Go backend + static web)
 ├── Dockerfile                          # Container build definition
 ├── READme.md                           # Project documentation
 └── terraform-sa-key.json               # Terraform service account key

@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Portal · Home</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <main class="card">
+    <img id="avatar" class="avatar" alt="" referrerpolicy="no-referrer" hidden>
+    <h1>Welcome<span id="name"></span></h1>
+    <p id="email" class="muted"></p>
+    <form method="post" action="/auth/logout">
+      <button class="btn" type="submit">Sign out</button>
+    </form>
+  </main>
+  <script src="/static/home.js"></script>
+</body>
+</html>
