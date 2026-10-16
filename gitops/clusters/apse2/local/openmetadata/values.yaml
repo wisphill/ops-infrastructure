@@ -24,6 +24,8 @@ openmetadata:
     authentication:
       # Only seeds the auth config on first boot. Once it is stored in the DB, changing this has no
       # effect; see READme.md in this directory for the manual step.
+      enabled: true
+      provider: basic
       enableSelfSignup: false
     # No Airflow in the local cluster, so don't try to reach a pipeline service.
     pipelineServiceClientConfig:
