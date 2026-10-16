@@ -27,20 +27,13 @@ So:
 - **Existing install**: do one of the procedures below once. The setting then persists in the DB
   across pod restarts, Argo CD syncs and chart upgrades.
 
-### Option A: Admin UI (recommended)
+It cannot be done from the UI: `Settings > SSO` only lists SSO providers, each with its own
+"Enable Self Signup" toggle, and has no entry for the basic (username/password) provider.
 
-1. Open https://openmetadata.opswork.io.vn and sign in as an admin
-   (bootstrap admin is `admin@open-metadata.org`; change its default password if not done yet:
-   `Settings > Members > Admins`).
-2. Go to `Settings > SSO`.
-3. Set **Enable Self Signup** to **Disabled**.
-4. Click **Save**.
+### Option A: Reset the stored security config to the Helm values
 
-### Option B: Reset the stored security config to the Helm values
-
-Use this if the UI is unavailable or the saved auth config is broken. It deletes the auth config
-from the DB so the server re-seeds it from `values.yaml` on the next start. Make sure `values.yaml`
-with `enableSelfSignup: false` is already synced by Argo CD.
+Deletes the auth config from the DB so the server re-seeds it from `values.yaml` on the next start.
+Make sure `values.yaml` with `enableSelfSignup: false` is already synced by Argo CD.
 
 ```bash
 kubectl -n openmetadata exec -it deploy/openmetadata -- \
@@ -52,23 +45,46 @@ kubectl -n openmetadata rollout status deploy/openmetadata
 
 > Any auth settings that were changed only in the UI (not in `values.yaml`) are lost by this reset.
 
+### Option B: Edit only `enableSelfSignup` in the stored config
+
+Keeps every other stored auth setting. Export the config, flip the flag, import it back:
+
+```bash
+kubectl -n openmetadata exec -it deploy/openmetadata -c openmetadata -- sh -c '
+  OPS=/opt/openmetadata/bootstrap/openmetadata-ops.sh
+  $OPS get-security-config -o /tmp/security.yaml &&
+  sed -i "s/^  enableSelfSignup: true/  enableSelfSignup: false/" /tmp/security.yaml &&
+  grep -n "enableSelfSignup" /tmp/security.yaml &&
+  $OPS update-security-config -f /tmp/security.yaml &&
+  rm -f /tmp/security.yaml'
+
+kubectl -n openmetadata rollout restart deploy/openmetadata
+```
+
+`update-security-config` asks for confirmation; check the `grep` output shows
+`enableSelfSignup: false` under `authenticationConfiguration` before confirming.
+
 ### Verify
 
 1. Sign out (or open a private window) and load the login page: there must be no
    **Create Account** / **Sign up** link.
-2. From the API:
+2. From the API (inside the pod; the public URL is behind a Cloudflare challenge):
 
    ```bash
-   curl -s https://openmetadata.opswork.io.vn/api/v1/system/config/auth | jq .enableSelfSignup
+   kubectl -n openmetadata exec deploy/openmetadata -c openmetadata -- \
+     wget -qO- localhost:8585/api/v1/system/config/auth | jq .enableSelfSignup
    # false
    ```
 
+   If this still says `true` while `printenv AUTHENTICATION_ENABLE_SELF_SIGNUP` in the pod says
+   `false`, the DB copy was never updated: do Option A or B.
+
 ### Creating users afterwards
 
-Admins add users from `Settings > Members > Users > Add User` (set a password, or let the user reset
+Admins add users from `Settings > Team & User Management > Users > Add User` (set a password, or let the user reset
 it if SMTP is configured).
 
 ### Re-enabling
 
-Set **Enable Self Signup** back to **Enabled** in `Settings > SSO`, and set
-`enableSelfSignup: true` in `values.yaml` so a future fresh install matches.
+Set `enableSelfSignup: true` in `values.yaml`, let Argo CD sync, then run Option A (or Option B
+with the `sed` reversed).
