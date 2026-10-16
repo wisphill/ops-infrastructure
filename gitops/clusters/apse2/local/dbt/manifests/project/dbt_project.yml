@@ -1,0 +1,12 @@
+name: shop_analytics
+version: "1.0.0"
+config-version: 2
+profile: oracle_local
+
+model-paths: ["models"]
+
+models:
+  shop_analytics:
+    # dbt-oracle drops and recreates the materialized views on every `dbt run`, so the data is
+    # fresh after each CronJob run (no Oracle-side refresh schedule needed).
+    +materialized: materialized_view

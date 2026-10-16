@@ -1,0 +1,42 @@
+version: 2
+
+models:
+  - name: stg_customers
+    description: Customers with normalised (lower-case) email.
+  - name: stg_products
+    description: Product catalog with business column names.
+  - name: stg_orders
+    description: Orders with business column names.
+  - name: stg_order_items
+    description: Order lines with the computed line amount.
+    columns:
+      - name: line_amount
+        description: quantity * unit_price
+
+  - name: fct_orders
+    description: One row per order with its customer and total.
+    columns:
+      - name: customer_email
+        description: Email of the ordering customer, from stg_customers.
+      - name: item_count
+        description: Number of order lines.
+      - name: order_total
+        description: Sum of line_amount over the order's lines.
+
+  - name: dim_customers
+    description: One row per customer with lifetime order metrics.
+    columns:
+      - name: order_count
+        description: Number of orders placed.
+      - name: lifetime_value
+        description: Sum of order_total across all orders.
+      - name: last_ordered_at
+        description: Time of the most recent order.
+
+  - name: fct_product_sales
+    description: Units sold and revenue per product.
+    columns:
+      - name: units_sold
+        description: Sum of quantity across order lines.
+      - name: revenue
+        description: Sum of line_amount across order lines.

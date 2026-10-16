@@ -83,3 +83,20 @@ data:
     INSERT INTO order_items (order_id, line_no, product_id, quantity, unit_price) VALUES (1, 1, 1, 1, 49.90);
     INSERT INTO order_items (order_id, line_no, product_id, quantity, unit_price) VALUES (1, 2, 2, 2, 19.90);
     COMMIT;
+
+  # Schema the dbt project builds into. It reads APP but owns only its own objects.
+  # Existing databases: run the same statements once, see openmetadata/docs/dbt-lineage.md.
+  03-analytics-schema.sh: |
+    #!/bin/bash
+    set -euo pipefail
+    sqlplus -s / as sysdba <<EOF
+    WHENEVER SQLERROR EXIT SQL.SQLCODE
+    ALTER SESSION SET CONTAINER = FREEPDB1;
+    CREATE USER ANALYTICS IDENTIFIED BY "${ANALYTICS_PASSWORD}" QUOTA UNLIMITED ON USERS;
+    GRANT CREATE SESSION, CREATE TABLE, CREATE VIEW, CREATE MATERIALIZED VIEW TO ANALYTICS;
+    GRANT SELECT ON APP.CUSTOMERS TO ANALYTICS;
+    GRANT SELECT ON APP.PRODUCTS TO ANALYTICS;
+    GRANT SELECT ON APP.ORDERS TO ANALYTICS;
+    GRANT SELECT ON APP.ORDER_ITEMS TO ANALYTICS;
+    EXIT
+    EOF

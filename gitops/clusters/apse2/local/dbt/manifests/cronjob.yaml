@@ -1,0 +1,98 @@
+# Rebuilds the ANALYTICS models from APP and publishes manifest.json / catalog.json to the
+# artifacts volume, where the artifacts Service serves them to the OpenMetadata dbt ingestion.
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: dbt-run
+  labels:
+    app: dbt-run
+spec:
+  schedule: "*/5 * * * *"
+  concurrencyPolicy: Forbid
+  startingDeadlineSeconds: 300
+  successfulJobsHistoryLimit: 2
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      activeDeadlineSeconds: 1200
+      ttlSecondsAfterFinished: 3600
+      template:
+        metadata:
+          labels:
+            app: dbt-run
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: dbt
+              image: python:3.12-slim
+              imagePullPolicy: IfNotPresent
+              command: ["sh", "-c"]
+              args:
+                - |
+                  set -eu
+                  REQ="dbt-oracle==1.9.4"
+                  if [ "$(cat /venv/.requirements 2>/dev/null)" != "$REQ" ]; then
+                    echo "installing $REQ into /venv"
+                    rm -rf /venv/bin /venv/lib /venv/include /venv/pyvenv.cfg
+                    python -m venv /venv
+                    /venv/bin/pip install --no-cache-dir --quiet "$REQ"
+                    echo "$REQ" > /venv/.requirements
+                  fi
+                  mkdir -p /work/project/models
+                  cp -L /dbt/project/* /work/project/
+                  cp -L /dbt/models/* /work/project/models/
+                  cd /work/project
+                  /venv/bin/dbt run --profiles-dir . --target-path /work/target
+                  /venv/bin/dbt docs generate --profiles-dir . --target-path /work/target
+                  # Publish both files together so readers never see a mixed pair.
+                  rm -rf /artifacts/.next && mkdir /artifacts/.next
+                  cp /work/target/manifest.json /work/target/catalog.json /artifacts/.next/
+                  mv /artifacts/.next/manifest.json /artifacts/manifest.json
+                  mv /artifacts/.next/catalog.json /artifacts/catalog.json
+              env:
+                - name: DBT_ORACLE_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      name: dbt-secrets
+                      key: DBT_ORACLE_PASSWORD
+                - name: ORA_PYTHON_DRIVER_TYPE
+                  value: thin
+                - name: DBT_SEND_ANONYMOUS_USAGE_STATS
+                  value: "false"
+                - name: DBT_LOG_PATH
+                  value: /work/logs
+              volumeMounts:
+                - name: dbt-project
+                  mountPath: /dbt/project
+                  readOnly: true
+                - name: dbt-models
+                  mountPath: /dbt/models
+                  readOnly: true
+                - name: data
+                  mountPath: /venv
+                  subPath: venv
+                - name: data
+                  mountPath: /artifacts
+                  subPath: artifacts
+                - name: work
+                  mountPath: /work
+              resources:
+                requests:
+                  cpu: 100m
+                  memory: 256Mi
+                limits:
+                  cpu: "1"
+                  memory: 1Gi
+          volumes:
+            - name: dbt-project
+              configMap:
+                name: dbt-project
+            - name: dbt-models
+              configMap:
+                name: dbt-models
+            - name: data
+              persistentVolumeClaim:
+                claimName: dbt-data
+            - name: work
+              emptyDir: {}

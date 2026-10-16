@@ -13,3 +13,4 @@ resources:
   - seaweedfs/app.yaml
   - openmetadata/app.yaml
   - oracle/app.yaml
+  - dbt/app.yaml

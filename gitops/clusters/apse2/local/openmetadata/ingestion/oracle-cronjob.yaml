@@ -1,6 +1,9 @@
 # Airflow is disabled in this cluster, so the ingestion agent runs as a CronJob.
-# Each run re-reads the full Oracle catalog and reconciles OpenMetadata
-# (new/altered objects are upserted, dropped ones are soft-deleted).
+# Each run, in order:
+#   1. The Oracle metadata workflow re-reads the catalog (APP + ANALYTICS) and reconciles
+#      OpenMetadata (new/altered objects are upserted, dropped ones are soft-deleted).
+#   2. The dbt workflow downloads the artifacts published by the dbt-run CronJob (namespace dbt)
+#      and attaches models, descriptions and lineage to those tables.
 apiVersion: batch/v1
 kind: CronJob
 metadata:
@@ -28,7 +31,12 @@ spec:
             - name: ingest
               image: openmetadata/ingestion-base:2.0.5
               imagePullPolicy: IfNotPresent
-              command: ["metadata", "ingest", "-c", "/config/oracle-metadata.yaml"]
+              command: ["sh", "-c"]
+              args:
+                - |
+                  set -e
+                  metadata ingest -c /config/oracle-metadata.yaml
+                  metadata ingest -c /config/dbt-metadata.yaml
               env:
                 - name: ORACLE_PASSWORD
                   valueFrom:

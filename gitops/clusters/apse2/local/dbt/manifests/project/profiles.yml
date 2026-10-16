@@ -1,0 +1,17 @@
+oracle_local:
+  target: local
+  outputs:
+    local:
+      type: oracle
+      user: ANALYTICS
+      pass: "{{ env_var('DBT_ORACLE_PASSWORD') }}"
+      protocol: tcp
+      host: oracle.oracle.svc.cluster.local
+      port: 1521
+      service: FREEPDB1
+      # Must match the OpenMetadata service's databaseName and a schema the Oracle ingestion
+      # (openmetadata/ingestion/oracle-workflow.yaml) includes, so dbt nodes resolve to the
+      # tables OpenMetadata already knows.
+      database: freepdb1
+      schema: analytics
+      threads: 2

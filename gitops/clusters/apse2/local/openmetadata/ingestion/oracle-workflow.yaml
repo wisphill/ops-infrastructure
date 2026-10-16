@@ -36,6 +36,36 @@ data:
           schemaFilterPattern:
             includes:
               - "(?i)^app$"
+              # Built by the dbt project in gitops/.../local/dbt; must be ingested before
+              # dbt-metadata.yaml runs.
+              - "(?i)^analytics$"
+    sink:
+      type: metadata-rest
+      config: {}
+    workflowConfig:
+      loggerLevel: INFO
+      openMetadataServerConfig:
+        hostPort: http://openmetadata.openmetadata.svc.cluster.local:8585/api
+        authProvider: openmetadata
+        securityConfig:
+          jwtToken: ${OM_JWT_TOKEN}
+
+  # Attaches dbt models, descriptions and lineage (from manifest depends_on and compiled SQL)
+  # to the tables the Oracle workflow above already created.
+  dbt-metadata.yaml: |
+    source:
+      type: dbt
+      serviceName: oracle_local
+      sourceConfig:
+        config:
+          type: DBT
+          # Published by the dbt-run CronJob in namespace dbt.
+          dbtConfigSource:
+            dbtConfigType: http
+            dbtManifestHttpPath: http://dbt-artifacts.dbt.svc.cluster.local/manifest.json
+            dbtCatalogHttpPath: http://dbt-artifacts.dbt.svc.cluster.local/catalog.json
+          dbtUpdateDescriptions: true
+          includeTags: true
     sink:
       type: metadata-rest
       config: {}

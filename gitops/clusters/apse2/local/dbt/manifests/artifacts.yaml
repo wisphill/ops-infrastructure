@@ -1,0 +1,71 @@
+# Serves the latest dbt manifest.json / catalog.json read-only inside the cluster, e.g.
+# http://dbt-artifacts.dbt.svc.cluster.local/manifest.json for the OpenMetadata dbt ingestion.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: dbt-data
+spec:
+  # local-path is node-local; the CronJob and this Deployment share it because the cluster has
+  # one node.
+  accessModes: ["ReadWriteOnce"]
+  storageClassName: local-path
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dbt-artifacts
+  labels:
+    app: dbt-artifacts
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dbt-artifacts
+  template:
+    metadata:
+      labels:
+        app: dbt-artifacts
+    spec:
+      containers:
+        - name: nginx
+          image: nginxinc/nginx-unprivileged:1.27-alpine
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8080
+          volumeMounts:
+            - name: data
+              mountPath: /usr/share/nginx/html
+              subPath: artifacts
+              readOnly: true
+          readinessProbe:
+            tcpSocket:
+              port: http
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: dbt-data
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dbt-artifacts
+  labels:
+    app: dbt-artifacts
+spec:
+  selector:
+    app: dbt-artifacts
+  ports:
+    - name: http
+      port: 80
+      targetPort: http

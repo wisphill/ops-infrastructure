@@ -45,6 +45,11 @@ spec:
                 secretKeyRef:
                   name: oracle-secrets
                   key: OM_READER_PASSWORD
+            - name: ANALYTICS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: oracle-secrets
+                  key: ANALYTICS_PASSWORD
           volumeMounts:
             - name: data
               mountPath: /opt/oracle/oradata

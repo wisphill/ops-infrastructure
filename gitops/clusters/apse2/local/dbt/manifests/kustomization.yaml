@@ -1,0 +1,31 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: dbt
+
+generators:
+  - secrets-generator.yaml
+
+resources:
+  - cronjob.yaml
+  - artifacts.yaml
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+configMapGenerator:
+  - name: dbt-project
+    files:
+      - project/dbt_project.yml
+      - project/profiles.yml
+  - name: dbt-models
+    files:
+      - models/sources.yml
+      - models/models.yml
+      - models/stg_customers.sql
+      - models/stg_products.sql
+      - models/stg_orders.sql
+      - models/stg_order_items.sql
+      - models/fct_orders.sql
+      - models/dim_customers.sql
+      - models/fct_product_sales.sql
