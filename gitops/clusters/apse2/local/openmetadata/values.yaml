@@ -21,6 +21,10 @@ openmetadata:
           # Provided by gitops/.../openmetadata/secrets (sops + ksops)
           secretRef: mysql-secrets
           secretKey: openmetadata-mysql-password
+    authentication:
+      # Only seeds the auth config on first boot. Once it is stored in the DB, changing this has no
+      # effect; see READme.md in this directory for the manual step.
+      enableSelfSignup: false
     # No Airflow in the local cluster, so don't try to reach a pipeline service.
     pipelineServiceClientConfig:
       enabled: false
