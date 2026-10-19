@@ -11,7 +11,9 @@ metadata:
   labels:
     app: oracle-metadata-ingestion
 spec:
-  schedule: "*/5 * * * *"
+  # Offset from dbt-run (*/5): dbt recreates the mart tables, and scanning ANALYTICS mid-build
+  # soft-deletes them (markDeletedTables).
+  schedule: "2-59/5 * * * *"
   concurrencyPolicy: Forbid
   startingDeadlineSeconds: 300
   successfulJobsHistoryLimit: 2

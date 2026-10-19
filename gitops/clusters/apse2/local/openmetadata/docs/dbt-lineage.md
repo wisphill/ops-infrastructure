@@ -29,11 +29,12 @@ The transformation lives in its own Argo CD app (`gitops/clusters/apse2/local/db
 | Oracle schema `ANALYTICS` | `oracle/manifests/initdb-configmap.yaml` (`03-analytics-schema.sh`) |
 | `ANALYTICS` password | `ANALYTICS_PASSWORD` in `oracle/manifests/secrets.enc.yaml`, same value as `DBT_ORACLE_PASSWORD` in `dbt/manifests/secrets.enc.yaml` |
 
-## Flow (both CronJobs run every 5 minutes)
+## Flow (every 5 minutes; ingestion runs 2 minutes after dbt)
 
 1. **`dbt-run`** (namespace `dbt`, `python:3.12-slim`): installs `dbt-oracle==1.9.4` into `/venv`
    on the first run only, then `dbt run` + `dbt docs generate` as Oracle user `ANALYTICS`. The
-   staging models are materialized views, recreated on every run; the marts are tables. On success
+   staging models are materialized views, refreshed on every run; the marts are tables, rebuilt
+   on every run. On success
    `manifest.json` and `catalog.json` are moved into the artifacts directory; a failed run leaves
    the previous artifacts in place.
 2. **`dbt-artifacts`** serves them at
@@ -93,7 +94,8 @@ In OpenMetadata open `oracle_local > freepdb1 > analytics > FCT_ORDERS` (or `DIM
 
 - **`analytics` tables disappear / show as deleted**: the Oracle workflow must include
   `(?i)^analytics$` in `schemaFilterPattern`; with `markDeletedSchemas: true` any run without it
-  soft-deletes the schema.
+  soft-deletes the schema. The ingestion CronJob must also stay offset from `dbt-run`; scanning
+  while dbt rebuilds the marts soft-deletes them until the next run.
 - **dbt step of the ingestion fails to fetch the manifest**: `dbt-run` has not succeeded yet; check
   `kubectl -n dbt logs job/<latest dbt-run job>`.
 - **`ORA-01031: insufficient privileges` creating a materialized view**: `ANALYTICS` is missing

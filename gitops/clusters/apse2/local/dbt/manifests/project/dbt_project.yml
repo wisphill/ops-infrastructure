@@ -7,6 +7,6 @@ model-paths: ["models"]
 
 models:
   shop_analytics:
-    # dbt-oracle drops and recreates the materialized views on every `dbt run`, so the data is
-    # fresh after each CronJob run (no Oracle-side refresh schedule needed).
+    # Each `dbt run` refreshes the existing materialized views (DBMS_MVIEW.REFRESH), so the data
+    # is fresh after each CronJob run (no Oracle-side refresh schedule needed).
     +materialized: materialized_view
