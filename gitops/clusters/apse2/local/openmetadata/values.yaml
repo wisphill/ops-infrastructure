@@ -7,7 +7,6 @@ openmetadata:
     authorizer:
       # Admin = <initialAdmin>@<principalDomain>; must match the Google account email you sign in with.
       initialAdmins:
-        - fizz.uet
         - phi.pounce
       principalDomain: "gmail.com"
       # Only Google accounts on these domains may log in (accounts still have to exist: no self signup).
