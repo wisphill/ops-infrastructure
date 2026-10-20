@@ -1,0 +1,197 @@
+# C1–C4 sensitivity scale (dự thảo Quy định Quản trị dữ liệu V1.1, Điều 20–22; see
+# ../../docs/data-governance-glossary.md). Applied to OpenMetadata by sync_classifications.py on
+# every auto-classification run: edits made in the UI to these fields are overwritten.
+#
+# Field names follow the OpenMetadata 2.0.5 CreateClassificationRequest / CreateTagRequest API.
+# Only C3 and C4 have recognizers: "public" and "internal" cannot be inferred from the data, so
+# Stewards assign C1/C2 by hand. Unlabelled columns are treated as C3 by policy, not by a tag.
+#
+# Recognizer scoring (metadata/pii/tag_analyzer.py):
+#   - target column_name: the pattern runs against the column name; score = sum of matches, max 1.
+#   - target content: the pattern runs against each sampled value; score = best single match.
+#     Context words are compared with the column name split on "_" and camelCase, and a hit
+#     raises the score by ~0.35. Low-score patterns below therefore only pass the 0.6 threshold
+#     when the column name agrees.
+# Presidio regexes are unanchored searches: short tokens are wrapped in (^|_)...(_|$).
+
+classification:
+  name: DataSensitivity
+  displayName: Phân loại dữ liệu C1–C4
+  description: >-
+    Cấp nhạy cảm theo dự thảo Quy định Quản trị dữ liệu V1.1 (Điều 20–22). Cấp của bảng là cấp
+    cao nhất của các cột; dữ liệu dẫn xuất không thấp hơn nguồn; chưa gắn nhãn thì xử lý như C3.
+    Nhãn tự động ở trạng thái Suggested, Data Steward xác nhận trong 10 ngày, Data Owner duyệt.
+  mutuallyExclusive: true
+  autoClassificationConfig:
+    enabled: true
+    # One level per column; when C3 and C4 both match, the stricter level wins.
+    conflictResolution: highest_priority
+    minimumConfidence: 0.6
+    requireExplicitMatch: true
+
+tags:
+  - name: C1
+    displayName: C1 Công khai
+    description: >-
+      Dữ liệu công bố được ra ngoài (lịch bay công bố, thông tin sản phẩm, báo cáo đã phát hành).
+      Không mã hoá bắt buộc, không che, tải tự do, dev/test và AI bên ngoài dùng được. Người
+      dùng đọc không cần duyệt; hạn quyền 12 tháng.
+    style:
+      color: "#2E7D32"
+    autoClassificationEnabled: false
+    autoClassificationPriority: 10
+
+  - name: C2
+    displayName: C2 Nội bộ
+    description: >-
+      Dùng trong Tổng công ty, lộ ra ngoài gây bất lợi (số liệu vận hành tổng hợp, quy trình,
+      danh mục nội bộ). Mã hoá khuyến nghị, tải có log, AI bên ngoài theo duyệt. Data Steward
+      duyệt quyền đọc; hạn 12 tháng.
+    style:
+      color: "#1565C0"
+    autoClassificationEnabled: false
+    autoClassificationPriority: 20
+
+  - name: C3
+    displayName: C3 Hạn chế
+    description: >-
+      Cá nhân cơ bản, PNR, hội viên, doanh thu chi tiết, hợp đồng. Mã hoá lưu trữ bắt buộc, che
+      trường cá nhân khi hiển thị, tải theo duyệt có log, dev/test chỉ dữ liệu đã che, cấm AI bên
+      ngoài. Data Owner duyệt quyền đọc; hạn 6 tháng.
+    style:
+      color: "#EF6C00"
+    autoClassificationEnabled: true
+    autoClassificationPriority: 80
+    recognizers:
+      - name: C3EmailRecognizer
+        displayName: Email
+        recognizerConfig:
+          type: predefined
+          name: EmailRecognizer
+        confidenceThreshold: 0.6
+        target: content
+      - name: C3PhoneRecognizer
+        displayName: Phone number
+        recognizerConfig:
+          type: predefined
+          name: PhoneRecognizer
+          context: [phone, mobile, tel, telephone, sdt, dien, thoai]
+        confidenceThreshold: 0.6
+        target: content
+      - name: C3PersonNameRecognizer
+        displayName: Person name (spaCy NER)
+        recognizerConfig:
+          type: predefined
+          name: SpacyRecognizer
+          supportedEntities: [PERSON]
+          context: [name, fullname, first, last, given, family, passenger, ten]
+        confidenceThreshold: 0.6
+        target: content
+      - name: C3ColumnNameRecognizer
+        displayName: Personal / commercial column name
+        description: >-
+          Tên cột gợi ý dữ liệu cá nhân cơ bản, PNR, hội viên, doanh thu chi tiết, hợp đồng.
+        recognizerConfig:
+          type: pattern
+          supportedLanguage: en
+          regexFlags: {dotAll: true, multiline: true, ignoreCase: true}
+          patterns:
+            - name: contact
+              regex: 'e_?mail|phone|mobile|(^|_)(tel|sdt)(_|$)|address|dia_?chi'
+              score: 0.9
+            - name: person_name
+              regex: 'full_?name|first_?name|last_?name|given_?name|family_?name|middle_?name|passenger_?name|ho_?ten'
+              score: 0.9
+            - name: birth_date
+              regex: 'birth|(^|_)dob(_|$)|ngay_?sinh'
+              score: 0.9
+            - name: booking
+              regex: '(^|_)pnr(_|$)|booking_?ref|record_?locator|ticket_?(number|no|num)'
+              score: 0.9
+            - name: loyalty
+              regex: 'lotus_?miles|frequent_?flyer|(^|_)ffp(_|$)|member(ship)?_?(id|number|no|num|tier)'
+              score: 0.9
+            - name: commercial
+              regex: 'revenue|doanh_?thu|contract|hop_?dong'
+              score: 0.9
+        confidenceThreshold: 0.6
+        target: column_name
+
+  - name: C4
+    displayName: C4 Đặc biệt hạn chế
+    description: >-
+      Bí mật kinh doanh, cá nhân nhạy cảm, thẻ thanh toán, giấy tờ tuỳ thân, sức khoẻ tổ bay, an
+      ninh hàng không, giá, lương (không gồm bí mật nhà nước). Mã hoá khoá riêng, che toàn bộ khi
+      hiển thị, cấm tải, cấm dev/test, cấm AI bên ngoài; dạng rõ chỉ ở bucket sensitive. Data
+      Owner + DPO/ATTT duyệt quyền đọc; hạn 3 tháng.
+    style:
+      color: "#C62828"
+    autoClassificationEnabled: true
+    autoClassificationPriority: 100
+    recognizers:
+      - name: C4CreditCardRecognizer
+        displayName: Payment card number
+        recognizerConfig:
+          type: predefined
+          name: CreditCardRecognizer
+          supportedLanguage: en
+        confidenceThreshold: 0.6
+        target: content
+      - name: C4IbanRecognizer
+        displayName: IBAN
+        recognizerConfig:
+          type: predefined
+          name: IbanRecognizer
+        confidenceThreshold: 0.6
+        target: content
+      - name: C4VnIdentityRecognizer
+        displayName: Vietnamese ID card / passport number
+        description: >-
+          CCCD 12 số, CMND 9 số, hộ chiếu VN (1 chữ + 7 số). Điểm thấp, chỉ đạt ngưỡng khi tên
+          cột chứa từ ngữ cảnh.
+        recognizerConfig:
+          type: pattern
+          supportedLanguage: en
+          regexFlags: {dotAll: true, multiline: true, ignoreCase: true}
+          patterns:
+            - name: cccd
+              regex: '\A\d{12}\Z'
+              score: 0.3
+            - name: cmnd
+              regex: '\A\d{9}\Z'
+              score: 0.3
+            - name: vn_passport
+              regex: '\A[A-Z]\d{7}\Z'
+              score: 0.3
+          context: [cccd, cmnd, citizen, national, identity, passport, chieu]
+        confidenceThreshold: 0.6
+        target: content
+      - name: C4ColumnNameRecognizer
+        displayName: Highly restricted column name
+        description: >-
+          Tên cột gợi ý thẻ thanh toán, giấy tờ tuỳ thân, sức khoẻ, cá nhân nhạy cảm, lương, bí mật.
+        recognizerConfig:
+          type: pattern
+          supportedLanguage: en
+          regexFlags: {dotAll: true, multiline: true, ignoreCase: true}
+          patterns:
+            - name: payment_card
+              regex: 'card_?(number|no|num)|credit_?card|(^|_)(pan|cvv|cvc|cvv2)(_|$)'
+              score: 0.9
+            - name: identity_document
+              regex: 'passport|ho_?chieu|(^|_)(cccd|cmnd)(_|$)|national_?id|citizen_?id|id_?card|identity_?(number|no|num)'
+              score: 0.9
+            - name: health
+              regex: 'medical|diagnos|disease|blood_?type|health_?(record|status|info)|suc_?khoe'
+              score: 0.9
+            - name: special_personal
+              regex: 'religion|ton_?giao|ethnic|dan_?toc|biometric|fingerprint|criminal'
+              score: 0.9
+            - name: salary
+              regex: 'salary|wage|payroll|tien_?luong'
+              score: 0.9
+            - name: secret
+              regex: 'password|passwd|secret|private_?key'
+              score: 0.9
+        confidenceThreshold: 0.6
+        target: column_name

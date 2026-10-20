@@ -9,3 +9,12 @@ generators:
 resources:
   - oracle-workflow.yaml
   - oracle-cronjob.yaml
+  - auto-classification-cronjob.yaml
+
+configMapGenerator:
+  - name: oracle-auto-classification
+    files:
+      - auto-classification/oracle-auto-classification.yaml
+      - auto-classification/data-sensitivity.yaml
+      - auto-classification/sync_classifications.py
+      - auto-classification/run_auto_classification.py
