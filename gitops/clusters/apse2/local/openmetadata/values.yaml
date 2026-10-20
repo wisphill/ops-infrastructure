@@ -5,9 +5,13 @@ replicaCount: 1
 openmetadata:
   config:
     authorizer:
+      # Admin = <initialAdmin>@<principalDomain>; must match the Google account email you sign in with.
       initialAdmins:
-        - admin
-      principalDomain: "opswork.io.vn"
+        - fizz.uet
+      principalDomain: "gmail.com"
+      # Only Google accounts on these domains may log in (accounts still have to exist: no self signup).
+      allowedEmailRegistrationDomains:
+        - gmail.com
     elasticsearch:
       host: opensearch
       searchType: opensearch
@@ -29,8 +33,31 @@ openmetadata:
       # Only seeds the auth config on first boot. Once it is stored in the DB, changing this has no
       # effect; see READme.md in this directory for the manual step.
       enabled: true
-      provider: basic
+      # Google SSO, confidential (server-side) OIDC flow. Client ID/secret come from Secret
+      # oidc-secrets in ./secrets (sops + ksops). Google OAuth client (type Web application) needs the
+      # authorized redirect URI https://openmetadata.opswork.io.vn/callback.
+      provider: google
+      clientType: confidential
+      authority: "https://accounts.google.com"
+      # Not a secret (visible to the browser), but must equal openmetadata-oidc-client-id in oidc-secrets.
+      clientId: "504337467379-ka99jbabmnbf5tthq72g2s88fsog5013.apps.googleusercontent.com"
+      publicKeys:
+        - "https://www.googleapis.com/oauth2/v3/certs"
+        - "http://openmetadata:8585/api/v1/system/config/jwks"
+      callbackUrl: "https://openmetadata.opswork.io.vn/callback"
       enableSelfSignup: false
+      oidcConfiguration:
+        enabled: true
+        oidcType: "google"
+        clientId:
+          secretRef: oidc-secrets
+          secretKey: openmetadata-oidc-client-id
+        clientSecret:
+          secretRef: oidc-secrets
+          secretKey: openmetadata-oidc-client-secret
+        discoveryUri: "https://accounts.google.com/.well-known/openid-configuration"
+        callbackUrl: "https://openmetadata.opswork.io.vn/callback"
+        serverUrl: "https://openmetadata.opswork.io.vn"
     # No Airflow in the local cluster, so don't try to reach a pipeline service.
     pipelineServiceClientConfig:
       enabled: false

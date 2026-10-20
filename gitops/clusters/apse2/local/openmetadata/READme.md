@@ -8,7 +8,45 @@
 | `openmetadata-access`      | Bot policies/roles (`access/access.yaml`) | 3 |
 | `openmetadata-auto-classification` | Auto-classification CronJob (tag suggestions) | 3 |
 
-UI: https://openmetadata.opswork.io.vn (basic auth provider).
+UI: https://openmetadata.opswork.io.vn (Google SSO, see [Google SSO](#google-sso)).
+
+## Google SSO
+
+`values.yaml` configures the `google` provider with the confidential OIDC flow. Admin is
+`<initialAdmins>@<principalDomain>` (`fizz.uet@gmail.com`); only `gmail.com` accounts may log in, and
+self signup stays off, so other users must be added by an admin first.
+
+### Google OAuth client
+
+In Google Cloud Console > APIs & Services > Credentials, create an OAuth client ID of type
+**Web application** with:
+
+- Authorized JavaScript origin: `https://openmetadata.opswork.io.vn`
+- Authorized redirect URI: `https://openmetadata.opswork.io.vn/callback`
+
+Then, from this directory, open the decrypted file in your editor and replace the two `xxx` values
+under the `oidc-secrets` document (`openmetadata-oidc-client-id`, `openmetadata-oidc-client-secret`):
+
+```bash
+SOPS_AGE_KEY_FILE=../../../../../sops-age-key.txt sops edit secrets/secrets.enc.yaml
+```
+
+Also set the same client ID in `openmetadata.config.authentication.clientId` in `values.yaml`
+(not a secret).
+
+> `secrets.enc.yaml` holds several Secrets in one file, so use `sops edit`:
+> - `sops set` only changes the **first** document (`mysql-secrets`).
+> - Encrypting a document separately and pasting it in breaks the file: all documents share one data
+>   key and MAC, and ksops fails with `cipher: message authentication failed`.
+
+### Switching an existing install from basic auth
+
+The auth config is only seeded on first boot (see below), so after Argo CD syncs the new values,
+reset the stored config once with [Option A](#option-a-reset-the-stored-security-config-to-the-helm-values).
+On restart the server creates the admin user from `initialAdmins`/`principalDomain`. The old
+`admin@open-metadata.org` basic-auth user can no longer sign in. Bot tokens (`OM_ADMIN_JWT_TOKEN`,
+ingestion bot) keep working because they are signed by OpenMetadata and still validated through the
+`/api/v1/system/config/jwks` entry in `publicKeys`.
 
 ## Disable account registration (self signup)
 
