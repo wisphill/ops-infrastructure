@@ -1,5 +1,5 @@
 # Runs on every Argo CD sync of openmetadata-access (hook; the previous Job is replaced).
-# Requires key OM_ADMIN_JWT_TOKEN (JWT of an admin user, or of a bot with the Admin role) in Secret
+# Requires key OM_ADMIN_BOT_TOKEN (JWT of an admin user, or of a bot with the Admin role) in Secret
 # openmetadata-ingestion-secrets, which the openmetadata-ingestion app renders from
 # ../ingestion/secrets.enc.yaml (see ../READme.md).
 apiVersion: batch/v1
@@ -23,11 +23,11 @@ spec:
           imagePullPolicy: IfNotPresent
           command: ["python", "/config/sync_access.py", "/config/access.yaml"]
           env:
-            - name: OM_ADMIN_JWT_TOKEN
+            - name: OM_ADMIN_BOT_TOKEN
               valueFrom:
                 secretKeyRef:
                   name: openmetadata-bot-secrets
-                  key: OM_ADMIN_JWT_TOKEN
+                  key: OM_ADMIN_BOT_TOKEN
           volumeMounts:
             - name: config
               mountPath: /config

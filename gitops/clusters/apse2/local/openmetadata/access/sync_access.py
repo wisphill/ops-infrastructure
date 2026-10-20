@@ -2,7 +2,7 @@
 
 Usage: python sync_access.py <access.yaml>
 
-Needs an admin JWT in $OM_ADMIN_JWT_TOKEN and the server URL in $OM_URL (default: in-cluster).
+Needs an admin JWT in $OM_ADMIN_BOT_TOKEN and the server URL in $OM_URL (default: in-cluster).
 Policies and roles are upserted; bots only gain roles, none is ever removed.
 """
 
@@ -15,7 +15,7 @@ import requests
 import yaml
 
 API = os.environ.get("OM_URL", "http://openmetadata.openmetadata.svc.cluster.local:8585").rstrip("/") + "/api/v1"
-HEADERS = {"Authorization": f"Bearer {os.environ['OM_ADMIN_JWT_TOKEN']}"}
+HEADERS = {"Authorization": f"Bearer {os.environ['OM_ADMIN_BOT_TOKEN']}"}
 
 
 def call(method: str, path: str, **kwargs) -> dict:

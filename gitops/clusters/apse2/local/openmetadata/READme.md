@@ -44,7 +44,7 @@ Also set the same client ID in `openmetadata.config.authentication.clientId` in 
 The auth config is only seeded on first boot (see below), so after Argo CD syncs the new values,
 reset the stored config once with [Option A](#option-a-reset-the-stored-security-config-to-the-helm-values).
 On restart the server creates the admin user from `initialAdmins`/`principalDomain`. The old
-`admin@open-metadata.org` basic-auth user can no longer sign in. Bot tokens (`OM_ADMIN_JWT_TOKEN`,
+`admin@open-metadata.org` basic-auth user can no longer sign in. Bot tokens (`OM_ADMIN_BOT_TOKEN`,
 ingestion bot) keep working because they are signed by OpenMetadata and still validated through the
 `/api/v1/system/config/jwks` entry in `publicKeys`.
 
@@ -145,7 +145,7 @@ it appearing in shell history or the process list:
 
 ```bash
 pbpaste | tr -d '\n' | jq -Rs . | SOPS_AGE_KEY_FILE=../../../../../sops-age-key.txt \
-  sops set --value-stdin ingestion/secrets.enc.yaml '["stringData"]["OM_ADMIN_JWT_TOKEN"]'
+  sops set --value-stdin ingestion/secrets.enc.yaml '["stringData"]["OM_ADMIN_BOT_TOKEN"]'
 ```
 
 Commit and push: Argo CD re-renders `openmetadata-ingestion-secrets` and the next
