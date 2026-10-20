@@ -2,6 +2,7 @@
 #   1. openmetadata-dependencies : MySQL + OpenSearch (sync-wave 0)
 #   2. openmetadata              : the OpenMetadata server + UI (sync-wave 1)
 #   3. openmetadata-ingestion    : metadata ingestion CronJobs (sync-wave 2)
+#   4. openmetadata-auto-classification : C1-C4 tag suggestion CronJob (sync-wave 3)
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -89,6 +90,28 @@ spec:
     path: gitops/clusters/apse2/local/openmetadata/ingestion
     plugin:
       name: ksops
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: openmetadata
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
+# Reads the openmetadata-ingestion-secrets Secret created by openmetadata-ingestion, hence wave 3.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: openmetadata-auto-classification
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/wisphill/ops-infrastructure
+    targetRevision: main
+    path: gitops/clusters/apse2/local/openmetadata/auto-classification
   destination:
     server: https://kubernetes.default.svc
     namespace: openmetadata

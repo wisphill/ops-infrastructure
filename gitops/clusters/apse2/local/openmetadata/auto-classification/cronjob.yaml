@@ -1,9 +1,10 @@
 # Suggests a C1–C4 level (DataSensitivity classification) for each Oracle column. Each run:
 #   1. sync_classifications.py applies auto-classification/data-sensitivity.yaml, so the
 #      classification, tags and recognizers on the server always match git.
-#   2. run_auto_classification.py samples APP + ANALYTICS and adds Suggested DataSensitivity
-#      tags. Columns that already carry a DataSensitivity tag (suggested or confirmed by a
-#      Steward) are skipped, because the classification is mutually exclusive.
+#   2. run_auto_classification.py samples APP + ANALYTICS and files a "Request Tag" task per
+#      column for the suggested DataSensitivity tag. Nothing is tagged until a Data Steward
+#      accepts the task in the UI (Activity Feed > Tasks). Columns that already carry a
+#      DataSensitivity tag, or have a task for that tag (open or rejected), are skipped.
 apiVersion: batch/v1
 kind: CronJob
 metadata:
@@ -40,6 +41,9 @@ spec:
                   python /config/sync_classifications.py /config/oracle-auto-classification.yaml /config/data-sensitivity.yaml
                   python /config/run_auto_classification.py /config/oracle-auto-classification.yaml DataSensitivity
               env:
+                # Team that receives the tasks; table owners if the team does not exist.
+                - name: SUGGESTION_ASSIGNEE_TEAM
+                  value: DataSteward
                 - name: ORACLE_PASSWORD
                   valueFrom:
                     secretKeyRef:

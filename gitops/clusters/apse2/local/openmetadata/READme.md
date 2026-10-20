@@ -5,6 +5,7 @@
 | `openmetadata-dependencies`| MySQL + OpenSearch            | 0         |
 | `openmetadata`             | Server + UI (`values.yaml`)   | 1         |
 | `openmetadata-ingestion`   | Ingestion CronJobs            | 2         |
+| `openmetadata-auto-classification` | Auto-classification CronJob (tag suggestions) | 3 |
 
 UI: https://openmetadata.opswork.io.vn (basic auth provider).
 
