@@ -1,6 +1,7 @@
 # Runs on every Argo CD sync of openmetadata-access (hook; the previous Job is replaced).
-# Requires Secret openmetadata-access-secrets with key OM_ADMIN_JWT_TOKEN (JWT of an admin user,
-# or of a bot with the Admin role). It is not managed here; create it once, see ../READme.md.
+# Requires key OM_ADMIN_JWT_TOKEN (JWT of an admin user, or of a bot with the Admin role) in Secret
+# openmetadata-ingestion-secrets, which the openmetadata-ingestion app renders from
+# ../ingestion/secrets.enc.yaml (see ../READme.md).
 apiVersion: batch/v1
 kind: Job
 metadata:
@@ -25,7 +26,7 @@ spec:
             - name: OM_ADMIN_JWT_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: openmetadata-access-secrets
+                  name: openmetadata-ingestion-secrets
                   key: OM_ADMIN_JWT_TOKEN
           volumeMounts:
             - name: config

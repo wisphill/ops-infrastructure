@@ -2,7 +2,7 @@
 #   1. openmetadata-dependencies : MySQL + OpenSearch (sync-wave 0)
 #   2. openmetadata              : the OpenMetadata server + UI (sync-wave 1)
 #   3. openmetadata-ingestion    : metadata ingestion CronJobs (sync-wave 2)
-#   4. openmetadata-access : bot policies/roles (sync-wave 2)
+#   4. openmetadata-access : bot policies/roles (sync-wave 3, needs the ingestion secret)
 #   5. openmetadata-auto-classification : C1-C4 tag suggestion CronJob (sync-wave 3)
 apiVersion: argoproj.io/v1alpha1
 kind: Application
@@ -106,7 +106,7 @@ metadata:
   name: openmetadata-access
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   project: default
   source:

@@ -5,7 +5,7 @@
 | `openmetadata-dependencies`| MySQL + OpenSearch            | 0         |
 | `openmetadata`             | Server + UI (`values.yaml`)   | 1         |
 | `openmetadata-ingestion`   | Ingestion CronJobs            | 2         |
-| `openmetadata-access`      | Bot policies/roles (`access/access.yaml`) | 2 |
+| `openmetadata-access`      | Bot policies/roles (`access/access.yaml`) | 3 |
 | `openmetadata-auto-classification` | Auto-classification CronJob (tag suggestions) | 3 |
 
 UI: https://openmetadata.opswork.io.vn (basic auth provider).
@@ -97,10 +97,18 @@ with the `sed` reversed).
 (`IngestionBotRole` + `AutoClassificationBotRole`, which allows `CreateTask`). Add a policy, role or
 bot there and push: Argo CD runs the `openmetadata-access-sync` Job on every sync.
 
-The Job needs an admin JWT, which is not in git. Create the Secret once (user or bot with the Admin
-role: Settings > Bots > token, or the user's Access Token):
+The Job needs an admin JWT (user's Access Token, or a bot with the Admin role), stored as
+`OM_ADMIN_JWT_TOKEN` in `ingestion/secrets.enc.yaml`.
+
+To create it, sign in as an admin, open the profile (avatar, top right) > **Access Token** >
+**Generate New Token**, pick an expiry (`Unlimited` avoids rotation; otherwise rotate before it
+expires) and copy the token. Then, from this directory, write it from the clipboard (macOS) without
+it appearing in shell history or the process list:
 
 ```bash
-kubectl -n openmetadata create secret generic openmetadata-access-secrets \
-  --from-literal=OM_ADMIN_JWT_TOKEN='<admin jwt>'
+pbpaste | tr -d '\n' | jq -Rs . | SOPS_AGE_KEY_FILE=../../../../../sops-age-key.txt \
+  sops set --value-stdin ingestion/secrets.enc.yaml '["stringData"]["OM_ADMIN_JWT_TOKEN"]'
 ```
+
+Commit and push: Argo CD re-renders `openmetadata-ingestion-secrets` and the next
+`openmetadata-access` sync runs the Job with the token.

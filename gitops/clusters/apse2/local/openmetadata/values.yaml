@@ -4,6 +4,10 @@ replicaCount: 1
 
 openmetadata:
   config:
+    authorizer:
+      initialAdmins:
+        - admin
+      principalDomain: "opswork.io.vn"
     elasticsearch:
       host: opensearch
       searchType: opensearch
