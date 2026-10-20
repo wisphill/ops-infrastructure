@@ -1,0 +1,43 @@
+# Runs on every Argo CD sync of openmetadata-access (hook; the previous Job is replaced).
+# Requires Secret openmetadata-access-secrets with key OM_ADMIN_JWT_TOKEN (JWT of an admin user,
+# or of a bot with the Admin role). It is not managed here; create it once, see ../READme.md.
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: openmetadata-access-sync
+  annotations:
+    argocd.argoproj.io/hook: Sync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  backoffLimit: 2
+  activeDeadlineSeconds: 300
+  ttlSecondsAfterFinished: 3600
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: sync
+          image: openmetadata/ingestion-base:2.0.5
+          imagePullPolicy: IfNotPresent
+          command: ["python", "/config/sync_access.py", "/config/access.yaml"]
+          env:
+            - name: OM_ADMIN_JWT_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: openmetadata-access-secrets
+                  key: OM_ADMIN_JWT_TOKEN
+          volumeMounts:
+            - name: config
+              mountPath: /config
+              readOnly: true
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              memory: 256Mi
+      volumes:
+        - name: config
+          configMap:
+            name: openmetadata-access

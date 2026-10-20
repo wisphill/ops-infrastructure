@@ -5,6 +5,7 @@
 | `openmetadata-dependencies`| MySQL + OpenSearch            | 0         |
 | `openmetadata`             | Server + UI (`values.yaml`)   | 1         |
 | `openmetadata-ingestion`   | Ingestion CronJobs            | 2         |
+| `openmetadata-access`      | Bot policies/roles (`access/access.yaml`) | 2 |
 | `openmetadata-auto-classification` | Auto-classification CronJob (tag suggestions) | 3 |
 
 UI: https://openmetadata.opswork.io.vn (basic auth provider).
@@ -89,3 +90,17 @@ it if SMTP is configured).
 
 Set `enableSelfSignup: true` in `values.yaml`, let Argo CD sync, then run Option A (or Option B
 with the `sed` reversed).
+
+## Bot access (policies and roles)
+
+`access/access.yaml` declares the bot policies, roles and which roles `ingestion-bot` holds
+(`IngestionBotRole` + `AutoClassificationBotRole`, which allows `CreateTask`). Add a policy, role or
+bot there and push: Argo CD runs the `openmetadata-access-sync` Job on every sync.
+
+The Job needs an admin JWT, which is not in git. Create the Secret once (user or bot with the Admin
+role: Settings > Bots > token, or the user's Access Token):
+
+```bash
+kubectl -n openmetadata create secret generic openmetadata-access-secrets \
+  --from-literal=OM_ADMIN_JWT_TOKEN='<admin jwt>'
+```

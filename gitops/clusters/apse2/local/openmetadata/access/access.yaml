@@ -1,0 +1,31 @@
+# Declarative access for OpenMetadata bots, applied by sync_access.py (Job access-sync).
+# Edit here and push: policies and roles are upserted (PUT), so UI edits to them are overwritten.
+# Field names follow the OpenMetadata 2.0.5 CreatePolicyRequest / CreateRoleRequest API.
+#
+# Bots only gain roles: a role the bot already has (or one assigned in the UI and not listed here)
+# is never removed.
+
+policies:
+  # Why: IngestionBotRole grants EditAll/ViewAll, which does not include CreateTask, so the
+  # auto-classification CronJob could not file "Request Tag" tasks.
+  - name: AutoClassificationTaskPolicy
+    displayName: Auto-classification - create tasks
+    description: Lets a bot file Request Tag tasks (tag suggestions for Data Stewards to review).
+    rules:
+      - name: AllowCreateTask
+        resources: [All]
+        operations: [CreateTask]
+        effect: allow
+
+roles:
+  - name: AutoClassificationBotRole
+    displayName: Auto-classification bot
+    description: Permissions the auto-classification CronJob needs on top of IngestionBotRole.
+    policies: [AutoClassificationTaskPolicy]
+
+bots:
+  # Bot user whose JWT is OM_JWT_TOKEN in openmetadata-ingestion-secrets.
+  ingestion-bot:
+    roles:
+      - IngestionBotRole       # built in; listed so the sync restores it if it was removed
+      - AutoClassificationBotRole
