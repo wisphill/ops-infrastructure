@@ -11,8 +11,9 @@ metadata:
   labels:
     app: oracle-auto-classification
 spec:
-  # Between oracle-metadata-ingestion (:02) and the next dbt-run rebuild of ANALYTICS (:05).
-  schedule: "3 * * * *"
+  # Every 5 min, one minute after oracle-metadata-ingestion (2-59/5) and before the next dbt-run
+  # rebuild of ANALYTICS (*/5). A run still in progress makes the next one skip (Forbid).
+  schedule: "3-59/5 * * * *"
   concurrencyPolicy: Forbid
   startingDeadlineSeconds: 300
   successfulJobsHistoryLimit: 2
