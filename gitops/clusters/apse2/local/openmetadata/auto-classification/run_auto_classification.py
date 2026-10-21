@@ -138,8 +138,8 @@ class TagSuggester:
                         # The workflow expands reviewer teams into their members when it computes
                         # assignees. A team sent as assignee is stored as is, so the task shows the
                         # team and any direct member can act on it.
-                        "assignees": self.reviewers,
-                        "reviewers": self.reviewers,
+                        # "assignees": self.reviewers,
+                        # "reviewers": self.reviewers,
                         "dueDate": int((time.time() + STEWARD_REVIEW_DAYS * 86400) * 1000),
                         "payload": {
                             "suggestionType": "Tag",
