@@ -7,8 +7,11 @@
 #
 # Teams listed here are created if missing (teamType default Group) and kept in sync: defaultRoles
 # is PATCHed to match this file (roles listed here are added, roles missing here are removed, same
-# as EditAll on the team in the UI would do). Members (users) are left alone, add/remove those in
-# the UI as usual.
+# as EditAll on the team in the UI would do).
+#
+# Users listed here are created if missing (Google SSO; no password, must sign in with that exact
+# Google account, whose domain also needs to be in values.yaml authorizer.allowedEmailRegistrationDomains).
+# An existing user only gains the teams listed; teams added in the UI and not listed here are kept.
 #
 # Do not reuse names of built-in policies/roles (IngestionBotRole, AutoClassificationBotRole, ...):
 # the PUT replaces their content.
@@ -81,3 +84,11 @@ teams:
     # be undone.
     defaultRoles:
       - DataSteward
+
+users:
+  # name is the email local-part: on Google SSO login OpenMetadata derives the username by
+  # stripping everything from "@" on, so this must match or login creates a second, separate user.
+  - name: phi.nguyen2
+    email: phi.nguyen2@sotatek.com
+    teams:
+      - vna-data-steward

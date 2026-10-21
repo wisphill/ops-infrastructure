@@ -129,22 +129,30 @@ it if SMTP is configured).
 Set `enableSelfSignup: true` in `values.yaml`, let Argo CD sync, then run Option A (or Option B
 with the `sed` reversed).
 
-## Bot access (policies, roles and teams)
+## Bot access (policies, roles, bots, teams and users)
 
-`access/access.yaml` declares the bot policies, roles, bots and teams. Add a policy, role, bot or
-team there and push: Argo CD runs the `openmetadata-access-sync` Job on every sync. Missing bots
-are created (JWT, no expiry) and existing bots only gain roles; missing teams are created
-(`teamType` default `Group`) and an existing team is left as is (members are managed from the UI,
-not here).
+`access/access.yaml` declares the bot policies, roles, bots, teams and (non-bot) users. Add an
+entry there and push: Argo CD runs the `openmetadata-access-sync` Job on every sync.
+
+- Missing bots are created (JWT, no expiry); existing bots only gain roles.
+- Missing teams are created (`teamType` default `Group`); `defaultRoles` is kept in sync both ways
+  (added and removed to match the file). Members are not managed here.
+- Missing users are created (Google SSO, no password); an existing user only gains the teams
+  listed, teams added in the UI are kept. `name` must be the email local-part (the part before
+  `@`): on Google SSO login OpenMetadata derives the username that way, so a mismatch creates a
+  second, separate user on first login. The user's email domain must also be listed in
+  `openmetadata.config.authorizer.allowedEmailRegistrationDomains` in `values.yaml`, or the login
+  is rejected even though the user entity exists.
 
 The auto-classification CronJob runs as its own bot, `data-sensitivity-bot`
 (`DataSensitivityBotRole`: read tables and sample data, manage the DataSensitivity classification
 and `SuggestionTaskWorkflow`, create Suggestion tasks). `ingestion-bot` is not managed by
 `access.yaml`.
 
-`access.yaml` also declares the `vna-data-steward` team (`Group`). This is separate from
+`access.yaml` also declares the `vna-data-steward` team (`Group`, `defaultRoles: [DataSteward]`)
+and its member `phi.nguyen2` (`phi.nguyen2@sotatek.com`). `vna-data-steward` is separate from
 `DataSteward`, the team `SUGGESTION_ASSIGNEE_TEAM` in `auto-classification/cronjob.yaml` assigns
-Suggestion tasks to; add members to either from **Settings > Team & User Management > Teams**.
+Suggestion tasks to.
 
 ### data-sensitivity-bot token
 

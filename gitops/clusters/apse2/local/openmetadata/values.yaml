@@ -12,6 +12,7 @@ openmetadata:
       # Only Google accounts on these domains may log in (accounts still have to exist: no self signup).
       allowedEmailRegistrationDomains:
         - gmail.com
+        - sotatek.com
     elasticsearch:
       host: opensearch
       searchType: opensearch

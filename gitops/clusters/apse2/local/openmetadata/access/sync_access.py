@@ -1,10 +1,12 @@
-"""Apply access.yaml (policies, roles, bot role assignments, teams) to OpenMetadata.
+"""Apply access.yaml (policies, roles, bots, teams, users) to OpenMetadata.
 
 Usage: python sync_access.py <access.yaml>
 
 Needs an admin JWT in $OM_ADMIN_BOT_TOKEN and the server URL in $OM_URL (default: in-cluster).
-Policies and roles are upserted; missing bots/teams are created; bots only gain roles and teams
-are otherwise left as is, none of it is ever removed.
+Policies and roles are upserted. Bots, teams and users are created if missing; existing ones only
+gain what this file lists (bot roles, team defaultRoles, user teams) except team defaultRoles,
+which is kept in sync both ways. Nothing already there is ever removed, other than a team's
+defaultRoles no longer listed.
 """
 
 import json
@@ -111,6 +113,44 @@ def ensure_team(name: str, spec: dict) -> None:
     print(f"team {name}: defaultRoles set to {sorted(want)}")
 
 
+def ensure_user(name: str, spec: dict) -> None:
+    """Create the (non-bot) user if missing, then add any team listed in spec they lack.
+
+    Teams already on the user (set here on an earlier run, or in the UI) are never removed.
+    Other fields (displayName, description, ...) are only set on creation.
+    """
+    user = call("GET", f"/users/name/{name}", missing_ok=True, params={"fields": "teams"})
+    if user is None:
+        user = call(
+            "POST",
+            "/users",
+            json={
+                "name": name,
+                "email": spec["email"],
+                "displayName": spec.get("displayName", name),
+                "description": spec.get("description", ""),
+            },
+        )
+        user.setdefault("teams", [])
+        print(f"user {name}: created")
+    elif user.get("isBot"):
+        sys.exit(f"user {name} exists and is a bot")
+    else:
+        print(f"user {name}: already exists")
+
+    have = {t["name"] for t in user.get("teams") or []}
+    missing = [team_name for team_name in spec.get("teams", []) if team_name not in have]
+    if not missing:
+        print(f"user {name}: teams up to date")
+        return
+    patch = []
+    for team_name in missing:
+        team = call("GET", f"/teams/name/{team_name}")
+        patch.append({"op": "add", "path": "/teams/-", "value": {"id": team["id"], "type": "team"}})
+    call("PATCH", f"/users/{user['id']}", data=json.dumps(patch), headers={"Content-Type": "application/json-patch+json"})
+    print(f"user {name}: added to {', '.join(missing)}")
+
+
 def main() -> None:
     if len(sys.argv) != 2:
         sys.exit(__doc__)
@@ -138,6 +178,15 @@ def main() -> None:
 
     for team, spec in definition.get("teams", {}).items():
         ensure_team(team, spec)
+
+    users = definition.get("users", [])
+    seen = set()
+    for spec in users:
+        name = spec["name"]
+        if name in seen:
+            sys.exit(f"user {name}: listed more than once in {sys.argv[1]}")
+        seen.add(name)
+        ensure_user(name, spec)
 
 
 if __name__ == "__main__":
