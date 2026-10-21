@@ -9,6 +9,7 @@ server copy: every update redeploys the workflow to the Flowable engine.
 
 import sys
 from pathlib import Path
+from urllib.parse import quote
 
 import yaml
 
@@ -16,6 +17,7 @@ from metadata.config.common import load_config_file
 from metadata.generated.schema.entity.services.connections.metadata.openMetadataConnection import (
     OpenMetadataConnection,
 )
+from metadata.ingestion.ometa.client import APIError
 from metadata.ingestion.ometa.ometa_api import OpenMetadata
 
 # Fields a PUT updates on an existing workflow (WorkflowDefinitionUpdater); the description of a
@@ -40,7 +42,39 @@ def matches(desired, actual) -> bool:
     return desired == actual
 
 
+def resolve_candidates(metadata: OpenMetadata, definition: dict) -> None:
+    """Turn each {type, fullyQualifiedName} assignee candidate into {id, type}.
+
+    The server rejects a candidate without an id ("query param id must not be null"), and ids
+    differ per environment, so the definition file names users and teams and the ids are looked
+    up here.
+    """
+    for node in definition.get("nodes", []):
+        assignees = (node.get("config") or {}).get("assignees") or {}
+        resolved = []
+        for candidate in assignees.get("candidates") or []:
+            if candidate.get("id"):
+                resolved.append(candidate)
+                continue
+            kind, fqn = candidate.get("type"), candidate.get("fullyQualifiedName")
+            if kind not in ("user", "team") or not fqn:
+                raise ValueError(
+                    f"node {node['name']}: candidate needs type user|team and fullyQualifiedName,"
+                    f" got {candidate}"
+                )
+            try:
+                entity = metadata.client.get(f"/{kind}s/name/{quote(fqn, safe='')}")
+            except APIError as error:
+                raise ValueError(f"node {node['name']}: {kind} {fqn} not found") from error
+            if not entity:
+                raise ValueError(f"node {node['name']}: {kind} {fqn} not found")
+            resolved.append({"id": entity["id"], "type": kind})
+        if resolved:
+            assignees["candidates"] = resolved
+
+
 def sync(metadata: OpenMetadata, definition: dict) -> None:
+    resolve_candidates(metadata, definition)
     name = definition["name"]
     current = metadata.client.get(f"/governance/workflowDefinitions/name/{name}")
     if current and all(matches(definition.get(f), current.get(f)) for f in COMPARED_FIELDS):

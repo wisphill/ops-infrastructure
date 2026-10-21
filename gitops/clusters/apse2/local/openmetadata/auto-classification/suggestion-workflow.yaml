@@ -43,9 +43,9 @@ nodes:
       assignees:
         addReviewers: true
         addOwners: false
-        # Entity reference. A "team:name" string does not deserialize and the PUT
-        # comes back as "Invalid request format". fullyQualifiedName is what the
-        # assignee resolver reads.
+        # Entity reference: a "team:name" string fails with "Invalid request format", and the
+        # server also requires an id. sync_workflow.py looks up the id from type +
+        # fullyQualifiedName and sends {id, type}.
         candidates: [{type: team, fullyQualifiedName: vna-data-steward}]
         emptyAssigneeStrategy: assignAdmins
       approvalThreshold: 1
