@@ -14,8 +14,9 @@ Same as `metadata classify -c <workflow.yaml>`, with two differences:
   10 days, then the table owners approve. Nothing is written to the column until the Owner
   approves.
 
-Task reviewers (the Steward step): the team named by $SUGGESTION_ASSIGNEE_TEAM; if it is unset or
-does not exist, the workflow falls back to the admins.
+Task assignees and reviewers (the Steward step): the team named by $SUGGESTION_ASSIGNEE_TEAM, sent
+as the team itself (not its members); if it is unset or does not exist, the workflow falls back to
+the admins.
 """
 
 import json
@@ -119,6 +120,10 @@ class TagSuggester:
                         "category": "MetadataUpdate",
                         "displayName": f"{tag_fqn} cho {table.name.root}.{column.name.root}",
                         "about": f"<#E::table::{table_fqn}>",
+                        # The workflow expands reviewer teams into their members when it computes
+                        # assignees. A team sent as assignee is stored as is, so the task shows the
+                        # team and any direct member can act on it.
+                        "assignees": self.reviewers,
                         "reviewers": self.reviewers,
                         "dueDate": int((time.time() + STEWARD_REVIEW_DAYS * 86400) * 1000),
                         "payload": {
