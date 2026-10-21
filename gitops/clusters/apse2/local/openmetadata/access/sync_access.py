@@ -1,10 +1,10 @@
-"""Apply access.yaml (policies, roles, bot role assignments) to OpenMetadata.
+"""Apply access.yaml (policies, roles, bot role assignments, teams) to OpenMetadata.
 
 Usage: python sync_access.py <access.yaml>
 
 Needs an admin JWT in $OM_ADMIN_BOT_TOKEN and the server URL in $OM_URL (default: in-cluster).
-Policies and roles are upserted; missing bots are created; bots only gain roles, none is ever
-removed.
+Policies and roles are upserted; missing bots/teams are created; bots only gain roles and teams
+are otherwise left as is, none of it is ever removed.
 """
 
 import json
@@ -70,6 +70,46 @@ def ensure_bot(name: str, spec: dict) -> dict:
     return user
 
 
+def ensure_team(name: str, spec: dict) -> None:
+    """Create the team if missing, then sync its defaultRoles to those listed in spec.
+
+    Members are never touched here. Other fields (displayName, description, teamType, ...) are
+    only set on creation: edit those in the UI afterwards if needed.
+    """
+    team = call("GET", f"/teams/name/{name}", missing_ok=True, params={"fields": "defaultRoles"})
+    if team is None:
+        team = call(
+            "POST",
+            "/teams",
+            json={
+                "name": name,
+                "teamType": spec.get("teamType", "Group"),
+                "displayName": spec.get("displayName", name),
+                "description": spec.get("description", ""),
+            },
+        )
+        print(f"team {name}: created")
+    else:
+        print(f"team {name}: already exists")
+
+    have = {r["name"] for r in team.get("defaultRoles") or []}
+    want = set(spec.get("defaultRoles", []))
+    if have == want:
+        print(f"team {name}: defaultRoles up to date")
+        return
+    role_ids = [call("GET", f"/roles/name/{role_name}")["id"] for role_name in want]
+    # "add" on an existing top-level member overwrites it, same as "replace" would, but also
+    # works when the team has no defaultRoles yet (then the field is absent, not an empty list,
+    # and "replace" would fail with "path not found").
+    call(
+        "PATCH",
+        f"/teams/{team['id']}",
+        data=json.dumps([{"op": "add", "path": "/defaultRoles", "value": role_ids}]),
+        headers={"Content-Type": "application/json-patch+json"},
+    )
+    print(f"team {name}: defaultRoles set to {sorted(want)}")
+
+
 def main() -> None:
     if len(sys.argv) != 2:
         sys.exit(__doc__)
@@ -94,6 +134,9 @@ def main() -> None:
         if patch:
             call("PATCH", f"/users/{user['id']}", data=json.dumps(patch), headers={"Content-Type": "application/json-patch+json"})
         print(f"bot {bot}: {'added ' + ', '.join(p['value']['id'] for p in patch) if patch else 'roles up to date'}")
+
+    for team, spec in definition.get("teams", {}).items():
+        ensure_team(team, spec)
 
 
 if __name__ == "__main__":

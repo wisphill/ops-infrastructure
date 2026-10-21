@@ -5,6 +5,11 @@
 # Bots listed here are created if missing (JWT, no expiry). Bots only gain roles: a role the bot
 # already has (or one assigned in the UI and not listed here) is never removed.
 #
+# Teams listed here are created if missing (teamType default Group) and kept in sync: defaultRoles
+# is PATCHed to match this file (roles listed here are added, roles missing here are removed, same
+# as EditAll on the team in the UI would do). Members (users) are left alone, add/remove those in
+# the UI as usual.
+#
 # Do not reuse names of built-in policies/roles (IngestionBotRole, AutoClassificationBotRole, ...):
 # the PUT replaces their content.
 
@@ -63,3 +68,16 @@ bots:
     description: Suggests DataSensitivity (C1-C4) tags as Suggestion tasks.
     roles:
       - DataSensitivityBotRole
+
+teams:
+  # Not the SUGGESTION_ASSIGNEE_TEAM used by oracle-auto-classification (cronjob.yaml), which
+  # stays DataSteward (the team name): this is a separate team, add members to it from the UI.
+  vna-data-steward:
+    teamType: Group
+    displayName: VNA Data Steward
+    description: Data Stewards for the VNA Oracle tables (app/analytics schemas).
+    # DataSteward here is the built-in role (edit metadata, confirm tags/glossary terms), applied
+    # to every member of this team. Re-synced on every run, so adding it in the UI instead would
+    # be undone.
+    defaultRoles:
+      - DataSteward

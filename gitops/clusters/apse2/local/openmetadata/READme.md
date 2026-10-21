@@ -129,16 +129,22 @@ it if SMTP is configured).
 Set `enableSelfSignup: true` in `values.yaml`, let Argo CD sync, then run Option A (or Option B
 with the `sed` reversed).
 
-## Bot access (policies and roles)
+## Bot access (policies, roles and teams)
 
-`access/access.yaml` declares the bot policies, roles and bots. Add a policy, role or bot there and
-push: Argo CD runs the `openmetadata-access-sync` Job on every sync. Missing bots are created (JWT,
-no expiry); existing bots only gain roles.
+`access/access.yaml` declares the bot policies, roles, bots and teams. Add a policy, role, bot or
+team there and push: Argo CD runs the `openmetadata-access-sync` Job on every sync. Missing bots
+are created (JWT, no expiry) and existing bots only gain roles; missing teams are created
+(`teamType` default `Group`) and an existing team is left as is (members are managed from the UI,
+not here).
 
 The auto-classification CronJob runs as its own bot, `data-sensitivity-bot`
 (`DataSensitivityBotRole`: read tables and sample data, manage the DataSensitivity classification
 and `SuggestionTaskWorkflow`, create Suggestion tasks). `ingestion-bot` is not managed by
 `access.yaml`.
+
+`access.yaml` also declares the `vna-data-steward` team (`Group`). This is separate from
+`DataSteward`, the team `SUGGESTION_ASSIGNEE_TEAM` in `auto-classification/cronjob.yaml` assigns
+Suggestion tasks to; add members to either from **Settings > Team & User Management > Teams**.
 
 ### data-sensitivity-bot token
 
