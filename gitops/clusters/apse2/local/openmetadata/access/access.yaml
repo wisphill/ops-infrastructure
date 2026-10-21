@@ -9,21 +9,32 @@
 # the PUT replaces their content.
 
 policies:
-  # Why: the CronJob files each suggested tag as a "Request Tag" task (POST /feed), which needs
-  # CreateTask. No built-in bot policy grants it.
+  # Why: the CronJob files each suggested tag as a Suggestion task (POST /v1/tasks), which needs
+  # Create on the task resource and CreateTask on the table, and keeps SuggestionTaskWorkflow in
+  # sync with git. No built-in bot policy grants these.
   - name: DataSensitivityBotPolicy
     displayName: Data sensitivity bot
     description: >-
-      Lets the auto-classification CronJob keep the DataSensitivity classification in sync with
-      git and file Request Tag tasks for Data Stewards to review.
+      Lets the auto-classification CronJob keep the DataSensitivity classification and the
+      Suggestion workflow in sync with git and file Suggestion tasks for Data Stewards to confirm.
     rules:
       - name: AllowManageClassification
         description: sync_classifications.py upserts the DataSensitivity classification and tags.
         resources: [classification, tag]
         operations: [Create, EditAll, ViewAll]
         effect: allow
+      - name: AllowManageSuggestionWorkflow
+        description: sync_workflow.py upserts SuggestionTaskWorkflow.
+        resources: [workflowDefinition]
+        operations: [Create, EditAll, ViewAll]
+        effect: allow
+      - name: AllowCreateSuggestionTask
+        description: run_auto_classification.py files Suggestion tasks and lists existing ones.
+        resources: [task]
+        operations: [Create, ViewAll]
+        effect: allow
       - name: AllowCreateTask
-        description: run_auto_classification.py files Request Tag tasks.
+        description: CreateTask on the table each Suggestion task is about.
         resources: [All]
         operations: [CreateTask]
         effect: allow
@@ -49,6 +60,6 @@ bots:
   # openmetadata-ingestion-secrets (see ../READme.md). ingestion-bot is not managed here.
   data-sensitivity-bot:
     displayName: Data sensitivity bot
-    description: Suggests DataSensitivity (C1-C4) tags as Request Tag tasks.
+    description: Suggests DataSensitivity (C1-C4) tags as Suggestion tasks.
     roles:
       - DataSensitivityBotRole

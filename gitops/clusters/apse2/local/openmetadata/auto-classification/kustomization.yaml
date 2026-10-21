@@ -11,5 +11,7 @@ configMapGenerator:
     files:
       - oracle-auto-classification.yaml
       - data-sensitivity.yaml
+      - suggestion-workflow.yaml
       - sync_classifications.py
+      - sync_workflow.py
       - run_auto_classification.py

@@ -9,18 +9,19 @@ Same as `metadata classify -c <workflow.yaml>`, with two differences:
   given on the command line. Only classifications whose autoClassificationConfig.enabled is true
   are used.
 * The sink would patch the scored tags straight onto the columns. Instead, each score is filed as
-  a "Request Tag" task on the column, which a Data Steward reviews and accepts/rejects in the UI
-  (Activity Feed > Tasks), see
-  https://docs.open-metadata.org/v2.0.x/how-to-guides/data-collaboration/request-tags
-  Nothing is written to the column until the task is accepted.
+  a Suggestion task (POST /v1/tasks; the legacy POST /feed refuses tasks created by bots). The
+  task follows SuggestionTaskWorkflow (suggestion-workflow.yaml): a Data Steward confirms within
+  10 days, then the table owners approve. Nothing is written to the column until the Owner
+  approves.
 
-Task assignees: the team named by $SUGGESTION_ASSIGNEE_TEAM; if it is unset or does not exist, the
-owners of the table.
+Task reviewers (the Steward step): the team named by $SUGGESTION_ASSIGNEE_TEAM; if it is unset or
+does not exist, the workflow falls back to the admins.
 """
 
 import json
 import os
 import sys
+import time
 from pathlib import Path
 from typing import Optional
 
@@ -36,46 +37,51 @@ from metadata.workflow.classification import AutoClassificationWorkflow
 
 logger = ingestion_logger()
 
+# Keep in sync with StewardConfirm.expiryTimer in suggestion-workflow.yaml.
+STEWARD_REVIEW_DAYS = 10
+
 
 class TagSuggester:
-    """Turns the column tags set by the classification processor into Request Tag tasks."""
+    """Turns the column tags set by the classification processor into Suggestion tasks."""
 
-    def __init__(self, metadata: OpenMetadata, assignee_team: Optional[str]):
+    def __init__(self, metadata: OpenMetadata, reviewer_team: Optional[str]):
         self.metadata = metadata
-        self.team = self._get_team(assignee_team)
+        self.reviewers = self._get_reviewers(reviewer_team)
 
-    def _get_team(self, name: Optional[str]):
+    def _get_reviewers(self, name: Optional[str]) -> list[str]:
         if not name:
-            return None
+            return []
         team = self.metadata.get_by_name(entity=Team, fqn=name)
         if team is None:
-            logger.warning(f"Assignee team {name!r} not found; falling back to table owners")
-        return team
+            logger.warning(f"Reviewer team {name!r} not found; the workflow assigns the admins")
+            return []
+        return [team.fullyQualifiedName.root]
 
-    def _assignees(self, table: Table) -> list[dict]:
-        if self.team:
-            return [{"id": str(self.team.id.root), "type": "team"}]
-        owners = self.metadata.get_by_name(entity=Table, fqn=table.fullyQualifiedName.root, fields=["owners"])
-        return [{"id": str(o.id.root), "type": o.type} for o in (owners.owners.root if owners and owners.owners else [])]
+    def _suggested(self, table_fqn: str) -> set[tuple[str, str]]:
+        """(fieldPath, tagFQN) of every Suggestion task on the table that blocks a new one.
 
-    def _already_suggested(self, entity_link: str, tag_fqn: str) -> bool:
-        """True if a task (open, accepted or rejected) already exists for this column and tag.
-
-        Accepted tasks leave the tag on the column, which the processor skips; rejected ones must
-        not be re-suggested on the next run.
+        Approved tasks leave the tag on the column, which the processor skips anyway; open and
+        rejected ones must not be filed again. Expired tasks (no Steward answer in time) do not
+        block, so the suggestion is filed again.
         """
-        threads = self.metadata.client.get("/feed", data={"entityLink": entity_link, "type": "Task", "limit": 100})
-        for thread in (threads or {}).get("data", []):
-            details = thread.get("task") or {}
-            if details.get("type") != "RequestTag":
-                continue
-            try:
-                suggested = json.loads(details.get("suggestion") or "[]")
-            except ValueError:
-                continue
-            if any(label.get("tagFQN") == tag_fqn for label in suggested):
-                return True
-        return False
+        suggested, after = set(), None
+        while True:
+            params = {"type": "Suggestion", "aboutEntity": table_fqn, "fields": "payload", "limit": 100}
+            if after:
+                params["after"] = after
+            page = self.metadata.client.get("/tasks", data=params) or {}
+            for task in page.get("data", []):
+                payload = task.get("payload") or {}
+                if task.get("status") == "Expired" or payload.get("suggestionType") != "Tag":
+                    continue
+                try:
+                    labels = json.loads(payload.get("suggestedValue") or "[]")
+                except ValueError:
+                    continue
+                suggested.update((payload.get("fieldPath"), label.get("tagFQN")) for label in labels)
+            after = (page.get("paging") or {}).get("after")
+            if not after:
+                return suggested
 
     def suggest(self, record) -> None:
         table = record.entity
@@ -83,9 +89,11 @@ class TagSuggester:
             return
         table_fqn = table.fullyQualifiedName.root
         columns = {c.fullyQualifiedName.root: c for c in table.columns or []}
-        assignees = self._assignees(table)
-        if not assignees:
-            logger.warning(f"{table_fqn}: no assignee team or owner; tasks are created unassigned")
+        try:
+            suggested = self._suggested(table_fqn)
+        except Exception as err:
+            logger.error(f"{table_fqn}: could not list existing suggestions, skipping table: {err}")
+            return
 
         for column_tag in record.column_tags:
             column = columns.get(column_tag.column_fqn)
@@ -93,22 +101,27 @@ class TagSuggester:
                 continue
             label = column_tag.tag_label
             tag_fqn = label.tagFQN.root
-            entity_link = f"<#E::table::{table_fqn}::columns::{column.name.root}>"
+            field_path = f"columns.{column.name.root}.tags"
+            if (field_path, tag_fqn) in suggested:
+                continue
+            # What the task applies when approved: a confirmed tag, as Steward and Owner vouched for it.
+            suggestion = label.model_copy(update={"state": State.Confirmed, "labelType": LabelType.Generated})
             try:
-                if self._already_suggested(entity_link, tag_fqn):
-                    continue
-                # What the task applies when accepted: a confirmed tag, as a Steward vouched for it.
-                suggestion = label.model_copy(update={"state": State.Confirmed, "labelType": LabelType.Generated})
                 self.metadata.client.post(
-                    "/feed",
+                    "/tasks",
                     json={
-                        "message": f"Suggested tag {tag_fqn} for {column.name.root}: {label.reason or 'auto-classification'}",
-                        "about": entity_link,
-                        "type": "Task",
-                        "taskDetails": {
-                            "type": "RequestTag",
-                            "suggestion": json.dumps([suggestion.model_dump(mode="json", exclude_none=True)]),
-                            "assignees": assignees,
+                        "type": "Suggestion",
+                        "category": "MetadataUpdate",
+                        "displayName": f"{tag_fqn} cho {table.name.root}.{column.name.root}",
+                        "about": f"<#E::table::{table_fqn}>",
+                        "reviewers": self.reviewers,
+                        "dueDate": int((time.time() + STEWARD_REVIEW_DAYS * 86400) * 1000),
+                        "payload": {
+                            "suggestionType": "Tag",
+                            "fieldPath": field_path,
+                            "suggestedValue": json.dumps([suggestion.model_dump(mode="json", exclude_none=True)]),
+                            "source": "AutoPilot",
+                            "reasoning": label.reason or "auto-classification",
                         },
                     },
                 )

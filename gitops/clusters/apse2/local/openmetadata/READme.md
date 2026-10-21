@@ -136,8 +136,9 @@ push: Argo CD runs the `openmetadata-access-sync` Job on every sync. Missing bot
 no expiry); existing bots only gain roles.
 
 The auto-classification CronJob runs as its own bot, `data-sensitivity-bot`
-(`DataSensitivityBotRole`: read tables and sample data, manage the DataSensitivity classification,
-`CreateTask` for Request Tag tasks). `ingestion-bot` is not managed by `access.yaml`.
+(`DataSensitivityBotRole`: read tables and sample data, manage the DataSensitivity classification
+and `SuggestionTaskWorkflow`, create Suggestion tasks). `ingestion-bot` is not managed by
+`access.yaml`.
 
 ### data-sensitivity-bot token
 
