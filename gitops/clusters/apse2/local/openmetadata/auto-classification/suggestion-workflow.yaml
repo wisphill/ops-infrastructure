@@ -11,6 +11,9 @@
 #   3. OwnerApprove: the table owners (admins if the table has none) approve or reject. The
 #      suggested tag is merged into the column only on approve.
 #
+# Neither node uses status Open (see StewardConfirm.taskStatus), so tasks are acted on from the task
+# page only.
+#
 # Only the final approve carries resolutionType Approved; "confirm" has none, so the task moves to
 # the next node instead of closing. A level changed in the form at "confirm" is not kept (2.0.5
 # only persists form edits on terminal transitions): the Steward proposes another level in a
@@ -46,7 +49,11 @@ nodes:
       rejectionThreshold: 1
       stageId: steward
       stageDisplayName: Steward xác nhận (10 ngày)
-      taskStatus: Open
+      # Not Open: the Activity Feed card (Approve/Reject) and the column suggestions panel only
+      # act on Open tasks, and they resolve with resolutionType Approved, which the server treats
+      # as the final approve at any node and merges the tag right away. Pending leaves only the
+      # task page buttons, which send the transition (confirm/reject).
+      taskStatus: Pending
       assigneeStrategy: reviewers
       transitionMetadata:
         - id: confirm

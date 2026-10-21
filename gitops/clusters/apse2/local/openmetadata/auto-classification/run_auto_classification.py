@@ -56,7 +56,7 @@ class TagSuggester:
         self.metadata = metadata
         self.reviewers = self._get_reviewers(reviewer_team)
         # Task statuses that do not block a new suggestion. Rejected only when testing.
-        self.refile_statuses = {"Expired", "Rejected"} if resuggest_rejected else {"Expired"}
+        self.refile_statuses = {"Approved", "Expired"} | ({"Rejected"} if resuggest_rejected else set())
         if resuggest_rejected:
             logger.warning("SUGGESTION_RESUGGEST_REJECTED is on: rejected suggestions are filed again")
 
@@ -72,10 +72,10 @@ class TagSuggester:
     def _suggested(self, table_fqn: str) -> set[tuple[str, str]]:
         """(fieldPath, tagFQN) of every Suggestion task on the table that blocks a new one.
 
-        Approved tasks leave the tag on the column, which the processor skips anyway; open and
-        rejected ones must not be filed again. Expired tasks (no Steward answer in time) do not
-        block, so the suggestion is filed again. With $SUGGESTION_RESUGGEST_REJECTED (testing),
-        rejected ones do not block either.
+        Open and rejected tasks must not be filed again. Approved tasks do not block: while the tag
+        is on the column the processor skips the column, so it only gets here once the tag was
+        removed. Expired tasks (no Steward answer in time) do not block either, so the suggestion
+        is filed again. With $SUGGESTION_RESUGGEST_REJECTED (testing), rejected ones do not block.
         """
         suggested, after = set(), None
         while True:

@@ -6,7 +6,8 @@
 #   3. run_auto_classification.py samples APP + ANALYTICS and files a Suggestion task per column
 #      for the suggested DataSensitivity tag. Nothing is tagged until the Owner approves the task
 #      in the UI (Tasks). Columns that already carry a DataSensitivity tag, or have a task for
-#      that tag (open or rejected), are skipped; an expired task is filed again.
+#      that tag (open or rejected), are skipped; an expired task, or an approved one whose tag was
+#      later removed, is filed again.
 apiVersion: batch/v1
 kind: CronJob
 metadata:
