@@ -97,14 +97,15 @@ def ensure_team(name: str, spec: dict) -> None:
     if have == want:
         print(f"team {name}: defaultRoles up to date")
         return
-    role_ids = [call("GET", f"/roles/name/{role_name}")["id"] for role_name in want]
+    # defaultRoles is a list of EntityReference ({"id": ..., "type": "role"}), not of bare ids.
+    role_refs = [{"id": call("GET", f"/roles/name/{role_name}")["id"], "type": "role"} for role_name in want]
     # "add" on an existing top-level member overwrites it, same as "replace" would, but also
     # works when the team has no defaultRoles yet (then the field is absent, not an empty list,
     # and "replace" would fail with "path not found").
     call(
         "PATCH",
         f"/teams/{team['id']}",
-        data=json.dumps([{"op": "add", "path": "/defaultRoles", "value": role_ids}]),
+        data=json.dumps([{"op": "add", "path": "/defaultRoles", "value": role_refs}]),
         headers={"Content-Type": "application/json-patch+json"},
     )
     print(f"team {name}: defaultRoles set to {sorted(want)}")
