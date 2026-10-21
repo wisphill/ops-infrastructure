@@ -48,6 +48,10 @@ spec:
                 # Team name (not displayName) from ../access/access.yaml teams.
                 - name: SUGGESTION_ASSIGNEE_TEAM
                   value: vna-data-steward
+                # Testing only: "true" files rejected suggestions again on the next run. Open
+                # tasks still block, so no duplicates. Keep "false" outside tests.
+                - name: SUGGESTION_RESUGGEST_REJECTED
+                  value: "true"
                 - name: ORACLE_PASSWORD
                   valueFrom:
                     secretKeyRef:

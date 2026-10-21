@@ -44,9 +44,13 @@ STEWARD_REVIEW_DAYS = 10
 class TagSuggester:
     """Turns the column tags set by the classification processor into Suggestion tasks."""
 
-    def __init__(self, metadata: OpenMetadata, reviewer_team: Optional[str]):
+    def __init__(self, metadata: OpenMetadata, reviewer_team: Optional[str], resuggest_rejected: bool = False):
         self.metadata = metadata
         self.reviewers = self._get_reviewers(reviewer_team)
+        # Task statuses that do not block a new suggestion. Rejected only when testing.
+        self.refile_statuses = {"Expired", "Rejected"} if resuggest_rejected else {"Expired"}
+        if resuggest_rejected:
+            logger.warning("SUGGESTION_RESUGGEST_REJECTED is on: rejected suggestions are filed again")
 
     def _get_reviewers(self, name: Optional[str]) -> list[str]:
         if not name:
@@ -62,7 +66,8 @@ class TagSuggester:
 
         Approved tasks leave the tag on the column, which the processor skips anyway; open and
         rejected ones must not be filed again. Expired tasks (no Steward answer in time) do not
-        block, so the suggestion is filed again.
+        block, so the suggestion is filed again. With $SUGGESTION_RESUGGEST_REJECTED (testing),
+        rejected ones do not block either.
         """
         suggested, after = set(), None
         while True:
@@ -72,7 +77,7 @@ class TagSuggester:
             page = self.metadata.client.get("/tasks", data=params) or {}
             for task in page.get("data", []):
                 payload = task.get("payload") or {}
-                if task.get("status") == "Expired" or payload.get("suggestionType") != "Tag":
+                if task.get("status") in self.refile_statuses or payload.get("suggestionType") != "Tag":
                     continue
                 try:
                     labels = json.loads(payload.get("suggestedValue") or "[]")
@@ -137,7 +142,11 @@ class SuggestingAutoClassificationWorkflow(AutoClassificationWorkflow):
         processor = create_pii_processor(
             self.metadata, self.config, classification_filter=self.classifications
         )
-        suggester = TagSuggester(self.metadata, os.environ.get("SUGGESTION_ASSIGNEE_TEAM"))
+        suggester = TagSuggester(
+            self.metadata,
+            os.environ.get("SUGGESTION_ASSIGNEE_TEAM"),
+            resuggest_rejected=os.environ.get("SUGGESTION_RESUGGEST_REJECTED", "").lower() in ("1", "true", "yes"),
+        )
         scored = processor._run
 
         def run_and_suggest(record):
