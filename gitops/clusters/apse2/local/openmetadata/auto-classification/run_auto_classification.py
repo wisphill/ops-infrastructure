@@ -42,6 +42,13 @@ logger = ingestion_logger()
 STEWARD_REVIEW_DAYS = 10
 
 
+def plain_reason(reason: Optional[str]) -> str:
+    """The task UI shows `reasoning` as a plain <p> (no markdown, newlines collapse): strip the
+    markdown the recognizers emit and keep it on one line."""
+    text = " ".join((reason or "").replace("`", "").split())
+    return text.replace(" - ", " ") or "auto-classification"
+
+
 class TagSuggester:
     """Turns the column tags set by the classification processor into Suggestion tasks."""
 
@@ -111,7 +118,15 @@ class TagSuggester:
             if (field_path, tag_fqn) in suggested:
                 continue
             # What the task applies when approved: a confirmed tag, as Steward and Owner vouched for it.
-            suggestion = label.model_copy(update={"state": State.Confirmed, "labelType": LabelType.Generated})
+            # The UI shows suggestedValue as raw JSON, so keep it to the tag and a one-line reason.
+            suggestion = label.model_copy(
+                update={
+                    "state": State.Confirmed,
+                    "labelType": LabelType.Generated,
+                    "reason": plain_reason(label.reason),
+                    "metadata": None,
+                }
+            )
             try:
                 self.metadata.client.post(
                     "/tasks",
@@ -131,7 +146,9 @@ class TagSuggester:
                             "fieldPath": field_path,
                             "suggestedValue": json.dumps([suggestion.model_dump(mode="json", exclude_none=True)]),
                             "source": "AutoPilot",
-                            "reasoning": label.reason or "auto-classification",
+                            "reasoning": (
+                                f'Gợi ý thay đổi nhãn pháp lý: cột "{column.name.root}" thành nhãn "{tag_fqn}"'
+                            ),
                         },
                     },
                 )
