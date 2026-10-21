@@ -8,30 +8,32 @@
 #   1. run_auto_classification.py files the task (reviewers: team vna-data-steward).
 #   2. StewardConfirm: a Data Steward confirms or rejects within 10 days. When the timer fires the
 #      task closes as Expired and the next run files the suggestion again.
-#   3. CheckUpdatedByReviewerNotOwner (after confirm): same check as the glossary node "Updated by
-#      is Reviewer", plus "is not Owner". 2.0.5 applies the rules to the related table (updatedBy /
-#      reviewers / owners), not to the user who clicks the task. True means the table was last
-#      updated by a reviewer who is not an owner: the workflow rejects instead of going to the
-#      Owner. False continues. A table has no reviewers, so this stays false unless reviewers are
-#      set on the table.
-#   4. RejectReviewerNotOwner: closes that task as Rejected. An end event alone does not resolve a
-#      Suggestion task; the timer does (closeAsResolution).
-#   5. OwnerApprove: the table owners (admins if the table has none) approve or reject. The
-#      suggested tag is merged into the column only on approve.
+#   3. OwnerApprove: the table owners (admins if the table has none) approve or reject. "approve"
+#      does not close the task; it hands over to the check.
+#   4. CheckUpdatedByReviewerNotOwner (after the Owner approves): same check as the glossary node
+#      "Updated by is Reviewer", plus "is not Owner". 2.0.5 applies the rules to the related table
+#      (updatedBy / reviewers / owners), not to the user who clicks the task. True means the table
+#      was last updated by a reviewer who is not an owner: the workflow rejects instead of
+#      approving. False continues. A table has no reviewers, so this stays false unless reviewers
+#      are set on the table.
+#   5. RejectReviewerNotOwner / FinalApprove: close the task as Rejected / Approved on a 1-second
+#      timer. An end event alone does not resolve a Suggestion task; the timer does
+#      (closeAsResolution). The suggested tag is merged into the column only by FinalApprove.
 #
-# Neither node uses status Open (see StewardConfirm.taskStatus), so tasks are acted on from the task
+# No node uses status Open (see StewardConfirm.taskStatus), so tasks are acted on from the task
 # page only.
 #
-# Only the final approve carries resolutionType Approved; "confirm" has none, so the task moves to
-# the next node instead of closing. A level changed in the form at "confirm" is not kept (2.0.5
-# only persists form edits on terminal transitions): the Steward proposes another level in a
-# comment and the Owner sets it in the form when approving.
+# Only FinalApprove carries resolutionType Approved; "confirm" and the Owner's "approve" have none,
+# so the task moves to the next node instead of closing. A level changed in the form at either
+# step is not kept (2.0.5 only persists form edits on terminal transitions, and both human
+# transitions are now non-terminal): the tag is merged with the level the bot suggested.
 name: SuggestionTaskWorkflow
 displayName: Suggestion Task Workflow
 description: >-
   Gợi ý tự động (nhãn DataSensitivity, mô tả). Data Steward xác nhận trong 10 ngày; quá hạn thì
-  task đóng ở trạng thái Expired và bot gợi ý lại ở lần chạy sau. Sau khi xác nhận, nếu người cập
-  nhật bảng là reviewer nhưng không phải owner thì task bị từ chối; còn lại Data Owner duyệt.
+  task đóng ở trạng thái Expired và bot gợi ý lại ở lần chạy sau. Sau đó Data Owner duyệt. Sau khi
+  Owner duyệt, nếu người cập nhật bảng là reviewer nhưng không phải owner thì task bị từ chối; còn
+  lại task được duyệt.
 config:
   storeStageStatus: true
 trigger:
@@ -90,7 +92,41 @@ nodes:
     inputNamespaceMap:
       relatedEntity: global
 
-  # Runs after the Steward confirms. Glossary shape: {"and":[{"isReviewer":{"var":"updatedBy"}}]}.
+  - type: userTask
+    subType: userApprovalTask
+    name: OwnerApprove
+    displayName: Owner duyệt
+    config:
+      assignees:
+        addReviewers: false
+        addOwners: true
+        candidates: [{type: user, fullyQualifiedName: admin}]
+        emptyAssigneeStrategy: assignAdmins
+      approvalThreshold: 1
+      rejectionThreshold: 1
+      stageId: owner
+      stageDisplayName: Owner duyệt
+      taskStatus: InProgress
+      assigneeStrategy: owners
+      transitionMetadata:
+        # No resolutionType: hands over to CheckUpdatedByReviewerNotOwner instead of closing.
+        - id: approve
+          label: Duyệt
+          targetStageId: approved
+          targetTaskStatus: InProgress
+          formRef: approve
+          requiresComment: false
+        - id: reject
+          label: Từ chối
+          targetStageId: rejected
+          targetTaskStatus: Rejected
+          resolutionType: Rejected
+          formRef: reject
+          requiresComment: true
+    inputNamespaceMap:
+      relatedEntity: global
+
+  # Runs after the Owner approves. Glossary shape: {"and":[{"isReviewer":{"var":"updatedBy"}}]}.
   # "!" is the jsonlogic not. True only when updatedBy is in the table's reviewers and not in its
   # owners.
   - type: automatedTask
@@ -136,22 +172,24 @@ nodes:
     inputNamespaceMap:
       relatedEntity: global
 
+  # Reached only when the check is false. Closes the Suggestion task as Approved, which merges the
+  # suggested tag. PT1S is a constant (see StewardConfirm.expiryTimer).
   - type: userTask
     subType: userApprovalTask
-    name: OwnerApprove
-    displayName: Owner duyệt
+    name: FinalApprove
+    displayName: Duyệt
     config:
       assignees:
         addReviewers: false
-        addOwners: true
+        addOwners: false
         candidates: [{type: user, fullyQualifiedName: admin}]
         emptyAssigneeStrategy: assignAdmins
       approvalThreshold: 1
       rejectionThreshold: 1
-      stageId: owner
-      stageDisplayName: Owner duyệt
-      taskStatus: InProgress
-      assigneeStrategy: owners
+      stageId: approved
+      stageDisplayName: Đã duyệt
+      taskStatus: Pending
+      assigneeStrategy: admins
       transitionMetadata:
         - id: approve
           label: Duyệt
@@ -160,13 +198,10 @@ nodes:
           resolutionType: Approved
           formRef: approve
           requiresComment: false
-        - id: reject
-          label: Từ chối
-          targetStageId: rejected
-          targetTaskStatus: Rejected
-          resolutionType: Rejected
-          formRef: reject
-          requiresComment: true
+      expiryTimer:
+        durationVariable: "'PT1S'"
+        transitionId: approve
+        closeAsResolution: Approved
     inputNamespaceMap:
       relatedEntity: global
 
@@ -187,12 +222,13 @@ nodes:
 
 edges:
   - {from: TaskStart, to: StewardConfirm}
-  - {from: StewardConfirm, to: CheckUpdatedByReviewerNotOwner, condition: confirm}
+  - {from: StewardConfirm, to: OwnerApprove, condition: confirm}
   - {from: StewardConfirm, to: RejectedEnd, condition: reject}
   - {from: StewardConfirm, to: ExpiredEnd, condition: timeout}
+  - {from: OwnerApprove, to: CheckUpdatedByReviewerNotOwner, condition: approve}
+  - {from: OwnerApprove, to: RejectedEnd, condition: reject}
   # Quoted: bare true/false become booleans and the edge condition must be the string.
   - {from: CheckUpdatedByReviewerNotOwner, to: RejectReviewerNotOwner, condition: "true"}
-  - {from: CheckUpdatedByReviewerNotOwner, to: OwnerApprove, condition: "false"}
+  - {from: CheckUpdatedByReviewerNotOwner, to: FinalApprove, condition: "false"}
   - {from: RejectReviewerNotOwner, to: RejectedEnd, condition: reject}
-  - {from: OwnerApprove, to: ApprovedEnd, condition: approve}
-  - {from: OwnerApprove, to: RejectedEnd, condition: reject}
+  - {from: FinalApprove, to: ApprovedEnd, condition: approve}
