@@ -6,9 +6,16 @@
 # name turns the review nodes into RequestApproval tasks that rewrite the payload.
 #
 #   1. run_auto_classification.py files the task (reviewers: team vna-data-steward).
-#   2. StewardConfirm: a Data Steward confirms or rejects within 10 days. When the timer fires the
+#   2. CheckUpdatedByReviewerNotOwner: same check as the glossary node "Updated by is Reviewer",
+#      plus "is not Owner". 2.0.5 applies the rules to the related table (updatedBy / reviewers /
+#      owners), not to the user who clicks the task. True means the table was last updated by a
+#      reviewer who is not an owner: the workflow rejects instead of approving. False continues.
+#      A table has no reviewers, so this stays false unless reviewers are set on the table.
+#   3. RejectReviewerNotOwner: closes that task as Rejected. An end event alone does not resolve a
+#      Suggestion task; the timer does (closeAsResolution).
+#   4. StewardConfirm: a Data Steward confirms or rejects within 10 days. When the timer fires the
 #      task closes as Expired and the next run files the suggestion again.
-#   3. OwnerApprove: the table owners (admins if the table has none) approve or reject. The
+#   5. OwnerApprove: the table owners (admins if the table has none) approve or reject. The
 #      suggested tag is merged into the column only on approve.
 #
 # Neither node uses status Open (see StewardConfirm.taskStatus), so tasks are acted on from the task
@@ -21,7 +28,8 @@
 name: SuggestionTaskWorkflow
 displayName: Suggestion Task Workflow
 description: >-
-  Gợi ý tự động (nhãn DataSensitivity, mô tả): Data Steward xác nhận trong 10 ngày, Data Owner
+  Gợi ý tự động (nhãn DataSensitivity, mô tả). Người cập nhật bảng là reviewer nhưng không phải
+  owner thì task bị từ chối, không duyệt. Còn lại: Data Steward xác nhận trong 10 ngày, Data Owner
   duyệt. Quá hạn thì task đóng ở trạng thái Expired và bot gợi ý lại ở lần chạy sau.
 config:
   storeStageStatus: true
@@ -34,6 +42,51 @@ nodes:
     subType: startEvent
     name: TaskStart
     displayName: Task Start
+
+  # Glossary shape: {"and":[{"isReviewer":{"var":"updatedBy"}}]}. "!" is the jsonlogic not.
+  # True only when updatedBy is in the table's reviewers and not in its owners.
+  - type: automatedTask
+    subType: checkEntityAttributesTask
+    name: CheckUpdatedByReviewerNotOwner
+    displayName: Người cập nhật là reviewer, không phải owner
+    config:
+      rules: >-
+        {"and":[{"isReviewer":{"var":"updatedBy"}},{"!":[{"isOwner":{"var":"updatedBy"}}]}]}
+    inputNamespaceMap:
+      relatedEntity: global
+
+  # Reached only when the check is true. Closes the Suggestion task as Rejected; the edge then
+  # ends the workflow. PT1S is a constant (see StewardConfirm.expiryTimer).
+  - type: userTask
+    subType: userApprovalTask
+    name: RejectReviewerNotOwner
+    displayName: Từ chối (reviewer không phải owner)
+    config:
+      assignees:
+        addReviewers: false
+        addOwners: false
+        candidates: [{type: user, fullyQualifiedName: admin}]
+        emptyAssigneeStrategy: assignAdmins
+      approvalThreshold: 1
+      rejectionThreshold: 1
+      stageId: rejected
+      stageDisplayName: Từ chối (reviewer không phải owner)
+      taskStatus: Pending
+      assigneeStrategy: admins
+      transitionMetadata:
+        - id: reject
+          label: Từ chối
+          targetStageId: rejected
+          targetTaskStatus: Rejected
+          resolutionType: Rejected
+          formRef: reject
+          requiresComment: false
+      expiryTimer:
+        durationVariable: "'PT1S'"
+        transitionId: reject
+        closeAsResolution: Rejected
+    inputNamespaceMap:
+      relatedEntity: global
 
   - type: userTask
     subType: userApprovalTask
@@ -131,7 +184,11 @@ nodes:
     displayName: Expired
 
 edges:
-  - {from: TaskStart, to: StewardConfirm}
+  - {from: TaskStart, to: CheckUpdatedByReviewerNotOwner}
+  # Quoted: bare true/false become booleans and the edge condition must be the string.
+  - {from: CheckUpdatedByReviewerNotOwner, to: RejectReviewerNotOwner, condition: "true"}
+  - {from: CheckUpdatedByReviewerNotOwner, to: StewardConfirm, condition: "false"}
+  - {from: RejectReviewerNotOwner, to: RejectedEnd, condition: reject}
   - {from: StewardConfirm, to: OwnerApprove, condition: confirm}
   - {from: StewardConfirm, to: RejectedEnd, condition: reject}
   - {from: StewardConfirm, to: ExpiredEnd, condition: timeout}
