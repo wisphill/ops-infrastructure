@@ -43,8 +43,10 @@ nodes:
       assignees:
         addReviewers: true
         addOwners: false
-        candidates:
-          - team:vna-data-steward
+        # Entity reference. A "team:name" string does not deserialize and the PUT
+        # comes back as "Invalid request format". fullyQualifiedName is what the
+        # assignee resolver reads.
+        candidates: [{type: team, fullyQualifiedName: vna-data-steward}]
         emptyAssigneeStrategy: assignAdmins
       approvalThreshold: 1
       rejectionThreshold: 1
@@ -87,8 +89,7 @@ nodes:
       assignees:
         addReviewers: false
         addOwners: true
-        candidates: 
-          - admin
+        candidates: [{type: user, fullyQualifiedName: admin}]
         emptyAssigneeStrategy: assignAdmins
       approvalThreshold: 1
       rejectionThreshold: 1
