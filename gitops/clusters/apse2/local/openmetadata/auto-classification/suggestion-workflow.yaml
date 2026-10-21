@@ -5,7 +5,7 @@
 # SuggestionTaskWorkflow: the server derives the task type from the workflow name, and any other
 # name turns the review nodes into RequestApproval tasks that rewrite the payload.
 #
-#   1. run_auto_classification.py files the task (reviewers: team DataSteward).
+#   1. run_auto_classification.py files the task (reviewers: team vna-data-steward).
 #   2. StewardConfirm: a Data Steward confirms or rejects within 10 days. When the timer fires the
 #      task closes as Expired and the next run files the suggestion again.
 #   3. OwnerApprove: the table owners (admins if the table has none) approve or reject. The

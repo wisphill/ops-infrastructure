@@ -73,8 +73,8 @@ bots:
       - DataSensitivityBotRole
 
 teams:
-  # Not the SUGGESTION_ASSIGNEE_TEAM used by oracle-auto-classification (cronjob.yaml), which
-  # stays DataSteward (the team name): this is a separate team, add members to it from the UI.
+  # SUGGESTION_ASSIGNEE_TEAM of oracle-auto-classification (../auto-classification/cronjob.yaml):
+  # its members get the Steward step of every Suggestion task. Renaming it breaks that link.
   vna-data-steward:
     teamType: Group
     displayName: VNA Data Steward

@@ -45,8 +45,9 @@ spec:
                   python /config/run_auto_classification.py /config/oracle-auto-classification.yaml DataSensitivity
               env:
                 # Team that reviews the tasks (Steward step); admins if the team does not exist.
+                # Team name (not displayName) from ../access/access.yaml teams.
                 - name: SUGGESTION_ASSIGNEE_TEAM
-                  value: DataSteward
+                  value: vna-data-steward
                 - name: ORACLE_PASSWORD
                   valueFrom:
                     secretKeyRef:
