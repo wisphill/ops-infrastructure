@@ -131,9 +131,27 @@ with the `sed` reversed).
 
 ## Bot access (policies and roles)
 
-`access/access.yaml` declares the bot policies, roles and which roles `ingestion-bot` holds
-(`IngestionBotRole` + `AutoClassificationBotRole`, which allows `CreateTask`). Add a policy, role or
-bot there and push: Argo CD runs the `openmetadata-access-sync` Job on every sync.
+`access/access.yaml` declares the bot policies, roles and bots. Add a policy, role or bot there and
+push: Argo CD runs the `openmetadata-access-sync` Job on every sync. Missing bots are created (JWT,
+no expiry); existing bots only gain roles.
+
+The auto-classification CronJob runs as its own bot, `data-sensitivity-bot`
+(`DataSensitivityBotRole`: read tables and sample data, manage the DataSensitivity classification,
+`CreateTask` for Request Tag tasks). `ingestion-bot` is not managed by `access.yaml`.
+
+### data-sensitivity-bot token
+
+After the first sync has created the bot, copy its token from **Settings > Bots >
+data-sensitivity-bot** (or regenerate it there) and, from this directory, store it as
+`OM_DATA_SENSITIVITY_BOT_TOKEN` in `openmetadata-ingestion-secrets`:
+
+```bash
+pbpaste | tr -d '\n' | jq -Rs . | SOPS_AGE_KEY_FILE=../../../../../sops-age-key.txt \
+  sops set --value-stdin secrets/secrets.enc.yaml '["stringData"]["OM_DATA_SENSITIVITY_BOT_TOKEN"]'
+```
+
+Commit and push. Until the key exists, `oracle-auto-classification` pods fail with
+`CreateContainerConfigError`.
 
 The Job needs an admin JWT (user's Access Token, or a bot with the Admin role), stored as
 `OM_ADMIN_JWT_TOKEN` in `ingestion/secrets.enc.yaml`.

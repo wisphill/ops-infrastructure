@@ -49,11 +49,12 @@ spec:
                     secretKeyRef:
                       name: openmetadata-ingestion-secrets
                       key: ORACLE_PASSWORD
+                # data-sensitivity-bot (../access/access.yaml), not ingestion-bot.
                 - name: OM_JWT_TOKEN
                   valueFrom:
                     secretKeyRef:
-                      name: openmetadata-ingestion-secrets
-                      key: OM_JWT_TOKEN
+                      name: openmetadata-bot-secrets
+                      key: OM_DATA_SENSITIVITY_BOT_TOKEN
               volumeMounts:
                 - name: config
                   mountPath: /config

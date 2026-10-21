@@ -2,30 +2,53 @@
 # Edit here and push: policies and roles are upserted (PUT), so UI edits to them are overwritten.
 # Field names follow the OpenMetadata 2.0.5 CreatePolicyRequest / CreateRoleRequest API.
 #
-# Bots only gain roles: a role the bot already has (or one assigned in the UI and not listed here)
-# is never removed.
+# Bots listed here are created if missing (JWT, no expiry). Bots only gain roles: a role the bot
+# already has (or one assigned in the UI and not listed here) is never removed.
+#
+# Do not reuse names of built-in policies/roles (IngestionBotRole, AutoClassificationBotRole, ...):
+# the PUT replaces their content.
 
 policies:
-  # Why: IngestionBotRole grants EditAll/ViewAll, which does not include CreateTask, so the
-  # auto-classification CronJob could not file "Request Tag" tasks.
-  - name: AutoClassificationTaskPolicy
-    displayName: Auto-classification - create tasks
-    description: Lets a bot file Request Tag tasks (tag suggestions for Data Stewards to review).
+  # Why: the CronJob files each suggested tag as a "Request Tag" task (POST /feed), which needs
+  # CreateTask. No built-in bot policy grants it.
+  - name: DataSensitivityBotPolicy
+    displayName: Data sensitivity bot
+    description: >-
+      Lets the auto-classification CronJob keep the DataSensitivity classification in sync with
+      git and file Request Tag tasks for Data Stewards to review.
     rules:
+      - name: AllowManageClassification
+        description: sync_classifications.py upserts the DataSensitivity classification and tags.
+        resources: [classification, tag]
+        operations: [Create, EditAll, ViewAll]
+        effect: allow
       - name: AllowCreateTask
+        description: run_auto_classification.py files Request Tag tasks.
         resources: [All]
         operations: [CreateTask]
         effect: allow
 
 roles:
+  - name: DataSensitivityBotRole
+    displayName: Data sensitivity bot
+    description: Permissions of data-sensitivity-bot (oracle-auto-classification CronJob).
+    policies:
+      - DefaultBotPolicy             # built in
+      - AutoClassificationBotPolicy  # built in: read tables, sample data
+      - DataSensitivityBotPolicy
+
+  # Built in. An earlier version of this file reused this name and replaced its policies with a
+  # custom one; listed here to restore the shipped content.
   - name: AutoClassificationBotRole
-    displayName: Auto-classification bot
-    description: Permissions the auto-classification CronJob needs on top of IngestionBotRole.
-    policies: [AutoClassificationTaskPolicy]
+    displayName: Auto Classification bot role
+    description: Role corresponding to a Auto Classification bot.
+    policies: [AutoClassificationBotPolicy, DefaultBotPolicy]
 
 bots:
-  # Bot user whose JWT is OM_JWT_TOKEN in openmetadata-ingestion-secrets.
-  ingestion-bot:
+  # Runs the oracle-auto-classification CronJob. Its JWT is OM_DATA_SENSITIVITY_BOT_TOKEN in
+  # openmetadata-ingestion-secrets (see ../READme.md). ingestion-bot is not managed here.
+  data-sensitivity-bot:
+    displayName: Data sensitivity bot
+    description: Suggests DataSensitivity (C1-C4) tags as Request Tag tasks.
     roles:
-      - IngestionBotRole       # built in; listed so the sync restores it if it was removed
-      - AutoClassificationBotRole
+      - DataSensitivityBotRole
