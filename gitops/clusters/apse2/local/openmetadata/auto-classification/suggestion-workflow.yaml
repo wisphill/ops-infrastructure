@@ -43,7 +43,7 @@ nodes:
       assignees:
         addReviewers: true
         addOwners: false
-        candidates: ["team:vna-data-steward"]
+        candidates: [team:vna-data-steward]
         emptyAssigneeStrategy: assignAdmins
       approvalThreshold: 1
       rejectionThreshold: 1
@@ -86,7 +86,7 @@ nodes:
       assignees:
         addReviewers: false
         addOwners: true
-        candidates: ["admin"]
+        candidates: [admin]
         emptyAssigneeStrategy: assignAdmins
       approvalThreshold: 1
       rejectionThreshold: 1
