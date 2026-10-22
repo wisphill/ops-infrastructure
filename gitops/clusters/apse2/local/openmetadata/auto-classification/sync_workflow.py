@@ -43,11 +43,13 @@ def matches(desired, actual) -> bool:
 
 
 def resolve_candidates(metadata: OpenMetadata, definition: dict) -> None:
-    """Turn each {type, fullyQualifiedName} assignee candidate into {id, type}.
+    """Turn each {type, fullyQualifiedName} assignee candidate into a full entity reference.
 
     The server rejects a candidate without an id ("query param id must not be null"), and ids
     differ per environment, so the definition file names users and teams and the ids are looked
-    up here.
+    up here. The server stores the reference as sent: with only {id, type} the workflow page has
+    no name to show and displays the raw id, so name, fullyQualifiedName and displayName are
+    sent too.
     """
     for node in definition.get("nodes", []):
         assignees = (node.get("config") or {}).get("assignees") or {}
@@ -68,7 +70,15 @@ def resolve_candidates(metadata: OpenMetadata, definition: dict) -> None:
                 raise ValueError(f"node {node['name']}: {kind} {fqn} not found") from error
             if not entity:
                 raise ValueError(f"node {node['name']}: {kind} {fqn} not found")
-            resolved.append({"id": entity["id"], "type": kind})
+            reference = {
+                "id": entity["id"],
+                "type": kind,
+                "name": entity["name"],
+                "fullyQualifiedName": entity.get("fullyQualifiedName") or entity["name"],
+            }
+            if entity.get("displayName"):
+                reference["displayName"] = entity["displayName"]
+            resolved.append(reference)
         if resolved:
             assignees["candidates"] = resolved
 

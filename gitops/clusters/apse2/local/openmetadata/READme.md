@@ -6,7 +6,7 @@
 | `openmetadata`             | Server + UI (`values.yaml`)   | 1         |
 | `openmetadata-ingestion`   | Ingestion CronJobs            | 2         |
 | `openmetadata-access`      | Bot policies/roles (`access/access.yaml`) | 3 |
-| `openmetadata-auto-classification` | Auto-classification CronJob (tag suggestions) | 3 |
+| `openmetadata-auto-classification` | Auto-classification CronJob (proposal tags for Stewards) + owner-review CronJob (real C1-C4 tasks for Data Owners) | 3 |
 
 UI: https://openmetadata.opswork.io.vn (Google SSO, see [Google SSO](#google-sso)).
 

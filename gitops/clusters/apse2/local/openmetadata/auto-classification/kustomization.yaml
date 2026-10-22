@@ -5,6 +5,7 @@ namespace: openmetadata
 
 resources:
   - cronjob.yaml
+  - owner-review-cronjob.yaml
 
 configMapGenerator:
   - name: oracle-auto-classification
@@ -15,3 +16,4 @@ configMapGenerator:
       - sync_classifications.py
       - sync_workflow.py
       - run_auto_classification.py
+      - request_owner_review.py

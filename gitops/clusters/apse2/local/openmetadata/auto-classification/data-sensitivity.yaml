@@ -30,6 +30,34 @@ classification:
     requireExplicitMatch: true
 
 tags:
+  - name: C1 Đề xuất
+    displayName: C1 Đề xuất
+    description: Nhãn đề xuất tự động; chờ Data Owner duyệt để chuyển thành C1.
+    style: {color: "#2E7D32"}
+    autoClassificationEnabled: false
+    autoClassificationPriority: 10
+
+  - name: C2 Đề xuất
+    displayName: C2 Đề xuất
+    description: Nhãn đề xuất tự động; chờ Data Owner duyệt để chuyển thành C2.
+    style: {color: "#1565C0"}
+    autoClassificationEnabled: false
+    autoClassificationPriority: 20
+
+  - name: C3 Đề xuất
+    displayName: C3 Đề xuất
+    description: Nhãn đề xuất tự động; chờ Data Owner duyệt để chuyển thành C3.
+    style: {color: "#EF6C00"}
+    autoClassificationEnabled: false
+    autoClassificationPriority: 80
+
+  - name: C4 Đề xuất
+    displayName: C4 Đề xuất
+    description: Nhãn đề xuất tự động; chờ Data Owner duyệt để chuyển thành C4.
+    style: {color: "#C62828"}
+    autoClassificationEnabled: false
+    autoClassificationPriority: 100
+
   - name: C1
     displayName: C1 Công khai
     description: >-

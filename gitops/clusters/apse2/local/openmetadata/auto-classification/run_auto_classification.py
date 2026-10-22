@@ -10,11 +10,12 @@ Same as `metadata classify -c <workflow.yaml>`, with two differences:
   are used.
 * The sink would patch the scored tags straight onto the columns. Instead, each score is filed as
   a Suggestion task (POST /v1/tasks; the legacy POST /feed refuses tasks created by bots). The
-  task follows SuggestionTaskWorkflow (suggestion-workflow.yaml): a Data Steward confirms within
-  10 days, then the table owners approve. Nothing is written to the column until the Owner
-  approves.
+  task follows SuggestionTaskWorkflow (suggestion-workflow.yaml): a Data Steward approves or
+  rejects it. Only the proposal tags ("C1 Đề xuất" ... "C4 Đề xuất") are filed, never C1-C4
+  themselves: request_owner_review.py later turns approved proposals into the real C1-C4 tasks
+  for the data owners. Nothing is written to the column until the Steward approves.
 
-Task assignees and reviewers (the Steward step): the team named by $SUGGESTION_ASSIGNEE_TEAM, sent
+Task assignees and reviewers: the team named by $SUGGESTION_ASSIGNEE_TEAM, sent
 as the team itself (not its members); if it is unset or does not exist, the workflow falls back to
 the admins.
 """
@@ -22,7 +23,6 @@ the admins.
 import json
 import os
 import sys
-import time
 from pathlib import Path
 from typing import Optional
 
@@ -38,8 +38,18 @@ from metadata.workflow.classification import AutoClassificationWorkflow
 
 logger = ingestion_logger()
 
-# Keep in sync with StewardConfirm.expiryTimer in suggestion-workflow.yaml.
-STEWARD_REVIEW_DAYS = 10
+LEVELS = ("C1", "C2", "C3", "C4")
+PROPOSAL_SUFFIX = " Đề xuất"
+CLASSIFICATION = "DataSensitivity"
+
+
+def tag_level(tag_fqn: str) -> Optional[str]:
+    """C1..C4 for DataSensitivity.C1 and DataSensitivity.C1 Đề xuất, else None."""
+    classification, _, name = tag_fqn.partition(".")
+    if classification != CLASSIFICATION:
+        return None
+    level = name.removesuffix(PROPOSAL_SUFFIX)
+    return level if level in LEVELS else None
 
 
 def plain_reason(reason: Optional[str]) -> str:
@@ -70,12 +80,14 @@ class TagSuggester:
         return [team.fullyQualifiedName.root]
 
     def _suggested(self, table_fqn: str) -> set[tuple[str, str]]:
-        """(fieldPath, tagFQN) of every Suggestion task on the table that blocks a new one.
+        """(fieldPath, level) of every Suggestion task on the table that blocks a new one.
+
+        A task for "C2 Đề xuất" and one for "C2" block the same level, so the proposal is not
+        filed again while the owner is reviewing the real tag.
 
         Open and rejected tasks must not be filed again. Approved tasks do not block: while the tag
         is on the column the processor skips the column, so it only gets here once the tag was
-        removed. Expired tasks (no Steward answer in time) do not block either, so the suggestion
-        is filed again. With $SUGGESTION_RESUGGEST_REJECTED (testing), rejected ones do not block.
+        removed. With $SUGGESTION_RESUGGEST_REJECTED (testing), rejected ones do not block.
         """
         suggested, after = set(), None
         while True:
@@ -91,7 +103,9 @@ class TagSuggester:
                     labels = json.loads(payload.get("suggestedValue") or "[]")
                 except ValueError:
                     continue
-                suggested.update((payload.get("fieldPath"), label.get("tagFQN")) for label in labels)
+                suggested.update(
+                    (payload.get("fieldPath"), tag_level(label.get("tagFQN") or "")) for label in labels
+                )
             after = (page.get("paging") or {}).get("after")
             if not after:
                 return suggested
@@ -113,11 +127,18 @@ class TagSuggester:
             if column is None:
                 continue
             label = column_tag.tag_label
-            tag_fqn = label.tagFQN.root
-            field_path = f"columns.{column.name.root}.tags"
-            if (field_path, tag_fqn) in suggested:
+            level = tag_level(label.tagFQN.root)
+            if level is None:
                 continue
-            # What the task applies when approved: a confirmed tag, as Steward and Owner vouched for it.
+            # File only the proposal tag; request_owner_review.py files the real C1-C4 later.
+            tag_fqn = f"{CLASSIFICATION}.{level}{PROPOSAL_SUFFIX}"
+            label = label.model_copy(update={"tagFQN": tag_fqn})
+            field_path = f"columns.{column.name.root}.tags"
+            if (field_path, level) in suggested:
+                continue
+            if any(tag_level(t.tagFQN.root) for t in column.tags or []):
+                continue  # already proposed or classified
+            # What the task applies when approved: a confirmed tag, as the Steward vouched for it.
             # The UI shows suggestedValue as raw JSON, so keep it to the tag and a one-line reason.
             suggestion = label.model_copy(
                 update={
@@ -140,7 +161,6 @@ class TagSuggester:
                         # team and any direct member can act on it.
                         "assignees": self.reviewers,
                         "reviewers": self.reviewers,
-                        "dueDate": int((time.time() + STEWARD_REVIEW_DAYS * 86400) * 1000),
                         "payload": {
                             "suggestionType": "Tag",
                             "fieldPath": field_path,

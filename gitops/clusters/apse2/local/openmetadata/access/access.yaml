@@ -17,13 +17,13 @@
 # the PUT replaces their content.
 
 policies:
-  # Why: the CronJob files each suggested tag as a Suggestion task (POST /v1/tasks), which needs
+  # Why: the CronJobs file each suggested tag as a Suggestion task (POST /v1/tasks), which needs
   # Create on the task resource and CreateTask on the table, and keeps SuggestionTaskWorkflow in
   # sync with git. No built-in bot policy grants these.
   - name: DataSensitivityBotPolicy
     displayName: Data sensitivity bot
     description: >-
-      Lets the auto-classification CronJob keep the DataSensitivity classification and the
+      Lets the auto-classification and owner-review CronJobs keep the DataSensitivity classification and the
       Suggestion workflow in sync with git and file Suggestion tasks for Data Stewards to confirm.
     rules:
       - name: AllowManageClassification
@@ -37,9 +37,14 @@ policies:
         operations: [Create, EditAll, ViewAll]
         effect: allow
       - name: AllowCreateSuggestionTask
-        description: run_auto_classification.py files Suggestion tasks and lists existing ones.
+        description: run_auto_classification.py and request_owner_review.py file Suggestion tasks and list existing ones.
         resources: [task]
         operations: [Create, ViewAll]
+        effect: allow
+      - name: AllowEditColumnTags
+        description: request_owner_review.py removes the proposal tags from columns and lists tables.
+        resources: [table]
+        operations: [EditTags, ViewAll]
         effect: allow
       - name: AllowCreateTask
         description: CreateTask on the table each Suggestion task is about.
@@ -74,7 +79,7 @@ bots:
 
 teams:
   # SUGGESTION_ASSIGNEE_TEAM of oracle-auto-classification (../auto-classification/cronjob.yaml):
-  # its members get the Steward step of every Suggestion task. Renaming it breaks that link.
+  # its members review the proposal ("Đề xuất") Suggestion tasks. Renaming it breaks that link.
   vna-data-steward:
     teamType: Group
     displayName: VNA Data Steward
