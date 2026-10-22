@@ -29,6 +29,6 @@ spec:
             - --http-address=0.0.0.0:4180
             - --reverse-proxy=true
             - --cookie-secure=true
-            - --cookie-domain=.opswork.io.vn
-            - --whitelist-domain=.opswork.io.vn
+            - --cookie-domain=.foolosophy.dev
+            - --whitelist-domain=.foolosophy.dev
             - --set-xauthrequest=true

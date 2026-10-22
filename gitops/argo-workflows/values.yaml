@@ -19,10 +19,10 @@ server:
     clientSecret:
       name: argo-workflows-secret-keys
       key: OKTA_AGROWORKFLOWS_CLIENT_SECRET
-    redirectUrl: https://argo-workflows.opswork.io.vn/oauth2/callback
+    redirectUrl: https://argo-workflows.foolosophy.dev/oauth2/callback
 
   ingress:
     enabled: true
     ingressClassName: nginx
     hosts:
-      - argo-workflows.opswork.io.vn
+      - argo-workflows.foolosophy.dev

@@ -62,22 +62,22 @@ data:
                 cache: 1m
                 sites:
                   - title: Portfolio
-                    url: https://phil.opswork.io.vn
+                    url: https://phil.foolosophy.dev
                     icon: mdi:home
                   - title: My blog
                     url: https://wisphill.github.io
                     icon: mdi:post
                   - title: Agro Workflows
-                    url: https://argo-workflows.opswork.io.vn
+                    url: https://argo-workflows.foolosophy.dev
                     icon: sh:argo-cd
                   - title: Agro CD & Kubernetes
-                    url: https://argocd.opswork.io.vn
+                    url: https://argocd.foolosophy.dev
                     icon: sh:kubernetes
                   - title: Grafana
-                    url: https://grafana.opswork.io.vn
+                    url: https://grafana.foolosophy.dev
                     icon: sh:grafana
                   - title: Prometheus
-                    url: https://prometheus.opswork.io.vn
+                    url: https://prometheus.foolosophy.dev
                     icon: sh:prometheus
 
           - size: small

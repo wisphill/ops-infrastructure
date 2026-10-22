@@ -7,7 +7,7 @@ server:
     ingressClassName: nginx
     annotations:
       nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
-    hostname: argocd.opswork.io.vn
+    hostname: argocd.foolosophy.dev
     path: /
 
 
@@ -20,7 +20,7 @@ configs:
     policy.csv: |
       g, Administrators, role:admin
   cm:
-    url: https://argocd.opswork.io.vn
+    url: https://argocd.foolosophy.dev
     admin.enabled: "true"
     oidc.config: |
       name: Okta

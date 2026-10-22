@@ -8,7 +8,7 @@
 | `openmetadata-access`      | Bot policies/roles (`access/access.yaml`) | 3 |
 | `openmetadata-auto-classification` | Auto-classification CronJob (proposal tags for Stewards) + owner-review CronJob (real C1-C4 tasks for Data Owners) | 3 |
 
-UI: https://openmetadata.opswork.io.vn (Google SSO, see [Google SSO](#google-sso)).
+UI: https://openmetadata.foolosophy.dev (Google SSO, see [Google SSO](#google-sso)).
 
 ## Google SSO
 
@@ -21,8 +21,8 @@ self signup stays off, so other users must be added by an admin first.
 In Google Cloud Console > APIs & Services > Credentials, create an OAuth client ID of type
 **Web application** with:
 
-- Authorized JavaScript origin: `https://openmetadata.opswork.io.vn`
-- Authorized redirect URI: `https://openmetadata.opswork.io.vn/callback`
+- Authorized JavaScript origin: `https://openmetadata.foolosophy.dev`
+- Authorized redirect URI: `https://openmetadata.foolosophy.dev/callback`
 
 Then, from this directory, open the decrypted file in your editor and replace the two `xxx` values
 under the `oidc-secrets` document (`openmetadata-oidc-client-id`, `openmetadata-oidc-client-secret`):

@@ -4,7 +4,7 @@ master:
   ingress:
     enabled: true
     className: nginx
-    host: seaweedfs.opswork.io.vn
+    host: seaweedfs.foolosophy.dev
     path: /
 
 volume:
@@ -24,7 +24,7 @@ filer:
     http:
       enabled: true
       className: nginx
-      host: seaweedfs-filer.opswork.io.vn
+      host: seaweedfs-filer.foolosophy.dev
       path: "/"
 
 s3:
@@ -33,7 +33,7 @@ s3:
   ingress:
     enabled: true
     className: nginx
-    host: seaweedfs-s3.opswork.io.vn
+    host: seaweedfs-s3.foolosophy.dev
     path: /
 
 admin:
@@ -45,5 +45,5 @@ admin:
   ingress:
     enabled: true
     className: nginx
-    host: seaweedfs-admin.opswork.io.vn
+    host: seaweedfs-admin.foolosophy.dev
     path: /

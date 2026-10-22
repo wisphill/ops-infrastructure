@@ -36,7 +36,7 @@ openmetadata:
       enabled: true
       # Google SSO, confidential (server-side) OIDC flow. Client ID/secret come from Secret
       # oidc-secrets in ./secrets (sops + ksops). Google OAuth client (type Web application) needs the
-      # authorized redirect URI https://openmetadata.opswork.io.vn/callback.
+      # authorized redirect URI https://openmetadata.foolosophy.dev/callback.
       provider: google
       clientType: confidential
       authority: "https://accounts.google.com"
@@ -45,7 +45,7 @@ openmetadata:
       publicKeys:
         - "https://www.googleapis.com/oauth2/v3/certs"
         - "http://openmetadata:8585/api/v1/system/config/jwks"
-      callbackUrl: "https://openmetadata.opswork.io.vn/callback"
+      callbackUrl: "https://openmetadata.foolosophy.dev/callback"
       enableSelfSignup: false
       oidcConfiguration:
         enabled: true
@@ -57,8 +57,8 @@ openmetadata:
           secretRef: oidc-secrets
           secretKey: openmetadata-oidc-client-secret
         discoveryUri: "https://accounts.google.com/.well-known/openid-configuration"
-        callbackUrl: "https://openmetadata.opswork.io.vn/callback"
-        serverUrl: "https://openmetadata.opswork.io.vn"
+        callbackUrl: "https://openmetadata.foolosophy.dev/callback"
+        serverUrl: "https://openmetadata.foolosophy.dev"
     # No Airflow in the local cluster, so don't try to reach a pipeline service.
     pipelineServiceClientConfig:
       enabled: false
@@ -78,7 +78,7 @@ ingress:
   enabled: true
   className: nginx
   hosts:
-    - host: openmetadata.opswork.io.vn
+    - host: openmetadata.foolosophy.dev
       paths:
         - path: /
           pathType: Prefix

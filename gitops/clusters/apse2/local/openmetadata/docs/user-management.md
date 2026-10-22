@@ -1,6 +1,6 @@
 # OpenMetadata: Flow đăng ký và quản lý user
 
-Bối cảnh hiện tại của instance https://openmetadata.opswork.io.vn:
+Bối cảnh hiện tại của instance https://openmetadata.foolosophy.dev:
 
 - Đăng nhập bằng **Basic Auth** (email + mật khẩu), không dùng SSO.
 - **Self signup đã tắt**: người dùng không tự tạo tài khoản được từ trang login
@@ -23,7 +23,7 @@ Người dùng ──(yêu cầu qua chat/ticket)──▶ Admin OpenMetadata
                      chung nhóm chat)
                                              │
                                              ▼
-             Người dùng đăng nhập tại https://openmetadata.opswork.io.vn
+             Người dùng đăng nhập tại https://openmetadata.foolosophy.dev
                          và đổi mật khẩu ngay lần đầu
 ```
 
@@ -45,7 +45,7 @@ Người dùng ──(yêu cầu qua chat/ticket)──▶ Admin OpenMetadata
 
 ## 3. Người dùng đăng nhập lần đầu
 
-1. Mở https://openmetadata.opswork.io.vn (có thể phải qua bước kiểm tra của Cloudflare).
+1. Mở https://openmetadata.foolosophy.dev (có thể phải qua bước kiểm tra của Cloudflare).
 2. Đăng nhập bằng email và mật khẩu tạm admin đã gửi.
 3. Đổi mật khẩu ngay: bấm avatar góc phải, vào trang profile, chọn **Change Password**.
 

@@ -6,7 +6,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: prometheus.opswork.io.vn
+    - host: prometheus.foolosophy.dev
       http:
         paths:
           - path: /oauth2
@@ -24,12 +24,12 @@ metadata:
   namespace: platform
   annotations:
     nginx.ingress.kubernetes.io/auth-url: "http://oauth2-proxy.platform.svc.cluster.local:4180/oauth2/auth"
-    nginx.ingress.kubernetes.io/auth-signin: "https://prometheus.opswork.io.vn/oauth2/start"
+    nginx.ingress.kubernetes.io/auth-signin: "https://prometheus.foolosophy.dev/oauth2/start"
 
 spec:
   ingressClassName: nginx
   rules:
-    - host: prometheus.opswork.io.vn
+    - host: prometheus.foolosophy.dev
       http:
         paths:
           - path: /
