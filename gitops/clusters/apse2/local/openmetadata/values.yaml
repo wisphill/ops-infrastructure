@@ -41,7 +41,7 @@ openmetadata:
       clientType: confidential
       authority: "https://accounts.google.com"
       # Not a secret (visible to the browser), but must equal openmetadata-oidc-client-id in oidc-secrets.
-      clientId: "504337467379-ka99jbabmnbf5tthq72g2s88fsog5013.apps.googleusercontent.com"
+      clientId: "504337467379-gq3st2cmidlilro2cssaje8cf39kqf2b.apps.googleusercontent.com"
       publicKeys:
         - "https://www.googleapis.com/oauth2/v3/certs"
         - "http://openmetadata:8585/api/v1/system/config/jwks"
