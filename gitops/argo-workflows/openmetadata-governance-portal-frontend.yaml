@@ -1,0 +1,77 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: deploy-openmetadata-governance-portal-frontend
+  namespace: argo-workflows
+  labels:
+    app.kubernetes.io/name: openmetadata-governance-portal-frontend
+    app.kubernetes.io/part-of: openmetadata-governance-portal
+spec:
+  entrypoint: deploy
+  serviceAccountName: workflow-runner
+  arguments:
+    parameters:
+      - name: source-repository
+        value: https://github.com/wisphill/openmetata-governance-portal.git
+      - name: source-revision
+        value: main
+      - name: pages-project
+        value: openmetadata-governance-portal
+      - name: pages-branch
+        value: main
+      # This becomes part of the browser bundle, so it must be a public HTTPS URL.
+      - name: vite-api-url
+        value: ""
+
+  templates:
+    - name: deploy
+      volumes:
+        - name: workspace
+          emptyDir: {}
+      containerSet:
+        volumeMounts:
+          - name: workspace
+            mountPath: /workspace
+        containers:
+          - name: clone
+            image: alpine/git:v2.45.2
+            command: [sh, -ec]
+            args:
+              - |
+                git clone --depth 1 --branch '{{workflow.parameters.source-revision}}' \
+                  '{{workflow.parameters.source-repository}}' /workspace/source
+
+          - name: build
+            image: node:22-alpine
+            dependencies: [clone]
+            workingDir: /workspace/source/frontend
+            env:
+              - name: VITE_API_URL
+                value: '{{workflow.parameters.vite-api-url}}'
+            command: [sh, -ec]
+            args:
+              - |
+                npm ci
+                npm run build
+
+          - name: deploy
+            image: node:22-alpine
+            dependencies: [build]
+            workingDir: /workspace/source/frontend
+            env:
+              - name: CLOUDFLARE_API_TOKEN
+                valueFrom:
+                  secretKeyRef:
+                    name: argo-workflows-secret-keys
+                    key: CLOUDFLARE_API_TOKEN
+              - name: CLOUDFLARE_ACCOUNT_ID
+                valueFrom:
+                  secretKeyRef:
+                    name: argo-workflows-secret-keys
+                    key: CLOUDFLARE_ACCOUNT_ID
+            command: [sh, -ec]
+            args:
+              - |
+                npx --yes wrangler@4 pages deploy dist \
+                  --project-name '{{workflow.parameters.pages-project}}' \
+                  --branch '{{workflow.parameters.pages-branch}}'

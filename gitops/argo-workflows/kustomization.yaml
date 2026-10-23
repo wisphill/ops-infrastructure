@@ -6,6 +6,7 @@ resources:
   - service-account.yaml
   - sa.yaml
   - workflow-template.yaml
+  - openmetadata-governance-portal-frontend.yaml
   - buildkitd.yaml
 generators:
   - secrets-generator.yaml
