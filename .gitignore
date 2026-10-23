@@ -9,3 +9,4 @@ terraform-sa-key.json
 sops-age-key.txt
 
 charts
+.cloudflare_token
