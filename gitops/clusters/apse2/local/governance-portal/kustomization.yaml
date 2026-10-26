@@ -6,3 +6,28 @@ resources:
   - service.yaml
   - ingress.yaml
   - workflow-rbac.yaml
+
+generators:
+  - secrets-generator.yaml
+
+configMapGenerator:
+  - name: openmetadata-governance-portal-backend-config
+    literals:
+      - APP_ENV=development
+      - PORTAL_PUBLIC_URL=https://governance-portal.foolosophy.dev
+      - BACKEND_PUBLIC_URL=https://governance-portal-api.foolosophy.dev
+      - CORS_ORIGINS=https://governance-portal.foolosophy.dev
+      - SESSION_COOKIE_SECURE=false
+      - OIDC_ISSUER=https://accounts.google.com
+      - OIDC_SCOPES=openid profile email
+      - OIDC_AUDIENCE=504337467379-gq3st2cmidlilro2cssaje8cf39kqf2b.apps.googleusercontent.com
+      - OIDC_REDIRECT_URI=https://governance-portal-api.foolosophy.dev/auth/callback
+      - OIDC_LOGOUT_URI=https://governance-portal.foolosophy.dev
+      - OIDC_EMAIL_CLAIM=email
+      - OPENMETADATA_BASE_URL=https://openmetadata.foolosophy.dev
+      - OPENMETADATA_API_VERSION=v1
+      - OPENMETADATA_AUTH_MODE=admin_bot
+      - OPENMETADATA_USER_LOOKUP_FIELD=email
+      - OPENMETADATA_TASKS_PATH=/feed
+      - OPENMETADATA_TIMEOUT_SECONDS=10
+      - DATABASE_QUERIES_ENABLED=false

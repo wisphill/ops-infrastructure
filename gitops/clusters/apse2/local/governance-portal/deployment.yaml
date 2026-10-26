@@ -28,9 +28,25 @@ spec:
               containerPort: 8000
           env:
             - name: APP_ENV
-              value: production
+              valueFrom:
+                configMapKeyRef:
+                  name: openmetadata-governance-portal-backend-config
+                  key: APP_ENV
+            - name: BACKEND_PUBLIC_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: openmetadata-governance-portal-backend-config
+                  key: BACKEND_PUBLIC_URL
+            - name: OIDC_REDIRECT_URI
+              valueFrom:
+                configMapKeyRef:
+                  name: openmetadata-governance-portal-backend-config
+                  key: OIDC_REDIRECT_URI
             - name: SESSION_COOKIE_SECURE
-              value: "true"
+              valueFrom:
+                configMapKeyRef:
+                  name: openmetadata-governance-portal-backend-config
+                  key: SESSION_COOKIE_SECURE
           envFrom:
             - secretRef:
                 name: openmetadata-governance-portal-backend-secrets

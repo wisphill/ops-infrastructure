@@ -4,3 +4,6 @@ persistence:
 
 service:
   type: ClusterIP
+  # Keep the registry endpoint stable for the K3s containerd mirror on node yuu.
+  # This is the ClusterIP currently allocated to the existing Service.
+  clusterIP: 10.43.236.94
