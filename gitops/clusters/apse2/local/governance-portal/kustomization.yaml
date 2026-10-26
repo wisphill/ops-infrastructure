@@ -31,3 +31,8 @@ configMapGenerator:
       - OPENMETADATA_TASKS_PATH=/feed
       - OPENMETADATA_TIMEOUT_SECONDS=10
       - DATABASE_QUERIES_ENABLED=false
+
+# The current Argo CD KSOPS rendering path does not rewrite configMapKeyRef names.
+# Keep this name stable so the generated ConfigMap matches the Deployment reference.
+generatorOptions:
+  disableNameSuffixHash: true
