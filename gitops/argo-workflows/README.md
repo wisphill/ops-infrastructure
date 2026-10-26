@@ -39,3 +39,23 @@ make -C gitops/argo-workflows workflow-submit \
 Use `SOURCE_REVISION=<git-ref>` to build another revision and `PAGES_BRANCH=<branch>`
 to select the Cloudflare Pages deployment branch. After a change to this folder is
 merged, inspect `app-status` before submitting a workflow.
+
+## OpenMetadata Governance Portal backend
+
+`build-and-deploy-openmetadata-governance-portal-backend` clones the backend
+repository's `main` branch, builds `backend/Dockerfile`, and pushes
+`docker-registry.docker-registry.svc.cluster.local:5000/governance-portal/backend:main`.
+It then stops at an Argo manual approval node. Resuming that node restarts the
+GitOps-managed backend Deployment and waits for its health check. The workflow's
+cross-namespace RBAC is deliberately restricted to that one Deployment.
+
+Submit the build with:
+
+```bash
+make -C gitops/argo-workflows backend-workflow-submit
+```
+
+Before submitting, make sure the Argo CD Application
+`openmetadata-governance-portal-backend` has synchronized and that its encrypted
+runtime Secret has been added. The build does not deploy until the manual approval
+node is resumed.

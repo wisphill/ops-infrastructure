@@ -1,0 +1,77 @@
+apiVersion: argoproj.io/v1alpha1
+kind: WorkflowTemplate
+metadata:
+  name: build-and-deploy-openmetadata-governance-portal-backend
+  namespace: argo-workflows
+  labels:
+    app.kubernetes.io/name: openmetadata-governance-portal-backend
+    app.kubernetes.io/part-of: openmetadata-governance-portal
+spec:
+  entrypoint: build-and-deploy
+  serviceAccountName: workflow-runner
+  templates:
+    - name: build-and-deploy
+      dag:
+        tasks:
+          - name: build-and-push-main
+            template: build-and-push-main
+          - name: approval
+            dependencies: [build-and-push-main]
+            template: approval
+          - name: deploy
+            dependencies: [approval]
+            template: restart-deployment
+
+    - name: build-and-push-main
+      volumes:
+        - name: workspace
+          emptyDir: {}
+        - name: buildkit-config
+          configMap:
+            name: buildkit-config
+      containerSet:
+        volumeMounts:
+          - name: workspace
+            mountPath: /workspace
+          - name: buildkit-config
+            mountPath: /etc/buildkit/buildkitd.toml
+            subPath: buildkitd.toml
+        containers:
+          - name: clone
+            image: alpine/git:v2.45.2
+            command: [sh, -ec]
+            args:
+              - |
+                git clone --depth 1 --branch main \
+                  https://github.com/wisphill/openmetata-governance-portal.git \
+                  /workspace/source
+          - name: build-and-push
+            image: moby/buildkit:v0.25.1-rootless
+            dependencies: [clone]
+            command: [buildctl-daemonless.sh]
+            env:
+              - name: BUILDKITD_FLAGS
+                value: --oci-worker-no-process-sandbox --config=/etc/buildkit/buildkitd.toml
+            args:
+              - build
+              - --frontend
+              - dockerfile.v0
+              - --local
+              - context=/workspace/source/backend
+              - --local
+              - dockerfile=/workspace/source/backend
+              - --output
+              - type=image,name=docker-registry.docker-registry.svc.cluster.local:5000/governance-portal/backend:main,push=true
+
+    # Resuming this node in Argo Workflows is the required manual deployment approval.
+    - name: approval
+      suspend: {}
+
+    - name: restart-deployment
+      container:
+        image: bitnami/kubectl:1.32.3
+        command: [sh, -ec]
+        args:
+          - |
+            kubectl -n governance-portal rollout restart deployment/openmetadata-governance-portal-backend
+            kubectl -n governance-portal rollout status deployment/openmetadata-governance-portal-backend --timeout=5m

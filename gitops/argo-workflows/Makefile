@@ -7,8 +7,9 @@ TEMPLATE ?= deploy-openmetadata-governance-portal-frontend
 SOURCE_REVISION ?= main
 PAGES_PROJECT ?= openmetadata-governance-portal
 PAGES_BRANCH ?= main
+BACKEND_TEMPLATE ?= build-and-deploy-openmetadata-governance-portal-backend
 
-.PHONY: app-status app-diff workflow-list workflow-status workflow-logs workflow-watch workflow-submit
+.PHONY: app-status app-diff workflow-list workflow-status workflow-logs workflow-watch workflow-submit backend-workflow-submit
 
 # Read-only Argo CD and Argo Workflows status commands.
 app-status:
@@ -42,3 +43,8 @@ workflow-submit:
 		-p pages-branch=$(PAGES_BRANCH) \
 		-p vite-api-url=$(VITE_API_URL) \
 		--watch
+
+# Builds the backend main branch and waits at the manual Argo approval node.
+# Resume the workflow in Argo only after the image and deployment are approved.
+backend-workflow-submit:
+	$(ARGO) submit -n $(NAMESPACE) --from workflowtemplate/$(BACKEND_TEMPLATE)

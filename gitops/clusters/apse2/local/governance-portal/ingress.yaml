@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: openmetadata-governance-portal-backend
+  namespace: governance-portal
+  labels:
+    app.kubernetes.io/name: openmetadata-governance-portal-backend
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: governance-portal-api.foolosophy.dev
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: openmetadata-governance-portal-backend
+                port:
+                  name: http

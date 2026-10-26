@@ -1,0 +1,38 @@
+# Allows only the post-approval workflow action: restart and observe this Deployment.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: governance-portal-deployer
+  namespace: governance-portal
+rules:
+  - apiGroups:
+      - apps
+    resources:
+      - deployments
+    resourceNames:
+      - openmetadata-governance-portal-backend
+    verbs:
+      - get
+      - patch
+  - apiGroups:
+      - apps
+    resources:
+      - deployments/status
+    resourceNames:
+      - openmetadata-governance-portal-backend
+    verbs:
+      - get
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: governance-portal-workflow-deployer
+  namespace: governance-portal
+subjects:
+  - kind: ServiceAccount
+    name: workflow-runner
+    namespace: argo-workflows
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: governance-portal-deployer
