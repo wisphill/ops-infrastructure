@@ -50,6 +50,8 @@ spec:
           envFrom:
             - secretRef:
                 name: openmetadata-governance-portal-backend-secrets
+            - configMapRef:
+                name: openmetadata-governance-portal-backend-config
           readinessProbe:
             httpGet:
               path: /api/health
