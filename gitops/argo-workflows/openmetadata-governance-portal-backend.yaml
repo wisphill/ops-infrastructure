@@ -68,10 +68,31 @@ spec:
       suspend: {}
 
     - name: restart-deployment
+      steps:
+        - - name: restart
+            template: rollout-restart
+        - - name: wait-for-rollout
+            template: rollout-status
+
+    - name: rollout-restart
       container:
         image: rancher/kubectl:v1.32.3
-        command: [sh, -ec]
+        command: [/bin/kubectl]
         args:
-          - |
-            kubectl -n governance-portal rollout restart deployment/openmetadata-governance-portal-backend
-            kubectl -n governance-portal rollout status deployment/openmetadata-governance-portal-backend --timeout=5m
+          - -n
+          - governance-portal
+          - rollout
+          - restart
+          - deployment/openmetadata-governance-portal-backend
+
+    - name: rollout-status
+      container:
+        image: rancher/kubectl:v1.32.3
+        command: [/bin/kubectl]
+        args:
+          - -n
+          - governance-portal
+          - rollout
+          - status
+          - deployment/openmetadata-governance-portal-backend
+          - --timeout=5m
