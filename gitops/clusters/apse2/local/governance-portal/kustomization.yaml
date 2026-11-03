@@ -31,6 +31,11 @@ configMapGenerator:
       - OPENMETADATA_TASKS_PATH=/feed
       - OPENMETADATA_TIMEOUT_SECONDS=10
       - DATABASE_QUERIES_ENABLED=false
+      - ORACLE_DSN=localhost:1521/FREEPDB1TODO
+      - ORACLE_USER_ALLOWLIST=phi.pounce@gmail.com
+      - ORACLE_QUERY_SCHEMA=APP
+      - ORACLE_QUERY_TABLE=CUSTOMERS
+      - ORACLE_QUERY_MAX_ROWS=1000
 
 # The current Argo CD KSOPS rendering path does not rewrite configMapKeyRef names.
 # Keep this name stable so the generated ConfigMap matches the Deployment reference.
