@@ -57,7 +57,7 @@ spec:
             args:
               - |
                 git clone --depth 1 --branch main \
-                  git@github.com:wisphill/openmetata-governance-portal.git \
+                  git@github.com:wisphill/om-governance-service.git \
                   /workspace/source
           - name: build-and-push
             image: moby/buildkit:v0.25.1-rootless
@@ -71,9 +71,9 @@ spec:
               - --frontend
               - dockerfile.v0
               - --local
-              - context=/workspace/source/backend
+              - context=/workspace/source
               - --local
-              - dockerfile=/workspace/source/backend
+              - dockerfile=/workspace/source
               - --output
               - type=image,name=docker-registry.docker-registry.svc.cluster.local:5000/governance-portal/backend:main,push=true
 
