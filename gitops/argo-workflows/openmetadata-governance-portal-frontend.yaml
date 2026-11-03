@@ -12,7 +12,7 @@ spec:
   arguments:
     parameters:
       - name: source-repository
-        value: https://github.com/wisphill/openmetata-governance-portal.git
+        value: git@github.com:wisphill/om-governance-ui.git
       - name: source-revision
         value: main
       - name: pages-project
@@ -28,13 +28,27 @@ spec:
       volumes:
         - name: workspace
           emptyDir: {}
+        - name: git-ssh
+          secret:
+            secretName: argo-workflows-git-ssh
+            defaultMode: 256
       containerSet:
         volumeMounts:
           - name: workspace
             mountPath: /workspace
+          - name: git-ssh
+            mountPath: /etc/git-ssh
+            readOnly: true
         containers:
           - name: clone
             image: alpine/git:v2.45.2
+            env:
+              - name: GIT_SSH_COMMAND
+                value: >-
+                  ssh -F /dev/null -i /etc/git-ssh/ssh-privatekey -o IdentitiesOnly=yes
+                  -o UserKnownHostsFile=/etc/git-ssh/known_hosts -o StrictHostKeyChecking=yes
+              - name: GIT_TERMINAL_PROMPT
+                value: "0"
             command: [sh, -ec]
             args:
               - |
@@ -44,10 +58,14 @@ spec:
           - name: build
             image: node:22-alpine
             dependencies: [clone]
-            workingDir: /workspace/source/frontend
+            workingDir: /workspace/source
             env:
               - name: VITE_API_URL
                 value: '{{workflow.parameters.vite-api-url}}'
+              - name: VITE_BRAND_NAME
+                value: Vietnam Airlines | VDP Data Governance Portal
+              - name: VITE_USE_MOCKS
+                value: "false"
             command: [sh, -ec]
             args:
               - |

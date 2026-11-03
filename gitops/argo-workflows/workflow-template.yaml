@@ -17,6 +17,10 @@ spec:
         - name: buildkit-config
           configMap:
             name: buildkit-config
+        - name: git-ssh
+          secret:
+            secretName: argo-workflows-git-ssh
+            defaultMode: 256
 
       # use the container set to make sure workflow pods are in the same node
       containerSet:
@@ -26,16 +30,26 @@ spec:
           - name: buildkit-config
             mountPath: /etc/buildkit/buildkitd.toml
             subPath: buildkitd.toml
+          - name: git-ssh
+            mountPath: /etc/git-ssh
+            readOnly: true
         containers:
           - name: clone
             image: alpine/git:v2.45.2
+            env:
+              - name: GIT_SSH_COMMAND
+                value: >-
+                  ssh -F /dev/null -i /etc/git-ssh/ssh-privatekey -o IdentitiesOnly=yes
+                  -o UserKnownHostsFile=/etc/git-ssh/known_hosts -o StrictHostKeyChecking=yes
+              - name: GIT_TERMINAL_PROMPT
+                value: "0"
             command:
               - sh
               - -c
             args:
               - |
                 set -ex
-                git clone https://github.com/wisphill/apps.gin.git /workspace
+                git clone git@github.com:wisphill/apps.gin.git /workspace
                 ls -lah /workspace
 
           # buildkit build, then push to docker registry
