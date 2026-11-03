@@ -75,7 +75,7 @@ spec:
           - name: deploy
             image: node:22-alpine
             dependencies: [build]
-            workingDir: /workspace/source/frontend
+            workingDir: /workspace/source
             env:
               - name: CLOUDFLARE_API_TOKEN
                 valueFrom:
