@@ -24,7 +24,7 @@ configMapGenerator:
       - OIDC_REDIRECT_URI=https://governance-portal-api.foolosophy.dev/auth/callback
       - OIDC_LOGOUT_URI=https://governance-portal.foolosophy.dev
       - OIDC_EMAIL_CLAIM=email
-      - OPENMETADATA_BASE_URL=https://openmetadata.foolosophy.dev
+      - OPENMETADATA_BASE_URL=http://openmetadata.openmetadata.svc.cluster.local:8585
       - OPENMETADATA_API_VERSION=v1
       - OPENMETADATA_AUTH_MODE=admin_bot
       - OPENMETADATA_USER_LOOKUP_FIELD=email
