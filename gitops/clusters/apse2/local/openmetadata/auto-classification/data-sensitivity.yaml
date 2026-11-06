@@ -2,7 +2,7 @@
 # ../docs/data-governance-glossary.md). Applied to OpenMetadata by sync_classifications.py on
 # every auto-classification run: edits made in the UI to these fields are overwritten.
 #
-# Field names follow the OpenMetadata 2.1.0 CreateClassificationRequest / CreateTagRequest API.
+# Field names follow the OpenMetadata 2.1.0-rc1 CreateClassificationRequest / CreateTagRequest API.
 # Only C3 and C4 have recognizers: "public" and "internal" cannot be inferred from the data, so
 # Stewards assign C1/C2 by hand. Unlabelled columns are treated as C3 by policy, not by a tag.
 #

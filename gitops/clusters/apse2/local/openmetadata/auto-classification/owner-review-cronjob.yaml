@@ -29,7 +29,7 @@ spec:
           restartPolicy: Never
           containers:
             - name: owner-review
-              image: openmetadata/ingestion-base:2.1.0
+              image: openmetadata/ingestion-base:2.1.0-rc1
               imagePullPolicy: IfNotPresent
               command: ["python", "/config/request_owner_review.py", "/config/oracle-auto-classification.yaml"]
               env:
