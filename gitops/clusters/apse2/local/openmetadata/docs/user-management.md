@@ -79,7 +79,7 @@ tạo ít nhất một admin thật:
 
 1. Đăng nhập bằng admin thật, kiểm tra vào được `Settings`.
 2. Đổi mật khẩu hoặc xóa tài khoản `admin@open-metadata.org`
-   ([khuyến nghị của OpenMetadata](https://docs.open-metadata.org/v2.0.x/deployment/security/basic-auth)).
+   ([khuyến nghị của OpenMetadata](https://docs.open-metadata.org/v2.1.x/deployment/security/basic-auth)).
 
 ## Khi nào flow này thay đổi
 
