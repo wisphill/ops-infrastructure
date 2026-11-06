@@ -19,7 +19,7 @@ spec:
       restartPolicy: Never
       containers:
         - name: sync
-          image: openmetadata/ingestion-base:2.0.7
+          image: openmetadata/ingestion-base:2.0.5
           imagePullPolicy: IfNotPresent
           command: ["python", "/config/sync_access.py", "/config/access.yaml"]
           env:

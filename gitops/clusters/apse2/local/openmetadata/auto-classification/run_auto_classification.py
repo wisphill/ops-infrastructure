@@ -4,7 +4,7 @@ Usage: python run_auto_classification.py <workflow.yaml> <classification>...
 
 Same as `metadata classify -c <workflow.yaml>`, with two differences:
 
-* `metadata classify` (2.0.7) only scores tags of the PII classification:
+* `metadata classify` (2.0.5) only scores tags of the PII classification:
   AutoClassificationWorkflow hardcodes classification_filter=[PII]. Here the classifications are
   given on the command line. Only classifications whose autoClassificationConfig.enabled is true
   are used.
