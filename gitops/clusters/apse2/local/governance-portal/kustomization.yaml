@@ -32,7 +32,7 @@ configMapGenerator:
       - OPENMETADATA_TIMEOUT_SECONDS=10
       - DATABASE_QUERIES_ENABLED=false
       
-      - ORACLE_DSN=localhost:1521/FREEPDB1TODO
+      - ORACLE_DSN=oracle.oracle.svc.cluster.local:1521/FREEPDB1
       - ORACLE_USER_ALLOWLIST=phi.pounce@gmail.com
       - ORACLE_QUERY_SCHEMA=APP
       - ORACLE_QUERY_TABLE=CUSTOMERS
