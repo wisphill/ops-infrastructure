@@ -1,0 +1,14 @@
+# Single Redis node with no replica or Sentinel workloads.
+architecture: standalone
+
+# Redis is intentionally unauthenticated for access through the private Tailscale network.
+auth:
+  enabled: false
+
+master:
+  service:
+    type: LoadBalancer
+    # Reserved from the MetalLB pool (172.18.255.160-172.18.255.200).
+    # .200 is already assigned to ingress-nginx.
+    annotations:
+      metallb.io/loadBalancerIPs: "172.18.255.199"
