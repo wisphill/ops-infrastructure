@@ -1,0 +1,27 @@
+# Chart 17.3.3 currently defaults to Forgejo 15.0.12. Explicitly use the
+# current Forgejo release while retaining the chart's rootless-image defaults.
+image:
+  tag: 17.0.2
+
+persistence:
+  enabled: true
+  storageClass: local-path
+  size: 10Gi
+
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: forgejo.foolosophy.dev
+      paths:
+        - path: /
+          pathType: Prefix
+          port: http
+
+gitea:
+  config:
+    server:
+      DOMAIN: forgejo.foolosophy.dev
+      ROOT_URL: https://forgejo.foolosophy.dev/
+    service:
+      DISABLE_REGISTRATION: true

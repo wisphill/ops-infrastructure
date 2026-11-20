@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: forgejo
+  namespace: argocd
+spec:
+  project: default
+  sources:
+    - repoURL: https://github.com/wisphill/ops-infrastructure.git
+      targetRevision: main
+      ref: values
+    - repoURL: code.forgejo.org/forgejo-helm
+      chart: forgejo
+      targetRevision: 17.3.3
+      helm:
+        releaseName: forgejo
+        valueFiles:
+          - $values/gitops/forgejo/values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: forgejo
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
