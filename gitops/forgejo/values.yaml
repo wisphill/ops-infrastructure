@@ -11,6 +11,12 @@ persistence:
 ingress:
   enabled: true
   className: nginx
+  annotations:
+    # Git packs and LFS objects may be large; limit this Ingress without
+    # relaxing request-body limits for unrelated workloads.
+    nginx.ingress.kubernetes.io/proxy-body-size: 1g
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
   hosts:
     - host: forgejo.foolosophy.dev
       paths:
@@ -23,5 +29,8 @@ gitea:
     server:
       DOMAIN: forgejo.foolosophy.dev
       ROOT_URL: https://forgejo.foolosophy.dev/
+      DISABLE_SSH: true
+      START_SSH_SERVER: false
+      LFS_START_SERVER: true
     service:
       DISABLE_REGISTRATION: true
