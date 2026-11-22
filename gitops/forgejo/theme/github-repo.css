@@ -10,10 +10,10 @@
   --gh-canvas: #ffffff;
   --gh-canvas-subtle: #f6f8fa;
   --gh-canvas-inset: #f6f8fa;
-  --gh-border: #b6bec7;
-  --gh-border-muted: #b6bec7b3;
+  --gh-border: #d1d9e0;
+  --gh-border-muted: #d1d9e0b3;
   --gh-fg: #1f2328;
-  --gh-fg-muted: #424a53;
+  --gh-fg-muted: #59636e;
   --gh-accent: #0969da;
   --gh-accent-subtle: #ddf4ff;
   --gh-success: #1f883d;
@@ -21,12 +21,12 @@
   --gh-success-border: #1f232826;
   --gh-btn-bg: #f6f8fa;
   --gh-btn-hover: #eff2f5;
-  --gh-btn-border: #b6bec7;
+  --gh-btn-border: #d1d9e0;
   --gh-tab-active: #fd8c73;
   --gh-row-hover: #f6f8fa;
   --gh-shadow-sm: 0 1px 0 #1f23280a;
   --gh-shadow-md: 0 8px 24px #42474e26;
-  --gh-file: #424a53;
+  --gh-file: #59636e;
 }
 
 /* ---------- Palette: dark ---------- */
@@ -34,10 +34,10 @@
   --gh-canvas: #0d1117;
   --gh-canvas-subtle: #151b23;
   --gh-canvas-inset: #010409;
-  --gh-border: #4c535c;
-  --gh-border-muted: #4c535cb3;
+  --gh-border: #3d444d;
+  --gh-border-muted: #3d444db3;
   --gh-fg: #f0f6fc;
-  --gh-fg-muted: #b1bac4;
+  --gh-fg-muted: #9198a1;
   --gh-accent: #4493f8;
   --gh-accent-subtle: #388bfd1a;
   --gh-success: #238636;
@@ -45,12 +45,12 @@
   --gh-success-border: #f0f6fc1a;
   --gh-btn-bg: #212830;
   --gh-btn-hover: #262c36;
-  --gh-btn-border: #4c535c;
+  --gh-btn-border: #3d444d;
   --gh-tab-active: #f78166;
   --gh-row-hover: #151b23;
   --gh-shadow-sm: 0 0 transparent;
   --gh-shadow-md: 0 8px 24px #01040966;
-  --gh-file: #b1bac4;
+  --gh-file: #9198a1;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -58,10 +58,10 @@
     --gh-canvas: #0d1117;
     --gh-canvas-subtle: #151b23;
     --gh-canvas-inset: #010409;
-    --gh-border: #4c535c;
-    --gh-border-muted: #4c535cb3;
+    --gh-border: #3d444d;
+    --gh-border-muted: #3d444db3;
     --gh-fg: #f0f6fc;
-    --gh-fg-muted: #b1bac4;
+    --gh-fg-muted: #9198a1;
     --gh-accent: #4493f8;
     --gh-accent-subtle: #388bfd1a;
     --gh-success: #238636;
@@ -69,12 +69,12 @@
     --gh-success-border: #f0f6fc1a;
     --gh-btn-bg: #212830;
     --gh-btn-hover: #262c36;
-    --gh-btn-border: #4c535c;
+    --gh-btn-border: #3d444d;
     --gh-tab-active: #f78166;
     --gh-row-hover: #151b23;
     --gh-shadow-sm: 0 0 transparent;
     --gh-shadow-md: 0 8px 24px #01040966;
-    --gh-file: #b1bac4;
+    --gh-file: #9198a1;
   }
 }
 
@@ -611,16 +611,52 @@
   margin-bottom: 0 !important;
 }
 
-/* ---------- Icon colors ---------- */
+/* ---------- github.com color parity ---------- */
+:root[data-theme="forgejo-light"],
+:root[data-theme="forgejo-auto"] {
+  --gh-folder: #54aeff;
+  --gh-header: #ffffff;
+}
+
+:root[data-theme="forgejo-dark"] {
+  --gh-folder: #9198a1;
+  --gh-header: #0d1117;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="forgejo-auto"] {
+    --gh-folder: #9198a1;
+    --gh-header: #0d1117;
+  }
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) {
+  --color-nav-bg: var(--gh-header);
+  --color-secondary-nav-bg: var(--gh-header);
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) #navbar,
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .secondary-nav {
+  background: var(--gh-header) !important;
+}
+
 :root[data-theme^="forgejo-"]:not(:has(.page-content.home)) #repo-files-table .octicon-file-directory-fill,
 :root[data-theme^="forgejo-"]:not(:has(.page-content.home)) #repo-files-table .octicon-file-submodule,
 :root[data-theme^="forgejo-"]:not(:has(.page-content.home)) #repo-files-table .octicon-file-directory-symlink {
-  color: #368cf9;
-  fill: #368cf9;
+  color: var(--gh-folder) !important;
 }
 
 :root[data-theme^="forgejo-"]:not(:has(.page-content.home)) #repo-files-table .octicon-file,
 :root[data-theme^="forgejo-"]:not(:has(.page-content.home)) #repo-files-table .octicon-file-symlink-file {
+  color: var(--gh-fg-muted);
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) #repo-files-table td.name a,
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) #repo-files-table td.name .text {
+  color: var(--gh-fg);
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) #repo-files-table td.name .text.light-2 {
   color: var(--gh-fg-muted);
 }
 
@@ -631,4 +667,44 @@
 
 :root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .secondary-nav .overflow-menu-items .item.active svg {
   color: var(--gh-fg);
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .sha.label {
+  padding: 0;
+  background: transparent;
+  color: var(--gh-fg-muted);
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .sha.label:hover {
+  color: var(--gh-accent);
+  text-decoration: underline;
+}
+
+/* Summary row: plain text like GitHub's branch/tag counters, thin language bar. */
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .repository-summary {
+  border: 0;
+  background: transparent;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .repository-summary .repository-menu {
+  display: flex;
+  justify-content: flex-start;
+  gap: 16px;
+  padding: 0 0 8px;
+  background: transparent;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .repository-summary .repository-menu .item {
+  flex: 0 0 auto;
+  padding: 0;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .repository-summary .repository-menu .item b {
+  font-weight: 600;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .repository-summary stats-bar {
+  height: 8px;
+  border-radius: 6px;
+  overflow: hidden;
 }
