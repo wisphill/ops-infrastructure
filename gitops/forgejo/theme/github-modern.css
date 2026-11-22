@@ -109,21 +109,6 @@ body:has(.page-content.home) .page-content.home .home-hero {
   text-align: center;
 }
 
-body:has(.page-content.home) .page-content.home .home-monogram {
-  display: inline-grid;
-  place-items: center;
-  width: 96px;
-  height: 96px;
-  margin-bottom: 20px;
-  border: 1px solid #58a6ff55;
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 25%, #388bfd, #1f6feb 45%, #0d1117 100%);
-  box-shadow: 0 20px 44px #1f6feb55;
-  color: #ffffff;
-  font-size: 44px;
-  font-weight: 700;
-  letter-spacing: -0.04em;
-}
 
 body:has(.page-content.home) .page-content.home .home-eyebrow {
   margin: 0 0 12px;
@@ -385,12 +370,6 @@ body:has(.page-content.home) .page-footer a:hover {
     margin-bottom: clamp(16px, 4vh, 56px);
   }
 
-  body:has(.page-content.home) .page-content.home .home-monogram {
-    width: clamp(44px, 7vh, 80px);
-    height: clamp(44px, 7vh, 80px);
-    margin-bottom: clamp(8px, 1.6vh, 16px);
-    font-size: clamp(20px, 3.4vh, 36px);
-  }
 
   body:has(.page-content.home) .page-content.home .home-eyebrow {
     margin-bottom: clamp(4px, 1vh, 10px);

@@ -1,0 +1,463 @@
+/*
+ * GitHub-inspired look for the built-in Forgejo themes.
+ * Only the forgejo-* themes are restyled so users can still pick the stock
+ * Gitea themes from their settings.
+ */
+
+/* ---------- Palette: light ---------- */
+:root[data-theme="forgejo-light"],
+:root[data-theme="forgejo-auto"] {
+  --gh-canvas: #ffffff;
+  --gh-canvas-subtle: #f6f8fa;
+  --gh-canvas-inset: #f6f8fa;
+  --gh-border: #d1d9e0;
+  --gh-border-muted: #d1d9e0b3;
+  --gh-fg: #1f2328;
+  --gh-fg-muted: #59636e;
+  --gh-accent: #0969da;
+  --gh-accent-subtle: #ddf4ff;
+  --gh-success: #1f883d;
+  --gh-success-hover: #1c8139;
+  --gh-success-border: #1f232826;
+  --gh-btn-bg: #f6f8fa;
+  --gh-btn-hover: #eff2f5;
+  --gh-btn-border: #d1d9e0;
+  --gh-tab-active: #fd8c73;
+  --gh-row-hover: #f6f8fa;
+  --gh-shadow-sm: 0 1px 0 #1f23280a;
+  --gh-shadow-md: 0 8px 24px #42474e26;
+  --gh-file: #59636e;
+}
+
+/* ---------- Palette: dark ---------- */
+:root[data-theme="forgejo-dark"] {
+  --gh-canvas: #0d1117;
+  --gh-canvas-subtle: #151b23;
+  --gh-canvas-inset: #010409;
+  --gh-border: #3d444d;
+  --gh-border-muted: #3d444db3;
+  --gh-fg: #f0f6fc;
+  --gh-fg-muted: #9198a1;
+  --gh-accent: #4493f8;
+  --gh-accent-subtle: #388bfd1a;
+  --gh-success: #238636;
+  --gh-success-hover: #29903b;
+  --gh-success-border: #f0f6fc1a;
+  --gh-btn-bg: #212830;
+  --gh-btn-hover: #262c36;
+  --gh-btn-border: #3d444d;
+  --gh-tab-active: #f78166;
+  --gh-row-hover: #151b23;
+  --gh-shadow-sm: 0 0 transparent;
+  --gh-shadow-md: 0 8px 24px #01040966;
+  --gh-file: #9198a1;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root[data-theme="forgejo-auto"] {
+    --gh-canvas: #0d1117;
+    --gh-canvas-subtle: #151b23;
+    --gh-canvas-inset: #010409;
+    --gh-border: #3d444d;
+    --gh-border-muted: #3d444db3;
+    --gh-fg: #f0f6fc;
+    --gh-fg-muted: #9198a1;
+    --gh-accent: #4493f8;
+    --gh-accent-subtle: #388bfd1a;
+    --gh-success: #238636;
+    --gh-success-hover: #29903b;
+    --gh-success-border: #f0f6fc1a;
+    --gh-btn-bg: #212830;
+    --gh-btn-hover: #262c36;
+    --gh-btn-border: #3d444d;
+    --gh-tab-active: #f78166;
+    --gh-row-hover: #151b23;
+    --gh-shadow-sm: 0 0 transparent;
+    --gh-shadow-md: 0 8px 24px #01040966;
+    --gh-file: #9198a1;
+  }
+}
+
+/* ---------- Map the palette onto Forgejo's theme variables ---------- */
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) {
+  --border-radius: 6px;
+  --border-radius-medium: 6px;
+  --border-radius-large: 12px;
+
+  --color-primary: var(--gh-accent);
+  --color-primary-contrast: #ffffff;
+  --color-primary-hover: var(--gh-accent);
+  --color-primary-active: var(--gh-accent);
+  --color-primary-dark-1: var(--gh-accent);
+  --color-primary-dark-2: var(--gh-accent);
+  --color-primary-light-1: var(--gh-accent);
+  --color-primary-light-2: var(--gh-accent);
+  --color-primary-alpha-10: color-mix(in srgb, var(--gh-accent) 10%, transparent);
+  --color-primary-alpha-20: color-mix(in srgb, var(--gh-accent) 20%, transparent);
+  --color-primary-alpha-30: color-mix(in srgb, var(--gh-accent) 30%, transparent);
+  --color-primary-alpha-40: color-mix(in srgb, var(--gh-accent) 40%, transparent);
+  --color-primary-alpha-50: color-mix(in srgb, var(--gh-accent) 50%, transparent);
+  --color-accent: var(--gh-accent);
+  --color-small-accent: var(--gh-accent-subtle);
+
+  --color-body: var(--gh-canvas);
+  --color-text: var(--gh-fg);
+  --color-text-dark: var(--gh-fg);
+  --color-text-light: var(--gh-fg-muted);
+  --color-text-light-1: var(--gh-fg-muted);
+  --color-text-light-2: var(--gh-fg-muted);
+  --color-text-light-3: var(--gh-fg-muted);
+
+  --color-secondary: var(--gh-border);
+  --color-secondary-bg: var(--gh-canvas-subtle);
+  --color-light-border: var(--gh-border);
+  --color-box-header: var(--gh-canvas-subtle);
+  --color-box-body: var(--gh-canvas);
+  --color-box-body-highlight: var(--gh-row-hover);
+  --color-card: var(--gh-canvas);
+  --color-menu: var(--gh-canvas);
+
+  --color-nav-bg: var(--gh-canvas-subtle);
+  --color-nav-hover-bg: var(--gh-btn-hover);
+  --color-secondary-nav-bg: var(--gh-canvas-subtle);
+  --color-header-wrapper: var(--gh-canvas-subtle);
+  --color-footer: var(--gh-canvas);
+
+  --color-button: var(--gh-btn-bg);
+  --color-hover: var(--gh-btn-hover);
+  --color-active: var(--gh-btn-hover);
+  --color-input-background: var(--gh-canvas);
+  --color-input-border: var(--gh-border);
+  --color-input-border-hover: var(--gh-fg-muted);
+
+  --color-code-bg: var(--gh-canvas);
+  --color-markup-code-block: var(--gh-canvas-subtle);
+  --color-markup-code-inline: color-mix(in srgb, var(--gh-fg-muted) 20%, transparent);
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) body {
+  -webkit-font-smoothing: antialiased;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* ---------- Top navbar ---------- */
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) #navbar {
+  min-height: 64px;
+  padding: 0 16px;
+  background: var(--gh-canvas-subtle);
+  border-bottom: 1px solid var(--gh-border);
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) #navbar .item {
+  border-radius: 6px;
+  font-weight: 600;
+  color: var(--gh-fg);
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) #navbar .item:hover {
+  background: var(--gh-btn-hover);
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) #navbar-logo img {
+  width: 32px;
+  height: 32px;
+}
+
+/* ---------- Repo header + tabs ---------- */
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .secondary-nav {
+  background: var(--gh-canvas-subtle);
+  border-bottom: 1px solid var(--gh-border);
+  box-shadow: none;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .repo-header {
+  padding-top: 16px;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .repo-header .flex-item-title {
+  font-size: 20px;
+  gap: 4px;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .repo-header .flex-item-title a {
+  color: var(--gh-accent);
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .repo-header .flex-item-title a.tw-font-semibold {
+  font-weight: 600;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .repo-header .flex-item-leading svg {
+  color: var(--gh-fg-muted);
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) body:has(.secondary-nav) #navbar {
+  border-bottom: 0;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .secondary-nav overflow-menu.ui.secondary.pointing.menu {
+  border-bottom: 0 !important;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .secondary-nav .ui.tabs.divider {
+  display: none;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .page-content > .secondary-nav:first-child {
+  margin-bottom: 24px;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .secondary-nav .overflow-menu-items .item {
+  position: relative;
+  margin: 0 2px 0 0;
+  padding: 8px 10px 14px;
+  border: 0;
+  color: var(--gh-fg);
+  font-weight: 400;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .secondary-nav .overflow-menu-items .item:hover::before {
+  content: "";
+  position: absolute;
+  inset: 4px 0 10px;
+  z-index: -1;
+  border-radius: 6px;
+  background: var(--gh-btn-hover);
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .secondary-nav .overflow-menu-items .item.active {
+  font-weight: 600;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .secondary-nav .overflow-menu-items .item.active::after {
+  content: "";
+  display: block;
+  visibility: visible;
+  position: absolute;
+  top: auto;
+  width: auto;
+  margin: 0;
+  border: 0;
+  transform: none;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  border-radius: 6px;
+  background: var(--gh-tab-active);
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .secondary-nav .overflow-menu-items .item svg {
+  color: var(--gh-fg-muted);
+}
+
+/* ---------- Buttons ---------- */
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .ui.button,
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .ui.basic.button {
+  border-radius: 6px;
+  font-weight: 500;
+  box-shadow: var(--gh-shadow-sm);
+  transition: background-color 80ms ease, border-color 80ms ease;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .ui.basic.button,
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .ui.labeled.button > .ui.basic.label {
+  background: var(--gh-btn-bg);
+  border: 1px solid var(--gh-btn-border);
+  color: var(--gh-fg);
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .ui.basic.button:hover,
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .ui.labeled.button > .ui.basic.label:hover {
+  background: var(--gh-btn-hover);
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .ui.labeled.button > .ui.basic.label {
+  border-left: 0;
+  font-weight: 600;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .ui.primary.button,
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .ui.primary.buttons .button,
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .ui.green.button {
+  background: var(--gh-success);
+  border: 1px solid var(--gh-success-border);
+  color: #ffffff;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .ui.primary.button:hover,
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .ui.primary.buttons .button:hover,
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .ui.green.button:hover {
+  background: var(--gh-success-hover);
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .ui.input > input,
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) input[type="text"],
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) input[type="search"],
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) textarea {
+  border-radius: 6px;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) input:focus,
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) textarea:focus {
+  border-color: var(--gh-accent) !important;
+  box-shadow: inset 0 0 0 1px var(--gh-accent);
+}
+
+/* ---------- Repo summary (commits / branches / tags) ---------- */
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .repository-summary {
+  border: 1px solid var(--gh-border);
+  border-radius: 6px;
+  box-shadow: none;
+  overflow: hidden;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .repository-summary .repository-menu {
+  background: var(--gh-canvas);
+  border: 0;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .repository-summary .repository-menu .item {
+  color: var(--gh-fg-muted);
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .repository-summary .repository-menu .item b {
+  color: var(--gh-fg);
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .repository-summary .repository-menu a.item:hover,
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .repository-summary .repository-menu a.item:hover b {
+  color: var(--gh-accent);
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .repository-summary stats-bar {
+  height: 8px;
+  border-radius: 0;
+}
+
+/* ---------- File table ---------- */
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) #repo-files-table {
+  border: 1px solid var(--gh-border);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: none;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) #repo-files-table td {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  border-top: 1px solid var(--gh-border-muted);
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) #repo-files-table tr.commit-list td {
+  height: 56px;
+  background: var(--gh-canvas-subtle);
+  border-top: 0;
+  border-bottom: 1px solid var(--gh-border);
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) #repo-files-table tr.entry:hover td {
+  background: var(--gh-row-hover);
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) #repo-files-table td.name a {
+  color: var(--gh-fg);
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) #repo-files-table td.name a:hover {
+  color: var(--gh-accent);
+  text-decoration: underline;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) #repo-files-table td.message a,
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) #repo-files-table td.age {
+  color: var(--gh-fg-muted);
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) #repo-files-table td.message a:hover {
+  color: var(--gh-accent);
+  text-decoration: underline;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) #repo-files-table .octicon-file {
+  color: var(--gh-file);
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .latest-commit .author-wrapper strong {
+  font-weight: 600;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .latest-commit .ui.avatar {
+  border-radius: 50%;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .sha.label {
+  padding: 2px 8px;
+  border: 0;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--gh-fg-muted) 15%, transparent);
+  color: var(--gh-fg-muted);
+  font-family: var(--fonts-monospace);
+  font-size: 12px;
+}
+
+/* ---------- Generic boxes, segments and dropdowns ---------- */
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .ui.segment,
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .ui.segments,
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .ui.table,
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .ui.attached.header,
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .ui.attached.segment {
+  border-color: var(--gh-border);
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .ui.top.attached.header {
+  border-top-left-radius: 6px;
+  border-top-right-radius: 6px;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .ui.bottom.attached.segment {
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .ui.dropdown .menu,
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .tippy-box,
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) details.dropdown > .content {
+  border: 1px solid var(--gh-border);
+  border-radius: 12px;
+  box-shadow: var(--gh-shadow-md);
+}
+
+/* ---------- README / markdown ---------- */
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) #readme {
+  border: 1px solid var(--gh-border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .markup h1,
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .markup h2 {
+  border-bottom: 1px solid var(--gh-border-muted);
+  padding-bottom: 0.3em;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .markup pre {
+  border-radius: 6px;
+}
+
+/* ---------- Footer ---------- */
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .page-footer {
+  background: transparent;
+  border-top: 1px solid var(--gh-border);
+  color: var(--gh-fg-muted);
+  font-size: 12px;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .page-footer a {
+  color: var(--gh-fg-muted);
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .page-footer a:hover {
+  color: var(--gh-accent);
+}

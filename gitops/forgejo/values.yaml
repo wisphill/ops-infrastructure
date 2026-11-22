@@ -36,6 +36,8 @@ extraVolumes:
       items:
         - key: github-modern.css
           path: github-modern.css
+        - key: github-repo.css
+          path: github-repo.css
   - name: custom-theme-templates
     configMap:
       name: forgejo-custom-theme

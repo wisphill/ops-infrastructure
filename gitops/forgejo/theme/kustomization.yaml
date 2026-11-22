@@ -12,5 +12,6 @@ configMapGenerator:
   - name: forgejo-custom-theme
     files:
       - github-modern.css
+      - github-repo.css
       - header.tmpl
       - home.tmpl
