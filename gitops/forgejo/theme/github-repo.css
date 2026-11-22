@@ -708,3 +708,40 @@
   border-radius: 6px;
   overflow: hidden;
 }
+
+/* ---------- Spacing around summary, buttons and code search ---------- */
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .repo-description {
+  margin-bottom: 12px;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .repository-summary {
+  margin: 0 0 16px !important;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .repository-summary .repository-menu {
+  padding: 0 0 10px;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .repository-summary .repository-menu .item {
+  line-height: 20px;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .repository-summary stats-bar {
+  height: 6px;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .repo-button-row {
+  margin: 0 0 16px;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .code-search {
+  padding: 8px !important;
+  border-color: var(--gh-border) !important;
+  border-radius: 6px 6px 0 0 !important;
+  background: var(--gh-canvas-subtle);
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .code-search + #repo-files-table {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
