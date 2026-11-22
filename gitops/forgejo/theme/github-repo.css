@@ -461,3 +461,152 @@
 :root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .page-footer a:hover {
   color: var(--gh-accent);
 }
+
+/* ---------- Compact density (closer to github.com) ---------- */
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) #repo-files-table td {
+  padding: 0 8px;
+  height: 40px;
+  line-height: 20px;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) #repo-files-table td .truncate,
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) #repo-files-table td a {
+  line-height: 20px;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) #repo-files-table tr.commit-list td {
+  height: 48px;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .repository-summary .repository-menu {
+  padding: 6px 12px;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .repository-summary stats-bar {
+  height: 6px;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .repo-header {
+  padding-top: 12px;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .secondary-nav .overflow-menu-items .item {
+  padding: 6px 8px 10px;
+  font-size: 14px;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .page-content > .secondary-nav:first-child {
+  margin-bottom: 16px;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .ui.button.small,
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .ui.compact.small.button {
+  padding: 5px 12px;
+  font-size: 12px;
+  line-height: 20px;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) #navbar {
+  min-height: 56px;
+}
+
+/* ---------- Sign-in page (github.com/login style) ---------- */
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .page-content.signin {
+  padding-top: 24px;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .page-content.signin .ui.middle.grid {
+  margin: 0;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .page-content.signin .column {
+  max-width: 340px !important;
+  width: 100%;
+  padding: 0 !important;
+  gap: 16px;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .page-content.signin h4.ui.top.attached.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 0 0 16px;
+  border: 0;
+  background: transparent;
+  font-size: 0;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .page-content.signin h4.ui.top.attached.header::before {
+  content: "";
+  width: 48px;
+  height: 48px;
+  background: url("/assets/img/logo.svg") center / contain no-repeat;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .page-content.signin h4.ui.top.attached.header::after {
+  content: "Sign in to Phil's Forge";
+  color: var(--gh-fg);
+  font-size: 24px;
+  font-weight: 300;
+  letter-spacing: -0.01em;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .page-content.signin .ui.attached.segment {
+  padding: 16px;
+  border: 1px solid var(--gh-border);
+  border-radius: 6px;
+  background: var(--gh-canvas-subtle);
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .page-content.signin .ui.form .field > label {
+  margin-bottom: 8px;
+  color: var(--gh-fg);
+  font-size: 14px;
+  font-weight: 400;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .page-content.signin .ui.form .field {
+  margin-bottom: 16px;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .page-content.signin .ui.form input[type="text"],
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .page-content.signin .ui.form input[type="password"] {
+  height: 32px;
+  padding: 5px 12px;
+  border: 1px solid var(--gh-border);
+  border-radius: 6px;
+  background: var(--gh-canvas);
+  font-size: 14px;
+  line-height: 20px;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .page-content.signin .ui.form .ui.primary.button {
+  height: 32px;
+  margin-top: 4px;
+  padding: 0 16px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .page-content.signin .ui.attached.segment.header.top {
+  max-width: none;
+  margin: 0 !important;
+  padding: 16px;
+  border: 1px solid var(--gh-border);
+  border-radius: 6px;
+  background: transparent;
+  text-align: center;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .page-content.signin .ui.attached.segment.header.top a {
+  font-size: 12px;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .page-content.signin .ui.attached.segment.header.top .field {
+  margin: 0;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .page-content.signin .ui.form {
+  margin-bottom: 0 !important;
+}
