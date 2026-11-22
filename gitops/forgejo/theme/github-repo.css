@@ -10,10 +10,10 @@
   --gh-canvas: #ffffff;
   --gh-canvas-subtle: #f6f8fa;
   --gh-canvas-inset: #f6f8fa;
-  --gh-border: #d1d9e0;
-  --gh-border-muted: #d1d9e0b3;
+  --gh-border: #b6bec7;
+  --gh-border-muted: #b6bec7b3;
   --gh-fg: #1f2328;
-  --gh-fg-muted: #59636e;
+  --gh-fg-muted: #424a53;
   --gh-accent: #0969da;
   --gh-accent-subtle: #ddf4ff;
   --gh-success: #1f883d;
@@ -21,12 +21,12 @@
   --gh-success-border: #1f232826;
   --gh-btn-bg: #f6f8fa;
   --gh-btn-hover: #eff2f5;
-  --gh-btn-border: #d1d9e0;
+  --gh-btn-border: #b6bec7;
   --gh-tab-active: #fd8c73;
   --gh-row-hover: #f6f8fa;
   --gh-shadow-sm: 0 1px 0 #1f23280a;
   --gh-shadow-md: 0 8px 24px #42474e26;
-  --gh-file: #59636e;
+  --gh-file: #424a53;
 }
 
 /* ---------- Palette: dark ---------- */
@@ -34,10 +34,10 @@
   --gh-canvas: #0d1117;
   --gh-canvas-subtle: #151b23;
   --gh-canvas-inset: #010409;
-  --gh-border: #3d444d;
-  --gh-border-muted: #3d444db3;
+  --gh-border: #4c535c;
+  --gh-border-muted: #4c535cb3;
   --gh-fg: #f0f6fc;
-  --gh-fg-muted: #9198a1;
+  --gh-fg-muted: #b1bac4;
   --gh-accent: #4493f8;
   --gh-accent-subtle: #388bfd1a;
   --gh-success: #238636;
@@ -45,12 +45,12 @@
   --gh-success-border: #f0f6fc1a;
   --gh-btn-bg: #212830;
   --gh-btn-hover: #262c36;
-  --gh-btn-border: #3d444d;
+  --gh-btn-border: #4c535c;
   --gh-tab-active: #f78166;
   --gh-row-hover: #151b23;
   --gh-shadow-sm: 0 0 transparent;
   --gh-shadow-md: 0 8px 24px #01040966;
-  --gh-file: #9198a1;
+  --gh-file: #b1bac4;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -58,10 +58,10 @@
     --gh-canvas: #0d1117;
     --gh-canvas-subtle: #151b23;
     --gh-canvas-inset: #010409;
-    --gh-border: #3d444d;
-    --gh-border-muted: #3d444db3;
+    --gh-border: #4c535c;
+    --gh-border-muted: #4c535cb3;
     --gh-fg: #f0f6fc;
-    --gh-fg-muted: #9198a1;
+    --gh-fg-muted: #b1bac4;
     --gh-accent: #4493f8;
     --gh-accent-subtle: #388bfd1a;
     --gh-success: #238636;
@@ -69,12 +69,12 @@
     --gh-success-border: #f0f6fc1a;
     --gh-btn-bg: #212830;
     --gh-btn-hover: #262c36;
-    --gh-btn-border: #3d444d;
+    --gh-btn-border: #4c535c;
     --gh-tab-active: #f78166;
     --gh-row-hover: #151b23;
     --gh-shadow-sm: 0 0 transparent;
     --gh-shadow-md: 0 8px 24px #01040966;
-    --gh-file: #9198a1;
+    --gh-file: #b1bac4;
   }
 }
 
@@ -609,4 +609,26 @@
 
 :root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .page-content.signin .ui.form {
   margin-bottom: 0 !important;
+}
+
+/* ---------- Icon colors ---------- */
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) #repo-files-table .octicon-file-directory-fill,
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) #repo-files-table .octicon-file-submodule,
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) #repo-files-table .octicon-file-directory-symlink {
+  color: #368cf9;
+  fill: #368cf9;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) #repo-files-table .octicon-file,
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) #repo-files-table .octicon-file-symlink-file {
+  color: var(--gh-fg-muted);
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .secondary-nav .overflow-menu-items .item svg,
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .repository-summary .item svg {
+  color: var(--gh-fg-muted);
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .secondary-nav .overflow-menu-items .item.active svg {
+  color: var(--gh-fg);
 }
