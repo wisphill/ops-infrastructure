@@ -13,3 +13,4 @@ configMapGenerator:
     files:
       - github-modern.css
       - header.tmpl
+      - home.tmpl

@@ -1,0 +1,103 @@
+{{template "base/head" .}}
+<div role="main" aria-label="{{ctx.Locale.Tr "home"}}" class="page-content home">
+	<section class="home-hero">
+		<div class="home-monogram" aria-hidden="true">P</div>
+		<p class="home-eyebrow">{{AppDomain}}</p>
+		<h1 class="title">{{AppName}}</h1>
+		<p class="large">
+			Hi, I'm Phil. This is where I keep my code: the GitOps setup behind my home cluster,
+			data and Power BI workflows, and whatever I'm tinkering with next.
+		</p>
+		<div class="home-actions">
+			<a class="home-button home-button-primary" href="{{AppSubUrl}}/explore/repos">{{svg "octicon-repo"}} Browse repositories</a>
+			{{if .IsSigned}}
+				<a class="home-button" href="{{AppSubUrl}}/">{{svg "octicon-home"}} {{ctx.Locale.Tr "dashboard"}}</a>
+			{{else}}
+				<a class="home-button" href="{{AppSubUrl}}/user/login">{{svg "octicon-sign-in"}} {{ctx.Locale.Tr "sign_in"}}</a>
+			{{end}}
+			<a class="home-button" href="https://github.com/wisphill" target="_blank" rel="noopener noreferrer">{{svg "octicon-mark-github"}} GitHub</a>
+		</div>
+	</section>
+
+	<div class="home-grid">
+	<section class="home-section">
+		<div class="home-section-header">
+			<h2>Recently updated</h2>
+			<a href="{{AppSubUrl}}/explore/repos?sort=recentupdate">View all {{svg "octicon-arrow-right"}}</a>
+		</div>
+		<div class="home-repos" id="home-repos" data-api="{{AppSubUrl}}/api/v1/repos/search?limit=4&sort=updated&order=desc">
+			<p class="home-empty">Loading repositories…</p>
+		</div>
+	</section>
+
+	<section class="home-section">
+		<div class="home-section-header">
+			<h2>What lives here</h2>
+		</div>
+		<div class="home-topics">
+			<div class="home-topic">
+				{{svg "octicon-server" 24}}
+				<h3>Infrastructure</h3>
+				<p>Kubernetes manifests, Argo CD apps and Terraform for AWS, Azure and GCP.</p>
+			</div>
+			<div class="home-topic">
+				{{svg "octicon-graph" 24}}
+				<h3>Data &amp; BI</h3>
+				<p>Power BI models, dbt projects and OpenMetadata governance workflows.</p>
+			</div>
+			<div class="home-topic">
+				{{svg "octicon-tools" 24}}
+				<h3>Tools &amp; experiments</h3>
+				<p>Small Go services, router scripts and automations that keep things running.</p>
+			</div>
+		</div>
+	</section>
+	</div>
+</div>
+<script>
+(() => {
+	const list = document.getElementById('home-repos');
+	const languageColors = {Go: '#00add8', Python: '#3572a5', TypeScript: '#3178c6', JavaScript: '#f1e05a', Shell: '#89e051', HCL: '#844fba', Makefile: '#427819', Lua: '#000080', PowerShell: '#012456', Dockerfile: '#384d54'};
+	const rtf = new Intl.RelativeTimeFormat(undefined, {numeric: 'auto'});
+	const ago = (iso) => {
+		const seconds = (new Date(iso) - Date.now()) / 1000;
+		for (const [unit, size] of [['year', 31536000], ['month', 2592000], ['day', 86400], ['hour', 3600], ['minute', 60]]) {
+			if (Math.abs(seconds) >= size) return rtf.format(Math.round(seconds / size), unit);
+		}
+		return rtf.format(Math.round(seconds), 'second');
+	};
+	const el = (tag, className, text) => {
+		const node = document.createElement(tag);
+		if (className) node.className = className;
+		if (text) node.textContent = text;
+		return node;
+	};
+	const showMessage = (text) => list.replaceChildren(el('p', 'home-empty', text));
+
+	fetch(list.dataset.api)
+		.then((response) => response.ok ? response.json() : Promise.reject(response.status))
+		.then(({data}) => {
+			if (!data || data.length === 0) return showMessage('No public repositories yet.');
+			list.replaceChildren(...data.map((repo) => {
+				const card = el('a', 'home-repo');
+				card.href = repo.html_url;
+				card.title = repo.full_name;
+				const name = el('div', 'home-repo-name', repo.name);
+				if (repo.private) name.append(el('span', 'home-repo-badge', 'Private'));
+				card.append(name, el('p', 'home-repo-desc', repo.description || 'No description'));
+				const meta = el('div', 'home-repo-meta');
+				if (repo.language) {
+					const lang = el('span', 'home-repo-lang', repo.language);
+					lang.style.setProperty('--lang-color', languageColors[repo.language] || '#8b949e');
+					meta.append(lang);
+				}
+				if (repo.stars_count > 0) meta.append(el('span', null, `★ ${repo.stars_count}`));
+				meta.append(el('span', null, `Updated ${ago(repo.updated_at)}`));
+				card.append(meta);
+				return card;
+			}));
+		})
+		.catch(() => showMessage('Could not load repositories.'));
+})();
+</script>
+{{template "base/footer" .}}

@@ -41,18 +41,22 @@ extraVolumes:
       name: forgejo-custom-theme
       items:
         - key: header.tmpl
-          path: header.tmpl
+          path: custom/header.tmpl
+        - key: home.tmpl
+          path: home.tmpl
 
 extraContainerVolumeMounts:
   - name: custom-theme-css
     mountPath: /data/gitea/public/assets/css
     readOnly: true
   - name: custom-theme-templates
-    mountPath: /data/gitea/templates/custom
+    mountPath: /data/gitea/templates
     readOnly: true
 
 gitea:
   config:
+    APP_NAME: Phil's Forge
+    APP_SLOGAN: Code, infrastructure & data
     server:
       DOMAIN: forgejo.foolosophy.dev
       ROOT_URL: https://forgejo.foolosophy.dev/
