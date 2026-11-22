@@ -12,10 +12,10 @@ ingress:
   enabled: true
   className: nginx
   annotations:
-    # Git packs and LFS objects may be large; limit this Ingress without
-    # relaxing request-body limits for unrelated workloads.
+    # Git packs may be large; limit this Ingress without relaxing request-body
+    # limits for unrelated workloads.
     nginx.ingress.kubernetes.io/proxy-body-size: 1g
-    # Stream Git/LFS uploads to Forgejo instead of staging entire packs on the
+    # Stream Git uploads to Forgejo instead of staging entire packs on the
     # ingress controller's temporary filesystem.
     nginx.ingress.kubernetes.io/proxy-request-buffering: "off"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
@@ -69,6 +69,5 @@ gitea:
       ROOT_URL: https://forgejo.foolosophy.dev/
       DISABLE_SSH: true
       START_SSH_SERVER: false
-      LFS_START_SERVER: true
     service:
       DISABLE_REGISTRATION: true
