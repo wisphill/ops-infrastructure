@@ -9,6 +9,10 @@ spec:
     - repoURL: https://github.com/wisphill/ops-infrastructure.git
       targetRevision: main
       ref: values
+    # GitHub-style custom CSS, mounted into the Forgejo pod via values.yaml
+    - repoURL: https://github.com/wisphill/ops-infrastructure.git
+      targetRevision: main
+      path: gitops/forgejo/theme
     - repoURL: code.forgejo.org/forgejo-helm
       chart: forgejo
       targetRevision: 17.3.3

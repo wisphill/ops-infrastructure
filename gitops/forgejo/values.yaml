@@ -27,6 +27,30 @@ ingress:
           pathType: Prefix
           port: http
 
+# Custom theme from gitops/forgejo/theme, mounted under GITEA_CUSTOM
+# (/data/gitea). Template changes are only picked up after a pod restart.
+extraVolumes:
+  - name: custom-theme-css
+    configMap:
+      name: forgejo-custom-theme
+      items:
+        - key: github-modern.css
+          path: github-modern.css
+  - name: custom-theme-templates
+    configMap:
+      name: forgejo-custom-theme
+      items:
+        - key: header.tmpl
+          path: header.tmpl
+
+extraContainerVolumeMounts:
+  - name: custom-theme-css
+    mountPath: /data/gitea/public/assets/css
+    readOnly: true
+  - name: custom-theme-templates
+    mountPath: /data/gitea/templates/custom
+    readOnly: true
+
 gitea:
   config:
     server:
