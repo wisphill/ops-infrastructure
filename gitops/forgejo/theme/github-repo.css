@@ -745,3 +745,22 @@
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
+
+/* Joined input groups (search field + dropdown + button). */
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .ui.action.input > input {
+  border-radius: 6px 0 0 6px !important;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .ui.action.input > .ui.dropdown.selection {
+  border-radius: 0 !important;
+  background: var(--gh-canvas);
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .ui.action.input > .ui.button:last-child {
+  border-radius: 0 6px 6px 0 !important;
+  box-shadow: none;
+}
+
+:root[data-theme^="forgejo-"]:not(:has(.page-content.home)) .ui.action.input > .ui.button:not(:first-child) {
+  margin-left: -1px;
+}
