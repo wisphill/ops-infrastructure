@@ -57,10 +57,17 @@ extraContainerVolumeMounts:
 
 gitea:
   admin:
-    # The chart's generated Secret can change during GitOps rendering. Only
-    # set the bootstrap password on initial creation; never reset the admin
-    # account during a later Argo CD sync or pod rollout.
-    passwordMode: initialOnlyNoReset
+    # The chart generates the initial password. Require the admin to replace
+    # it on first login, without resetting it on later pod rollouts.
+    passwordMode: initialOnlyRequireReset
+  oauth:
+    - name: Google
+      provider: openidConnect
+      existingSecret: forgejo-google-oidc
+      autoDiscoverUrl: https://accounts.google.com/.well-known/openid-configuration
+      # Only the specified Google identity can pass this authentication source.
+      requiredClaimName: email
+      requiredClaimValue: phi.pounce@gmail.com
   config:
     APP_NAME: Phil's Forge
     APP_SLOGAN: Code, infrastructure & data
@@ -71,3 +78,10 @@ gitea:
       START_SSH_SERVER: false
     service:
       DISABLE_REGISTRATION: true
+    oauth2_client:
+      # This creates an account only after the auth source validates the exact
+      # Google email claim above; normal Forgejo registration remains disabled.
+      ENABLE_AUTO_REGISTRATION: true
+      USERNAME: email
+      ACCOUNT_LINKING: disabled
+      OPENID_CONNECT_SCOPES: email profile

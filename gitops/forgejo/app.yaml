@@ -13,6 +13,11 @@ spec:
     - repoURL: https://github.com/wisphill/ops-infrastructure.git
       targetRevision: main
       path: gitops/forgejo/theme
+    - repoURL: https://github.com/wisphill/ops-infrastructure.git
+      targetRevision: main
+      path: gitops/forgejo/secrets
+      plugin:
+        name: ksops
     - repoURL: code.forgejo.org/forgejo-helm
       chart: forgejo
       targetRevision: 17.3.3
