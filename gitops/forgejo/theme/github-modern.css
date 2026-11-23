@@ -3,15 +3,17 @@
  * settings, and authenticated dashboard pages retain Forgejo's own theme.
  */
 body:has(.page-content.home) {
-  --home-canvas: #0d1117;
-  --home-canvas-subtle: #161b22;
-  --home-border: #30363d;
-  --home-fg: #f0f6fc;
-  --home-muted: #8b949e;
-  --home-blue: #58a6ff;
-  --home-blue-hover: #79c0ff;
+  --home-canvas: #ffffff;
+  --home-canvas-subtle: #f6f8fa;
+  --home-border: #d1d9e0;
+  --home-fg: #1f2328;
+  --home-muted: #59636e;
+  --home-blue: #0969da;
+  --home-blue-hover: #0550ae;
+  --home-nav-bg: #010409;
+  --home-nav-fg: #f0f6fc;
   min-height: 100vh;
-  background: radial-gradient(circle at 50% -20%, #1f6feb33 0, transparent 42rem), var(--home-canvas);
+  background: var(--home-canvas);
   color: var(--home-fg);
 }
 
@@ -24,24 +26,23 @@ body:has(.page-content.home) .page-content.home {
 body:has(.page-content.home) #navbar {
   min-height: 64px;
   padding: 0 24px;
-  background: #010409e6;
-  border-bottom: 1px solid var(--home-border);
-  backdrop-filter: blur(12px);
+  background: var(--home-nav-bg);
+  border-bottom: 0;
 }
 
 body:has(.page-content.home) #navbar .item,
 body:has(.page-content.home) #navbar .item svg {
-  color: var(--home-fg);
+  color: var(--home-nav-fg);
 }
 
 body:has(.page-content.home) #navbar .item:hover {
-  color: var(--home-blue-hover);
+  background: transparent;
+  color: #f0f6fcb3;
 }
 
 body:has(.page-content.home) #navbar-logo img {
   width: 32px;
   height: 32px;
-  filter: drop-shadow(0 0 14px #58a6ff55);
 }
 
 body:has(.page-content.home) #navbar a[href*="/user/login"] {
@@ -49,14 +50,14 @@ body:has(.page-content.home) #navbar a[href*="/user/login"] {
   padding: 7px 14px;
   border: 1px solid #f0f6fc99;
   border-radius: 6px;
-  color: var(--home-fg);
+  color: var(--home-nav-fg);
   font-weight: 600;
 }
 
 body:has(.page-content.home) #navbar a[href*="/user/login"]:hover {
-  border-color: var(--home-fg);
+  border-color: var(--home-nav-fg);
   background: #f0f6fc14;
-  color: var(--home-fg);
+  color: var(--home-nav-fg);
 }
 
 /* Hero */
@@ -133,6 +134,7 @@ body:has(.page-content.home) .page-content.home .home-button {
   border: 1px solid var(--home-border);
   border-radius: 6px;
   background: var(--home-canvas-subtle);
+  box-shadow: 0 1px 0 #1f23280a;
   color: var(--home-fg);
   font-size: 1rem;
   font-weight: 600;
@@ -140,20 +142,20 @@ body:has(.page-content.home) .page-content.home .home-button {
 }
 
 body:has(.page-content.home) .page-content.home .home-button:hover {
-  border-color: var(--home-muted);
-  background: #21262d;
+  border-color: var(--home-border);
+  background: #eff2f5;
   color: var(--home-fg);
 }
 
 body:has(.page-content.home) .page-content.home .home-button-primary {
-  border-color: #f0f6fc1a;
-  background: #238636;
+  border-color: #1f232826;
+  background: #1f883d;
   color: #ffffff;
 }
 
 body:has(.page-content.home) .page-content.home .home-button-primary:hover {
-  border-color: #f0f6fc1a;
-  background: #2ea043;
+  border-color: #1f232826;
+  background: #1c8139;
   color: #ffffff;
 }
 
@@ -190,7 +192,7 @@ body:has(.page-content.home) .page-content.home .home-empty {
   margin: 0;
   padding: 32px;
   border: 1px dashed var(--home-border);
-  border-radius: 12px;
+  border-radius: 6px;
   color: var(--home-muted);
   text-align: center;
 }
@@ -208,16 +210,17 @@ body:has(.page-content.home) .page-content.home .home-repo {
   gap: 8px;
   padding: 20px;
   border: 1px solid var(--home-border);
-  border-radius: 12px;
-  background: var(--home-canvas-subtle);
+  border-radius: 6px;
+  background: var(--home-canvas);
   color: var(--home-fg);
-  transition: border-color 160ms ease, transform 160ms ease;
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
 }
 
 body:has(.page-content.home) .page-content.home .home-repo:hover {
-  border-color: #58a6ff99;
+  border-color: #0969da66;
+  box-shadow: 0 3px 6px #8c959f26;
   color: var(--home-fg);
-  transform: translateY(-2px);
+  transform: translateY(-1px);
 }
 
 body:has(.page-content.home) .page-content.home .home-repo-name {
@@ -274,8 +277,8 @@ body:has(.page-content.home) .page-content.home .home-topics {
 body:has(.page-content.home) .page-content.home .home-topic {
   padding: 24px;
   border: 1px solid var(--home-border);
-  border-radius: 12px;
-  background: linear-gradient(145deg, #161b22, #0d1117);
+  border-radius: 6px;
+  background: var(--home-canvas-subtle);
 }
 
 body:has(.page-content.home) .page-content.home .home-topic > .svg {
