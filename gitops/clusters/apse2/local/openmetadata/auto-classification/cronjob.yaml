@@ -72,8 +72,8 @@ spec:
               resources:
                 # spaCy NER model is loaded in memory.
                 requests:
-                  cpu: 200m
-                  memory: 1Gi
+                  cpu: 10m
+                  memory: 16Mi
                 limits:
                   cpu: "1"
                   memory: 2Gi

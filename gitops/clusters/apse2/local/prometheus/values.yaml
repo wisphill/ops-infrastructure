@@ -15,6 +15,11 @@ prometheus-node-exporter:
 
 alertmanager:
   enabled: true
+  alertmanagerSpec:
+    resources:
+      requests:
+        cpu: 10m
+        memory: 16Mi
 
 prometheus:
   prometheusSpec:

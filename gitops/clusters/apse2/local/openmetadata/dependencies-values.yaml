@@ -12,8 +12,8 @@ mysql:
     extraFlags: "--sort_buffer_size=10M"
     resources:
       requests:
-        cpu: "500m"
-        memory: "768Mi"
+        cpu: 10m
+        memory: 16Mi
         ephemeral-storage: "50Mi"
       limits:
         cpu: "750m"
@@ -50,8 +50,8 @@ opensearch:
   singleNode: true
   resources:
     requests:
-      cpu: "100m"
-      memory: "1536M"
+      cpu: 10m
+      memory: 16Mi
     limits:
       cpu: "2000m"
       memory: "2048M"

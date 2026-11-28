@@ -1,5 +1,9 @@
 pilot:
   replicaCount: 1
+  resources:
+    requests:
+      cpu: 10m
+      memory: 16Mi
 
 meshConfig:
   enableTracing: true

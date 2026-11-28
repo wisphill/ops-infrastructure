@@ -6,6 +6,15 @@ auth:
   enabled: false
 
 master:
+  resources:
+    requests:
+      cpu: 10m
+      memory: 16Mi
+      ephemeral-storage: 50Mi
+    limits:
+      cpu: 150m
+      memory: 192Mi
+      ephemeral-storage: 2Gi
   service:
     type: LoadBalancer
     # Reserved from the MetalLB pool (172.18.255.160-172.18.255.200).

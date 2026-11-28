@@ -13,6 +13,10 @@ spec:
     helm:
       values: |
         controller:
+          resources:
+            requests:
+              cpu: 10m
+              memory: 16Mi
           service:
             type: LoadBalancer
             # fixed metal LB IP for the Nginx ingress controller
