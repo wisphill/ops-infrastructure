@@ -10,6 +10,15 @@ mysql:
     rootPassword: password
   primary:
     extraFlags: "--sort_buffer_size=10M"
+    resources:
+      requests:
+        cpu: "500m"
+        memory: "768Mi"
+        ephemeral-storage: "50Mi"
+      limits:
+        cpu: "750m"
+        memory: "1Gi"
+        ephemeral-storage: "2Gi"
     persistence:
       size: 10Gi
     # The chart default exposes a nodePort on a ClusterIP service; keep it internal.
